@@ -6,14 +6,25 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://niwbie.github.io">
-  <title>isee&#39;blog</title>
+  <title>使用Hexo+Git搭建个人博客 | isee&#39;blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="isee'blog">
-<meta property="og:url" content="https://niwbie.github.io/index.html">
+  <meta name="description" content="安装准备:1.Node.js、Git、Github2.本地搭建Hexo框架，本地服务器测试，配置主题，修改参数等等3.本地Git+Hex与Github关联">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用Hexo+Git搭建个人博客">
+<meta property="og:url" content="https://niwbie.github.io/2016/11/07/使用Hexo-Ghuhub搭建个人博客/index.html">
 <meta property="og:site_name" content="isee'blog">
+<meta property="og:description" content="安装准备:1.Node.js、Git、Github2.本地搭建Hexo框架，本地服务器测试，配置主题，修改参数等等3.本地Git+Hex与Github关联">
+<meta property="og:image" content="https://niwbie.github.io/image/使用Hexo和git搭建个人博客/1.png">
+<meta property="og:image" content="https://niwbie.github.io/image/使用Hexo和git搭建个人博客/2.png">
+<meta property="og:image" content="https://niwbie.github.io/image/使用Hexo和git搭建个人博客/3.png">
+<meta property="og:image" content="https://niwbie.github.io/image/使用Hexo和git搭建个人博客/4.png">
+<meta property="og:image" content="https://niwbie.github.io/image/使用Hexo和git搭建个人博客/5.png">
+<meta property="og:image" content="https://niwbie.github.io/image/使用Hexo和git搭建个人博客/6.png">
+<meta property="og:updated_time" content="2016-11-07T08:17:33.575Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="isee'blog">
+<meta name="twitter:title" content="使用Hexo+Git搭建个人博客">
+<meta name="twitter:description" content="安装准备:1.Node.js、Git、Github2.本地搭建Hexo框架，本地服务器测试，配置主题，修改参数等等3.本地Git+Hex与Github关联">
+<meta name="twitter:image" content="https://niwbie.github.io/image/使用Hexo和git搭建个人博客/1.png">
   
     <link rel="alternative" href="/atom.xml" title="isee&#39;blog" type="application/atom+xml">
   
@@ -121,9 +132,7 @@
 </nav>
 
       <div class="body-wrap">
-        
-  
-    <article id="post-使用Hexo-Ghuhub搭建个人博客" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-使用Hexo-Ghuhub搭建个人博客" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <input type="hidden" class="isFancy" />
@@ -132,8 +141,8 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/11/07/使用Hexo-Ghuhub搭建个人博客/">使用Hexo+Git搭建个人博客</a>
+    <h1 class="article-title" itemprop="name">
+      使用Hexo+Git搭建个人博客
     </h1>
   
 
@@ -142,9 +151,48 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h2 id="安装准备"><a href="#安装准备" class="headerlink" title="安装准备:"></a>安装准备:</h2><p>1.Node.js、Git、Github<br>2.本地搭建Hexo框架，本地服务器测试，配置主题，修改参数等等<br>3.本地Git+Hex与Github关联</p>
-        <p class="article-more-link">
-          <a class="article-more-a"  href="/2016/11/07/使用Hexo-Ghuhub搭建个人博客/#more">more >></a>
-        </p>
+<a id="more"></a>
+<h2 id="安装过程"><a href="#安装过程" class="headerlink" title="安装过程:"></a>安装过程:</h2><ol>
+<li><p>0x01 安装Git<br>从 <a href="http://msysgit.github.io" target="_blank" rel="external">http://msysgit.github.io</a> 下载，然后按默认选项安装即可。<br>安装完成后，在开始菜单里找到“Git”-&gt;“Git Bash”，蹦出一个类似命令行窗口的东西，就说明Git安装成功！或者打开cmd命令窗口,输入 Git –version查看是否安装成功。</p>
+</li>
+<li><p>0x02 安装Node.js<br>同样的傻瓜式操作。安装完成后cmd输入 node -v看是否安装成功。<br>后面要用到Node.js里的npm命令，所以同样输入npm -v 看是否成功。</p>
+</li>
+<li><p>0x03 申请Github账号<br>这个就不多说了。。。</p>
+</li>
+<li><p>0x04 安装Hexo<br>hexo是基于node.js的静态博客，官网也是搭建在GitHub上</p>
+</li>
+</ol>
+<p>1）在电脑里新建一个文件夹，我这里取名为BLOG。<br>2）使用npm安装Hexo：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ npm install -g hexo-cli</div><div class="line">$ npm install hexo --save</div></pre></td></tr></table></figure></p>
+<p>安装完成后，输入命令看是否安装正确：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo -v</div></pre></td></tr></table></figure></p>
+<p>3）本地运行hexo:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo int</div></pre></td></tr></table></figure></p>
+<p>4）安装生成器:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$npm install</div></pre></td></tr></table></figure></p>
+<p>5）若要在本地运行博客，只要输入命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$hexo s -g</div></pre></td></tr></table></figure></p>
+<ol>
+<li>0x05 同步git</li>
+</ol>
+<p>1）配置和使用 Github</p>
+<p>2）设置用户信息:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ git config --global user.name &quot;yourname&quot;  //你的github用户名</div><div class="line">$ git config --global user.email &quot;youremail&quot; //你的github邮箱</div></pre></td></tr></table></figure>
+<p>3）在github新建一个repository仓库，仓库名必须为yourname.github.io，也就是说yourname必须和你的git用户名一致。<br>      新建后点击设置:<br>      <img src="/image/使用Hexo和git搭建个人博客/1.png" alt="这里写图片描述"></p>
+<p>会看到有个:<br>    <img src="/image/使用Hexo和git搭建个人博客/2.png" alt="这里写图片描述"></p>
+<p>这就是以后访问你博客的地址了。</p>
+<p>然后打开电脑上BLOG文件夹，里面有个”_config.yml”文件，打开，搜索URL，把这个地址拷贝进去,注意(空格！注意空格！注意空格！）:</p>
+<p><img src="/image/使用Hexo和git搭建个人博客/3.png" alt="这里写图片描述"></p>
+<p>4）接着配置”_config.yml文件”</p>
+<p>   翻到最下面，改成:<br>   <img src="/image/使用Hexo和git搭建个人博客/4.png" alt="这里写图片描述"><br>   注意冒号后面要空一格，http后不用加”s”。<br>   其中 repo 后面的地址改成前面创建的git仓库的网址：<br>   <img src="/image/使用Hexo和git搭建个人博客/5.png" alt="这里写图片描述"></p>
+<p>然后执行命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$npm install hexo-deployer-git --save</div></pre></td></tr></table></figure>
+<p>最后：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ hexo g #生成静态网页</div><div class="line">$ hexo d #开始部署</div></pre></td></tr></table></figure>
+<ol>
+<li>0x06 主题<br>在”_config.yml”中，有一个选项theme:<br><img src="/image/使用Hexo和git搭建个人博客/6.png" alt="这里写图片描述"></li>
+</ol>
+<p>我这里使用的是别人git上的主题yilia。具体步骤可以去git上搜索。</p>
+<ol>
+<li>0x07 常用命令</li>
+</ol>
+<p>部署步骤<br>每次部署的步骤，可按以下三步来进行。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ hexo clean</div><div class="line">$ hexo generate</div><div class="line">$ hexo deploy</div></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$hexo new&quot;postName&quot; #新建文章</div><div class="line">$hexo new page&quot;pageName&quot; #新建页面</div><div class="line">$hexo generate #生成静态页面至public目录</div><div class="line">$hexo server #开启预览访问端口（默认端口4000，&apos;ctrl + c&apos;关闭server）</div><div class="line">$hexo deploy #将.deploy目录部署到GitHub</div><div class="line">$hexo help # 查看帮助</div><div class="line">$hexo version #查看Hexo的版</div></pre></td></tr></table></figure>
       
     </div>
     <div class="article-info article-info-index">
@@ -165,57 +213,37 @@
   </div>
 </article>
 
-
-
-
-
-
-
-
-
-
   
-    <article id="post-看雪CTF-2016第一题Writeup" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
+<nav id="article-nav">
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/11/03/看雪CTF-2016第一题Writeup/">看雪CTF 2016第一题Writeup</a>
-    </h1>
   
+    <a href="/2016/11/03/看雪CTF-2016第一题Writeup/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">看雪CTF 2016第一题Writeup</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>源程序：<a href="http://pan.baidu.com/s/1qYzsTic">http://pan.baidu.com/s/1qYzsTic</a><br>一个菜鸟的分析，将就着看吧</p>
-        <p class="article-more-link">
-          <a class="article-more-a"  href="/2016/11/03/看雪CTF-2016第一题Writeup/#more">more >></a>
-        </p>
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      <a href="/2016/11/03/看雪CTF-2016第一题Writeup/" class="archive-article-date">
-  	<time datetime="2016-11-03T06:35:33.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-11-03</time>
-</a>
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CrackMe/">CrackMe</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/逆向/">逆向</a></li></ul>
+
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+	    <a class="jiathis_button_twitter"></a>
+	    <a class="jiathis_button_plus"></a> 
+	    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
 	</div>
-
-      
-
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
+	<script type="text/javascript" src="//v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
 
 
 
@@ -223,11 +251,6 @@
 
 
 
-
-
-
-  
-  
 
 
       </div>
@@ -249,8 +272,8 @@
 		fancybox: true,
 		mathjax: false,
 		animate: true,
-		isHome: true,
-		isPost: false,
+		isHome: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,

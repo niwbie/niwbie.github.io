@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <link rel="dns-prefetch" href="https://niwbie.github.io">
+  <title>看雪CTF 2016第一题Writeup | isee&#39;blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="源程序：http://pan.baidu.com/s/1qYzsTic一个菜鸟的分析，将就着看吧">
+<meta property="og:type" content="article">
+<meta property="og:title" content="看雪CTF 2016第一题Writeup">
+<meta property="og:url" content="https://niwbie.github.io/2016/11/03/看雪CTF-2016第一题Writeup/index.html">
+<meta property="og:site_name" content="isee'blog">
+<meta property="og:description" content="源程序：http://pan.baidu.com/s/1qYzsTic一个菜鸟的分析，将就着看吧">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第一题Writeup/1.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第一题Writeup/2.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第一题Writeup/3.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第一题Writeup/4.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第一题Writeup/5.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第一题Writeup/6.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第一题Writeup/7.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第一题Writeup/8.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第一题Writeup/9.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第一题Writeup/10.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第一题Writeup/11.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第一题Writeup/12.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第一题Writeup/13.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第一题Writeup/14.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第一题Writeup/15.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第一题Writeup/16.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第一题Writeup/17.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第一题Writeup/18.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第一题Writeup/19.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第一题Writeup/20.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第一题Writeup/21.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第一题Writeup/22.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第一题Writeup/23.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第一题Writeup/24.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第一题Writeup/25.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第一题Writeup/26.png">
+<meta property="og:updated_time" content="2016-11-07T12:00:06.905Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="看雪CTF 2016第一题Writeup">
+<meta name="twitter:description" content="源程序：http://pan.baidu.com/s/1qYzsTic一个菜鸟的分析，将就着看吧">
+<meta name="twitter:image" content="https://niwbie.github.io/image/看雪CTF2016第一题Writeup/1.png">
+  
+    <link rel="alternative" href="/atom.xml" title="isee&#39;blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/main.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+      <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img src="null" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">isee</a></h1>
+		</hgroup>
+
+		
+
+		<nav class="header-menu">
+			<ul>
+			
+				<li><a href="/">主页</a></li>
+	        
+			</ul>
+		</nav>
+		<nav class="header-smart-menu">
+	        
+    		
+    			
+    			<a class="js-smart-menu" data-idx="0" href="javascript:void(0)">所有文章</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="1" href="javascript:void(0)">标签</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="2" href="javascript:void(0)">友链</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="3" href="javascript:void(0)">关于我</a>
+    			
+    			
+            
+		</nav>
+		<nav class="header-nav">
+			<div class="social">
+				
+					<a class="rss" target="_blank" href="#" title="rss">rss</a>
+		        
+			</div>
+		</nav>
+	</header>		
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"><i class="icon-list"></i></div>
+  		<h1 class="header-author js-mobile-header hide">isee</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				
+					<img src="null" class="js-avatar">
+				
+			</div>
+			<hgroup>
+			  <h1 class="header-author">isee</h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="rss" target="_blank" href="#" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap">
+        <article id="post-看雪CTF-2016第一题Writeup" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      看雪CTF 2016第一题Writeup
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>源程序：<a href="http://pan.baidu.com/s/1qYzsTic" target="_blank" rel="external">http://pan.baidu.com/s/1qYzsTic</a><br>一个菜鸟的分析，将就着看吧</p>
+<a id="more"></a>
+<p>首先打开程序是这样的:<br><img src="/image/看雪CTF2016第一题Writeup/1.png" alt="这里写图片描述"></p>
+<p>查壳后发现没有加壳，OK那就随便输一个password吧：<br><img src="/image/看雪CTF2016第一题Writeup/2.png" alt="这里写图片描述"></p>
+<p>用IDA打开，从导入表里查看MessageBoxW的调用，很快找到了调用处：0x402120，容易看出是个消息循环的处理函数。由于是个循环函数，所以不好再这里下段点，那在IDA中继续往下看。猜想应该会调用GetWindowTextW之类的函数，果然：<br><img src="/image/看雪CTF2016第一题Writeup/3.png" alt="这里写图片描述"></p>
+<p>在OD中0x40232处，下断<br>这中间就是获取并设置运行次数的，然后看到有个goto LABEL_38，往上找，是个创建线程的函数:<br><img src="/image/看雪CTF2016第一题Writeup/4.png" alt="这里写图片描述"></p>
+<p>参数是v18，就是0x4020E0。这样猜想应该是另外开了一个线程来处理密码。结合IDA看函数0x402120,应该是另外那个线程处理并判断完密码之后，发送Message，然后主线程判断Message的参数进行弹框提示。然后就在这个0x4020E0处下断点。<br>由于这个线程函数在IDA中无法查看反汇编，那么我们只能用OD来一步步地调试了。<br>这里有一个小技巧，从下图的IDA中可以看出，当接受到的参数是1035(0x40B)时弹出破解成功，那么我们就找SendMessageW函数，看有没有那个参数是0x40B的。<br><img src="/image/看雪CTF2016第一题Writeup/5.png" alt="这里写图片描述"></p>
+<p>然而并没有找到，后来才发现原来是调用的PostMessageW的。其实找PostMessage的刚开始也没发现0x40B参数的，偶然中发现：<br><img src="/image/看雪CTF2016第一题Writeup/6.png" alt="这里写图片描述"></p>
+<p>往上追踪发现是函数调用顺序0x401A60-&gt;0x401870-&gt;PostMessage，那么现在在0x401A60<br>但是F9后并没有断下来。。。看来前面还做了一些判断，我们输入的未通过，然后就弹错误框了。那这部分先留着，在看看还有没有其他的判断。</p>
+<p>从0x4020E0往下走，遇到Call的先F8过去，因为不可能每个函数都进去仔细看。然后发现在地址0x4020E8处call完00401CB0后就弹出错误框了，看来这里面应该是判断函数，进去，并在0c401CB0下断。</p>
+<p>在0x401CB0中，跳到0x401D33后，SendMessage，并且wParam参数是0x40F，从IDA可以看出是打印错误框<br><img src="/image/看雪CTF2016第一题Writeup/7.png" alt="这里写图片描述"></p>
+<p>那么看它前面调用了0x401C00,并且返回值eax=0。那么继续跟进去下断0x401C00.<br>0x401C00整个函数退出之后call了0x401D33，而且之前很多地方都有call这个函数，猜测应该是通知主线程弹出错误框。分析之后，0x401C00函数再次调用了GetWindowTextW函数获取输入，在0x401C70处，将输入的password逐个字符与’b’进行比较:<br><img src="/image/看雪CTF2016第一题Writeup/8.png" alt="这里写图片描述"></p>
+<p>发现有‘b’字符，跳转到0x401C93,把1放入eax中.</p>
+<p>同样，在下面0x401D0F处call了0x402A50，也是查找字符串中是否有‘p’:<br><img src="/image/看雪CTF2016第一题Writeup/9.png" alt="这里写图片描述"></p>
+<p>然后是0x401D1F，call 0x401CB0，有从头执行了这个函数，继续跟。这一次在0x401CD0处进行了跳转，继续在0x401D57处下断：<br><img src="/image/看雪CTF2016第一题Writeup/10.png" alt="这里写图片描述"></p>
+<p>在0x401D57里面有一次调用了GetWindowTextW函数获取输入。这里面有一个问题调试了很久没有找到原因：在<br>0x401DC9处call了004048DE,然后eax与2进行比较，如果跳转到0x401E3E，整个程序就退出了。但有时候又不会跳转。在IDA里看这个0x4048DE函数：<br><img src="/image/看雪CTF2016第一题Writeup/11.png" alt="这里写图片描述"></p>
+<p>貌似也和判断函数没有关系。后面调试时我每次在这里下段点，强行不让它跳转。<br>整个函数的重点是统计输入的字符串长度，然后与7比较，如果小于7则弹出错误框1，大于7则弹出错误框2.<br>看来密码的长度必须为7：<br><img src="/image/看雪CTF2016第一题Writeup/12.png" alt="这里写图片描述"><br><img src="/image/看雪CTF2016第一题Writeup/13.png" alt="这里写图片描述"><br><img src="/image/看雪CTF2016第一题Writeup/14.png" alt="这里写图片描述"></p>
+<p>构造一个包含’b’、’p’，长度为7的密码，判断完长度后会跳转0x401DF6-&gt;0x401E24<br><img src="/image/看雪CTF2016第一题Writeup/15.png" alt="这里写图片描述"><br><img src="/image/看雪CTF2016第一题Writeup/16.png" alt="这里写图片描述"></p>
+<p>接着就是call 0x401A60。果然来到了上面说的0x401A60了。现在可以下断了。</p>
+<p>先用IDA看看这个函数。。。看了之后，算了。。。什么鬼，根本看不懂。<br>还是直接OD一步一步来吧。</p>
+<p>0x401A60中，还是一大串的比较，看不懂。。。然后到了最后，刚才是在0x401870函数中调用了PostMessage的，那么先看下这里面有什么，在0x401870处下断:<br>又是经过了一大段看不懂的算法，然后在0x40195C处统计了长度以及字符串中字母的个数：<br><img src="/image/看雪CTF2016第一题Writeup/17.png" alt="这里写图片描述"></p>
+<p>然后提取出其中的字母，并转化为大写：<br><img src="/image/看雪CTF2016第一题Writeup/18.png" alt="这里写图片描述"></p>
+<p>然后比较字母的个数是否为2，不是则弹错：<br><img src="/image/看雪CTF2016第一题Writeup/19.png" alt="这里写图片描述"></p>
+<p>最重要的是0x401A10这里：<br><img src="/image/看雪CTF2016第一题Writeup/20.png" alt="这里写图片描述"></p>
+<p>这里[EBP+ECX<em>2-0x10</em>]，其中[EBP-0X10]是UNICODE的“15PB”。接下来的分析中看出来，这里是将输入的字符串取第3-6位，然后与“15PB”进行比较，如果不符合就调到0x401A39进行PostMessageW（wParam为00x4A）,那么将弹出：<br><img src="/image/看雪CTF2016第一题Writeup/21.png" alt="这里写图片描述"></p>
+<p>所以从这里又得出了密码第3到5位为”15pb”，而且剩下的3位都是数字。</p>
+<p>接下来再看下IDA中0x401870在PostMessageW还做了那些判断：<br><img src="/image/看雪CTF2016第一题Writeup/22.png" alt="这里写图片描述"></p>
+<p>就是0x401740。用IDA一看，还是一大堆算法看不懂。。。<br>我这里是把OD和IDA一行一行对到来看的，不知道大神们都是怎么处理这种算法的。。。<br>一步一步跟下去，到这里发现，这里取了字符串“1234556789”前两位，分别于输入的前两位进行比较，如果不相等，则返回0：<br><img src="/image/看雪CTF2016第一题Writeup/23.png" alt="这里写图片描述"></p>
+<p>并且做了验证，前两位加起来的ASCII值要为0x63。所以可以推断出密码的前两位是1和2：<br><img src="/image/看雪CTF2016第一题Writeup/24.png" alt="这里写图片描述"></p>
+<p>最后取出input[6]，也就是输入密码的最后一位，与0x38进行比较：<br><img src="/image/看雪CTF2016第一题Writeup/25.png" alt="这里写图片描述"></p>
+<p>得出最后一位密码是8。<br>至此得到所有密码。</p>
+<p>输入1215pb8,破解成功：<br><img src="/image/看雪CTF2016第一题Writeup/26.png" alt="这里写图片描述"></p>
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/11/03/看雪CTF-2016第一题Writeup/" class="archive-article-date">
+  	<time datetime="2016-11-03T06:35:33.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-11-03</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CrackMe/">CrackMe</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/逆向/">逆向</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/2016/11/07/使用Hexo-Ghuhub搭建个人博客/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          使用Hexo+Git搭建个人博客
+        
+      </div>
+    </a>
+  
+  
+</nav>
+
+
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+	    <a class="jiathis_button_twitter"></a>
+	    <a class="jiathis_button_plus"></a> 
+	    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="//v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+
+
+
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 isee
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    <script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: false,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false,
+		root: "/",
+		innerArchive: true
+	}
+</script>
+
+<script src="/./main.js"></script>
+
+
+    
+<div class="tools-col">
+  <ul class="btn-wrap">
+    
+      <li class="chose" data-hook="tools-section-all"><span class="text">全部</span><i class="icon-book"></i></li>
+    
+    
+      <li data-hook="tools-section-tag"><span class="text">标签</span><i class="icon-price-tags"></i></li>
+    
+    
+      <li data-hook="tools-section-friends"><span class="text">友链</span><i class="icon-link"></i></li>
+    
+    
+      <li data-hook="tools-section-me"><span class="text">我</span><i class="icon-smile"></i></li>
+    
+  </ul>
+  <div class="tools-wrap">
+    
+    	<section class="tools-section tools-section-all chose">
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-tag">
+    			<div class="widget tagcloud" id="js-tagcloud">
+    				<a href="/tags/CrackMe/" style="font-size: 10px;">CrackMe</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/ctf/" style="font-size: 10px;">ctf</a> <a href="/tags/逆向/" style="font-size: 10px;">逆向</a>
+    			</div>
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-friends">
+  		
+  			<div class="friends-wrap" id="js-friends">
+  			
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">友情链接1</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">友情链接2</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">友情链接3</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">友情链接4</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">友情链接5</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">友情链接6</a>
+  	        
+  	        </div>
+  		
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-me">
+  	  	
+  	  		<div class="aboutme-wrap" id="js-aboutme">汪！</div>
+  	  	
+    	</section>
+    
+  </div>
+  
+</div>
+    <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+  </div>
+</body>
+</html>
