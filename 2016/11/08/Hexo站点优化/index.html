@@ -25,7 +25,8 @@
 <meta property="og:image" content="https://niwbie.github.io/image/Hexo站点优化/1.png">
 <meta property="og:image" content="https://niwbie.github.io/image/Hexo站点优化/2.png">
 <meta property="og:image" content="https://niwbie.github.io/image/Hexo站点优化/3.png">
-<meta property="og:updated_time" content="2016-11-08T07:10:56.267Z">
+<meta property="og:image" content="https://niwbie.github.io/image/Hexo站点优化/4.png">
+<meta property="og:updated_time" content="2016-11-08T07:30:28.188Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hexo站点优化">
 <meta name="twitter:description" content="上一篇博客中介绍了Hexo的站点配置及与GitHub的关联操作,这篇主要是介绍为Hexo博客添加多说评论以及增加访客统计功能~~
@@ -182,23 +183,15 @@
 <li>0x3 使用“不蒜子”显示访客数量</li>
 </ol>
 <p>很简单只有两个步骤：</p>
-<pre><code>1)：打开themes\yilia\layout\_partial\after-footer.ejs文件，在最后插入以下脚本：
-</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">	&lt;script async src=&quot;https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js&quot;&gt;</div><div class="line">	&lt;/script&gt;</div><div class="line">```	</div><div class="line">	2) 打开themes\yilia\layout\_partial\footer.ejs文件，插入一个标签：</div></pre></td></tr></table></figure>
-<pre><code> &lt;span id=&quot;busuanzi_container_site_pv&quot;&gt;
-             &lt;i class=&quot;fa fa-flag&quot;&gt;&lt;/i&gt;    你是第&lt;span id=&quot;busuanzi_value_site_pv&quot;&gt;&lt;i class=&quot;fa fa-spinner fa-spin&quot;&gt;&lt;/i&gt;&lt;/span&gt;个到访的小伙伴
-        &lt;/span&gt;
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">或者：</div></pre></td></tr></table></figure>
-
- &lt;span id=&quot;busuanzi_container_site_pv&quot;&gt;
-             &lt;i class=&quot;fa fa-flag&quot;&gt;&lt;/i&gt;    你是第&lt;span id=&quot;busuanzi_value_site_pv&quot;&gt;&lt;i class=&quot;fa fa-spinner fa-spin&quot;&gt;&lt;/i&gt;&lt;/span&gt;个到访的小伙伴
-        &lt;/span&gt;
-```
-
-第一个是pv的方式，单个用户连续点击n篇文章，记录n次访问量。
-第二个是uv的方式，单个用户连续点击n篇文章，只记录1次访客数。
-
-![这里写图片描述](/image/Hexo站点优化/4.png)
-</code></pre><p>完成。收工。</p>
+<p>1.打开themes\yilia\layout_partial\after-footer.ejs文件，在最后插入以下脚本：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&lt;script async src=&quot;https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js&quot;&gt;</div><div class="line">&lt;/script&gt;</div></pre></td></tr></table></figure>
+<p>2.打开themes\yilia\layout_partial\footer.ejs文件，插入一个标签：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;span id=&quot;busuanzi_container_site_pv&quot;&gt;</div><div class="line">            &lt;i class=&quot;fa fa-flag&quot;&gt;&lt;/i&gt;    你是第&lt;span id=&quot;busuanzi_value_site_pv&quot;&gt;&lt;i class=&quot;fa fa-spinner fa-spin&quot;&gt;&lt;/i&gt;&lt;/span&gt;个到访的小伙伴</div><div class="line">       &lt;/span&gt;</div></pre></td></tr></table></figure>
+<p>或者：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;span id=&quot;busuanzi_container_site_pv&quot;&gt;</div><div class="line">            &lt;i class=&quot;fa fa-flag&quot;&gt;&lt;/i&gt;    你是第&lt;span id=&quot;busuanzi_value_site_pv&quot;&gt;&lt;i class=&quot;fa fa-spinner fa-spin&quot;&gt;&lt;/i&gt;&lt;/span&gt;个到访的小伙伴</div><div class="line">       &lt;/span&gt;</div></pre></td></tr></table></figure>
+<p>第一个是pv的方式，单个用户连续点击n篇文章，记录n次访问量。<br>第二个是uv的方式，单个用户连续点击n篇文章，只记录1次访客数。</p>
+<p><img src="/image/Hexo站点优化/4.png" alt="这里写图片描述"></p>
+<p>完成。收工。</p>
 
       
     </div>
