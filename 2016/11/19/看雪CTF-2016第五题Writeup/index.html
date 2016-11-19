@@ -6,35 +6,27 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://niwbie.github.io">
-  <title>Hexo站点优化 | isee&#39;blog</title>
+  <title>看雪CTF 2016第五题Writeup(附RC4算法) | isee&#39;blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="上一篇博客中介绍了Hexo的站点配置及与GitHub的关联操作,这篇主要是介绍为Hexo博客添加多说评论以及增加访客统计功能~~
-
-0x1 添加多说评论Hexo默认使用国外比较流行的dispus，在国内大多数用的是多说评论。支持一些国产，而且试了一下超级简单，分分钟就能搞定。
-
-首先，去多说官网注册一下。我直接用QQ号就能登录了，然后就是设置一些信息：">
+  <meta name="description" content="源程序：http://pan.baidu.com/s/1bpsYvd9首先打开程序，看是VC6写的MFC程序。随便输入一个，点击按钮并没有什么反应。那么就手动去找它的验证函数。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hexo站点优化">
-<meta property="og:url" content="https://niwbie.github.io/2016/11/08/Hexo站点优化/index.html">
+<meta property="og:title" content="看雪CTF 2016第五题Writeup(附RC4算法)">
+<meta property="og:url" content="https://niwbie.github.io/2016/11/19/看雪CTF-2016第五题Writeup/index.html">
 <meta property="og:site_name" content="isee'blog">
-<meta property="og:description" content="上一篇博客中介绍了Hexo的站点配置及与GitHub的关联操作,这篇主要是介绍为Hexo博客添加多说评论以及增加访客统计功能~~
-
-0x1 添加多说评论Hexo默认使用国外比较流行的dispus，在国内大多数用的是多说评论。支持一些国产，而且试了一下超级简单，分分钟就能搞定。
-
-首先，去多说官网注册一下。我直接用QQ号就能登录了，然后就是设置一些信息：">
-<meta property="og:image" content="https://niwbie.github.io/image/Hexo站点优化/1.png">
-<meta property="og:image" content="https://niwbie.github.io/image/Hexo站点优化/2.png">
-<meta property="og:image" content="https://niwbie.github.io/image/Hexo站点优化/3.png">
-<meta property="og:image" content="https://niwbie.github.io/image/Hexo站点优化/4.png">
-<meta property="og:updated_time" content="2016-11-08T07:30:28.188Z">
+<meta property="og:description" content="源程序：http://pan.baidu.com/s/1bpsYvd9首先打开程序，看是VC6写的MFC程序。随便输入一个，点击按钮并没有什么反应。那么就手动去找它的验证函数。">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第五题Writeup/1.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第五题Writeup/2.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第五题Writeup/3.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第五题Writeup/4.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第五题Writeup/5.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第五题Writeup/6.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第五题Writeup/7.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第五题Writeup/9.png">
+<meta property="og:updated_time" content="2016-11-19T11:04:17.492Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo站点优化">
-<meta name="twitter:description" content="上一篇博客中介绍了Hexo的站点配置及与GitHub的关联操作,这篇主要是介绍为Hexo博客添加多说评论以及增加访客统计功能~~
-
-0x1 添加多说评论Hexo默认使用国外比较流行的dispus，在国内大多数用的是多说评论。支持一些国产，而且试了一下超级简单，分分钟就能搞定。
-
-首先，去多说官网注册一下。我直接用QQ号就能登录了，然后就是设置一些信息：">
-<meta name="twitter:image" content="https://niwbie.github.io/image/Hexo站点优化/1.png">
+<meta name="twitter:title" content="看雪CTF 2016第五题Writeup(附RC4算法)">
+<meta name="twitter:description" content="源程序：http://pan.baidu.com/s/1bpsYvd9首先打开程序，看是VC6写的MFC程序。随便输入一个，点击按钮并没有什么反应。那么就手动去找它的验证函数。">
+<meta name="twitter:image" content="https://niwbie.github.io/image/看雪CTF2016第五题Writeup/1.png">
   
     <link rel="alternative" href="/atom.xml" title="isee&#39;blog" type="application/atom+xml">
   
@@ -150,7 +142,7 @@
 </nav>
 
       <div class="body-wrap">
-        <article id="post-Hexo站点优化" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-看雪CTF-2016第五题Writeup" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <input type="hidden" class="isFancy" />
@@ -160,7 +152,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Hexo站点优化
+      看雪CTF 2016第五题Writeup(附RC4算法)
     </h1>
   
       
@@ -168,44 +160,35 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>上一篇博客中介绍了Hexo的站点配置及与GitHub的关联操作,这篇主要是介绍为Hexo博客添加多说评论以及增加访客统计功能~~</p>
-<ol>
-<li>0x1 添加多说评论<br>Hexo默认使用国外比较流行的dispus，在国内大多数用的是多说评论。支持一些国产，而且试了一下超级简单，分分钟就能搞定。</li>
-</ol>
-<p>首先，去多说官网注册一下。我直接用QQ号就能登录了，然后就是设置一些信息：<br><a id="more"></a><br>      <img src="/image/Hexo站点优化/1.png" alt="这里写图片描述"></p>
-<p>注意之前填写的时候有让输设置一个独立的域名，记住它，然后到themes/yilia下的_config.yml文件，在”duoshuo”后面填上这个域名：<br>      <img src="/image/Hexo站点优化/2.png" alt="这里写图片描述"></p>
-<ol>
-<li>0x2 使用百度统计</li>
-</ol>
-<p>首先在百度统计官网注册，到管理中心获取代码：<br>      <img src="/image/Hexo站点优化/3.png" alt="这里写图片描述"></p>
-<p>然后到themes\yilia\layout_partial目录下的after-footer.ejs文件里，在最后添加这段脚本即可。<br>发布后点击管理中心的代码安装检查查看是否安装成功。<br>这个貌似只能在百度管理中心看到具体的访问人数，但是怎么才能在自己的网页中显示的，我找了一个插件“不蒜子”来实现。</p>
-<ol>
-<li>0x3 使用“不蒜子”显示访客数量</li>
-</ol>
-<p>很简单只有两个步骤：</p>
-<p>1.打开themes\yilia\layout_partial\after-footer.ejs文件，在最后插入以下脚本：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&lt;script async src=&quot;https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js&quot;&gt;</div><div class="line">&lt;/script&gt;</div></pre></td></tr></table></figure>
-<p>2.打开themes\yilia\layout_partial\footer.ejs文件，插入一个标签：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;span id=&quot;busuanzi_container_site_pv&quot;&gt;</div><div class="line">            &lt;i class=&quot;fa fa-flag&quot;&gt;&lt;/i&gt;    你是第&lt;span id=&quot;busuanzi_value_site_pv&quot;&gt;&lt;i class=&quot;fa fa-spinner fa-spin&quot;&gt;&lt;/i&gt;&lt;/span&gt;个到访的小伙伴</div><div class="line">       &lt;/span&gt;</div></pre></td></tr></table></figure>
-<p>或者：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;span id=&quot;busuanzi_container_site_pv&quot;&gt;</div><div class="line">            &lt;i class=&quot;fa fa-flag&quot;&gt;&lt;/i&gt;    你是第&lt;span id=&quot;busuanzi_value_site_pv&quot;&gt;&lt;i class=&quot;fa fa-spinner fa-spin&quot;&gt;&lt;/i&gt;&lt;/span&gt;个到访的小伙伴</div><div class="line">       &lt;/span&gt;</div></pre></td></tr></table></figure>
-<p>第一个是pv的方式，单个用户连续点击n篇文章，记录n次访问量。<br>第二个是uv的方式，单个用户连续点击n篇文章，只记录1次访客数。</p>
-<p><img src="/image/Hexo站点优化/4.png" alt="这里写图片描述"></p>
-<p>完成。收工。</p>
+        <p>源程序：<a href="http://pan.baidu.com/s/1bpsYvd9" target="_blank" rel="external">http://pan.baidu.com/s/1bpsYvd9</a><br>首先打开程序，看是VC6写的MFC程序。随便输入一个，点击按钮并没有什么反应。那么就手动去找它的验证函数。</p>
+<a id="more"></a>
+<p>一般这种MFC程序都是使用消息机制，等待按钮按下后进入判断函数，或者是消息循环不断地去读取。经验证这题是使用第一种方法。</p>
+<p>先用IDA打开看看有没有什么可疑函数，但是没有找到GetWindowText之类的。用OD打开，给这个Button下消息断点0x202,然后给.text下断，点击按钮后就来到验证函数：0x401100。用IDA打开果然是：<br>      <img src="/image/看雪CTF2016第五题Writeup/1.png" alt="这里写图片描述"></p>
+<p>从IDA中初步看来，按钮按下后的处理部分应该是在这个分支中：<br>        <img src="/image/看雪CTF2016第五题Writeup/2.png" alt="这里写图片描述"></p>
+<p>那么在OD中给这个a2与273比较的地方下断：<br>        <img src="/image/看雪CTF2016第五题Writeup/3.png" alt="这里写图片描述"></p>
+<p>接着获取edit框的句柄并发送信息：<br>        <img src="/image/看雪CTF2016第五题Writeup/4.png" alt="这里写图片描述"></p>
+<p>然后判断是否全为数字，如果有非数字，则v4=0，不满足后面的判断。所以条件限制为6位的全数字：<br>        <img src="/image/看雪CTF2016第五题Writeup/5.png" alt="这里写图片描述"></p>
+<p>然后往下执行完函数sub_4010C0后，返回值为0，不满足。那么判断函数应该就是这个sub_4010C0了。用IDA看看，是对byte_406030的128位进行相加，看是否等于10617。看来之前是对这个地址进行了处理。重新输入，对这个地址下内存断点，看是在哪里做了处理：</p>
+<p><img src="/image/看雪CTF2016第五题Writeup/6.png" alt="这里写图片描述"></p>
+<p>断在了0x401097这个地方，对0x406030地址进行了处理。查看调用处，原来就是刚才上面那个函数sub_401000。这样，整个流程就清楚了：<br>在sub_401000函数里面结合输入的注册码对地址0x406030进行变换，然后验证0x406030的128相加是否满足条件。满足的话则激活窗口：<br>        <img src="/image/看雪CTF2016第五题Writeup/7.png" alt="这里写图片描述"></p>
+<p>同时执行406030处的函数。这样看来0x406030就相当于是一个shell了。<br>所以重点看下sub_401000。</p>
+<p>进去看到是个算法。。。瞬间就懵逼了。。。算法一直都是弱项，看这种伪代码和汇编更是头疼。不管了，直接复制IDA的伪代码，进行调试修改后直接跑，几秒钟结果就出来了：</p>
+<p><img src="/image/看雪CTF2016第五题Writeup/9.png" alt="这里写图片描述"></p>
+<p>后来经过提醒，才知道这是一个RC4算法。所以仔细去研究了一下RC4算法。</p>
+<p>RC4算法是一种对称加密算法。<br>RC4算法的特点是简单，速度快，且秘钥长度可变，范围为1-256字节。<br>RC4算法包括 初始化算法（KSA） 和 伪随机子密码生成算法（PRGA）两个部分。</p>
+<p>先上代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">void init(BYTE *s, BYTE *key, unsigned long Len)</div><div class="line">&#123;</div><div class="line">    int i = 0, j = 0;</div><div class="line">    char k[256] = &#123;0&#125;;</div><div class="line">    BYTE tmp = 0;</div><div class="line">    for (i = 0; i&lt;256; i++)</div><div class="line">    &#123;</div><div class="line">        s[i] = i;</div><div class="line">        k[i] = key[i%Len];</div><div class="line">    &#125;</div><div class="line">    for (i = 0; i&lt;256; i++)</div><div class="line">    &#123;</div><div class="line">        j = (j + s[i] + k[i]) % 256;</div><div class="line">        tmp = s[i];//交换</div><div class="line">        s[i] = s[j];</div><div class="line">        s[j] = tmp;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这里讲S-Box的长度定为256，秘钥为Key，秘钥长度为Len。<br>在初始化时，令s[i] = i,利用秘钥Key对数组对数组s做一个置换，主要是将s搅乱，i确保s的每个元素都能得到处理，j保证s的搅乱是随机的。且不同的s在经过伪随机子密码生成算法的处理后可以得到不同的子密钥。<br>这个初始化之后，将s与明文进行xor运算，就得到密文。同样的，将密文与s进行xor运算就得到明文。</p>
+<p>以下是加密过程：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">void crypt(BYTE*s, BYTE *Data, unsigned long Len)</div><div class="line">&#123;</div><div class="line">    int i = 0, j = 0, t = 0;</div><div class="line">    unsigned long k = 0;</div><div class="line">    BYTE tmp;</div><div class="line">    for (k = 0; k&lt;Len; k++)</div><div class="line">    &#123;</div><div class="line">        i = (i + 1) % 256;</div><div class="line">        j = (j + s[i]) % 256;</div><div class="line">        tmp = s[i]; //交换</div><div class="line">        s[i] = s[j];</div><div class="line">        s[j] = tmp;</div><div class="line">        t = (s[i] + s[j]) % 256;</div><div class="line">        Data[k] ^= s[t];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这样就得到了密文Data，同样将密文作为参数调用crypt函数，就可得到明文，密文长度和明文长度是一致的。</p>
 
       
     </div>
     <div class="article-info article-info-index">
       
-      <a href="/2016/11/08/Hexo站点优化/" class="archive-article-date">
-  	<time datetime="2016-11-08T07:05:22.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-11-08</time>
+      <a href="/2016/11/19/看雪CTF-2016第五题Writeup/" class="archive-article-date">
+  	<time datetime="2016-11-19T10:51:03.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-11-19</time>
 </a>
       
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hexo/">Hexo</a></li></ul>
-	</div>
-
       
 
       <div class="clearfix"></div>
@@ -216,18 +199,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2016/11/19/看雪CTF-2016第五题Writeup/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          看雪CTF 2016第五题Writeup(附RC4算法)
-        
-      </div>
-    </a>
   
-  
-    <a href="/2016/11/07/使用Hexo-Ghuhub搭建个人博客/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">使用Hexo+Git搭建个人博客</div>
+    <a href="/2016/11/08/Hexo站点优化/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Hexo站点优化</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -261,7 +235,7 @@
 
 <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="Hexo站点优化" data-title="Hexo站点优化" data-url="https://niwbie.github.io/2016/11/08/Hexo站点优化/"></div>
+	<div class="ds-thread" data-thread-key="看雪CTF-2016第五题Writeup" data-title="看雪CTF 2016第五题Writeup(附RC4算法)" data-url="https://niwbie.github.io/2016/11/19/看雪CTF-2016第五题Writeup/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">
