@@ -8,14 +8,12 @@
   <link rel="dns-prefetch" href="https://niwbie.github.io">
   <title>看雪CTF-2016第十题Writeup | isee&#39;blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="这是一个很神奇的程序。首先查壳，VS2008写的，无壳。运行起来就退不出了，使用命令行运行，居然连命令行窗口也退不出。估计是调用了EnableWindow之类的函数吧。随便输一个注册码，弹出“error！”：  
-用OD载入，首先查找字符串，但是没有找到“error”等明文。查找导入函数，也没有找到printf等关键，倒确实是发现了EnableWindow。那就先从头开始跑一跑吧。这个程序是在w">
+  <meta name="description" content="源程序：http://pan.baidu.com/s/1cCEpMu这是一个很神奇的程序。首先查壳，VS2008写的，无壳。运行起来就退不出了，使用命令行运行，居然连命令行窗口也退不出。估计是调用了EnableWindow之类的函数吧。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="看雪CTF-2016第十题Writeup">
-<meta property="og:url" content="https://niwbie.github.io/2016/12/08/看雪CTF-2016第十题Writeup/index.html">
+<meta property="og:url" content="https://niwbie.github.io/2016/11/21/看雪CTF-2016第十题Writeup/index.html">
 <meta property="og:site_name" content="isee'blog">
-<meta property="og:description" content="这是一个很神奇的程序。首先查壳，VS2008写的，无壳。运行起来就退不出了，使用命令行运行，居然连命令行窗口也退不出。估计是调用了EnableWindow之类的函数吧。随便输一个注册码，弹出“error！”：  
-用OD载入，首先查找字符串，但是没有找到“error”等明文。查找导入函数，也没有找到printf等关键，倒确实是发现了EnableWindow。那就先从头开始跑一跑吧。这个程序是在w">
+<meta property="og:description" content="源程序：http://pan.baidu.com/s/1cCEpMu这是一个很神奇的程序。首先查壳，VS2008写的，无壳。运行起来就退不出了，使用命令行运行，居然连命令行窗口也退不出。估计是调用了EnableWindow之类的函数吧。">
 <meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第十题Writeup/1.png">
 <meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第十题Writeup/2.png">
 <meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第十题Writeup/3.png">
@@ -23,11 +21,10 @@
 <meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第十题Writeup/5.png">
 <meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第十题Writeup/6.png">
 <meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第十题Writeup/7.png">
-<meta property="og:updated_time" content="2016-12-08T02:20:47.116Z">
+<meta property="og:updated_time" content="2016-12-08T02:30:58.462Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="看雪CTF-2016第十题Writeup">
-<meta name="twitter:description" content="这是一个很神奇的程序。首先查壳，VS2008写的，无壳。运行起来就退不出了，使用命令行运行，居然连命令行窗口也退不出。估计是调用了EnableWindow之类的函数吧。随便输一个注册码，弹出“error！”：  
-用OD载入，首先查找字符串，但是没有找到“error”等明文。查找导入函数，也没有找到printf等关键，倒确实是发现了EnableWindow。那就先从头开始跑一跑吧。这个程序是在w">
+<meta name="twitter:description" content="源程序：http://pan.baidu.com/s/1cCEpMu这是一个很神奇的程序。首先查壳，VS2008写的，无壳。运行起来就退不出了，使用命令行运行，居然连命令行窗口也退不出。估计是调用了EnableWindow之类的函数吧。">
 <meta name="twitter:image" content="https://niwbie.github.io/image/看雪CTF2016第十题Writeup/1.png">
   
     <link rel="alternative" href="/atom.xml" title="isee&#39;blog" type="application/atom+xml">
@@ -162,8 +159,9 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <a id="more"></a>
-<p>这是一个很神奇的程序。首先查壳，VS2008写的，无壳。运行起来就退不出了，使用命令行运行，居然连命令行窗口也退不出。估计是调用了EnableWindow之类的函数吧。随便输一个注册码，弹出“error！”：<br>  <img src="/image/看雪CTF2016第十题Writeup/1.png" alt="这里写图片描述"></p>
+        <p>源程序：<a href="http://pan.baidu.com/s/1cCEpMu" target="_blank" rel="external">http://pan.baidu.com/s/1cCEpMu</a><br>这是一个很神奇的程序。首先查壳，VS2008写的，无壳。运行起来就退不出了，使用命令行运行，居然连命令行窗口也退不出。估计是调用了EnableWindow之类的函数吧。</p>
+<a id="more"></a>
+<p>随便输一个注册码，弹出“error！”：<br> <img src="/image/看雪CTF2016第十题Writeup/1.png" alt="这里写图片描述"></p>
 <p>用OD载入，首先查找字符串，但是没有找到“error”等明文。查找导入函数，也没有找到printf等关键，倒确实是发现了EnableWindow。那就先从头开始跑一跑吧。这个程序是在win10上调试的，基地址为0x00D70000。<br>一路F8，到了0xD76A2F时，F8程序就退出了，再跑一次，F7进去看。<br>几次过后定位到了导致退出程序的函数：在0xD720D3 调用的0xD71F60。自己研究一下loc_D71F60这里，但是跑了几遍都是直接正常跑的，没发现什么异常，调用了SendMessageW之后就退出了。暴力地把这个函数nop掉，就可以过了：<br> <img src="/image/看雪CTF2016第十题Writeup/2.png" alt="这里写图片描述"></p>
 <p>往下走，调用了sub_D71D90函数获取输入,比较输入的字符串中有没有字符串“TrustMe”：<br> <img src="/image/看雪CTF2016第十题Writeup/3.png" alt="这里写图片描述"></p>
 <p>通过之后调用ntdll.dll中的ZwSetInformationThread()函数，程序就崩了：<br> <img src="/image/看雪CTF2016第十题Writeup/4.png" alt="这里写图片描述"></p>
@@ -176,8 +174,8 @@
     </div>
     <div class="article-info article-info-index">
       
-      <a href="/2016/12/08/看雪CTF-2016第十题Writeup/" class="archive-article-date">
-  	<time datetime="2016-12-08T01:47:57.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-12-08</time>
+      <a href="/2016/11/21/看雪CTF-2016第十题Writeup/" class="archive-article-date">
+  	<time datetime="2016-11-21T01:47:57.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-11-21</time>
 </a>
       
 	<div class="article-tag tagcloud">
@@ -195,9 +193,18 @@
   
 <nav id="article-nav">
   
+    <a href="/2016/11/21/看雪CTF-2016第七题调试部分/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          看雪CTF-2016第七题调试部分
+        
+      </div>
+    </a>
   
-    <a href="/2016/11/21/看雪CTF-2016第七题调试部分/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">看雪CTF-2016第七题调试部分</div>
+  
+    <a href="/2016/11/20/看雪CTF-2016第六题Writeup/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">看雪CTF-2016第六题Writeup</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -231,7 +238,7 @@
 
 <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="看雪CTF-2016第十题Writeup" data-title="看雪CTF-2016第十题Writeup" data-url="https://niwbie.github.io/2016/12/08/看雪CTF-2016第十题Writeup/"></div>
+	<div class="ds-thread" data-thread-key="看雪CTF-2016第十题Writeup" data-title="看雪CTF-2016第十题Writeup" data-url="https://niwbie.github.io/2016/11/21/看雪CTF-2016第十题Writeup/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">
