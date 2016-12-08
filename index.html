@@ -131,6 +131,64 @@
       <div class="body-wrap">
         
   
+    <article id="post-看雪CTF-2016第十题Writeup" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/12/08/看雪CTF-2016第十题Writeup/">看雪CTF-2016第十题Writeup</a>
+    </h1>
+  
+      
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <a id="more"></a>
+<p>这是一个很神奇的程序。首先查壳，VS2008写的，无壳。运行起来就退不出了，使用命令行运行，居然连命令行窗口也退不出。估计是调用了EnableWindow之类的函数吧。随便输一个注册码，弹出“error！”：<br>  <img src="/image/看雪CTF2016第十题Writeup/1.png" alt="这里写图片描述"></p>
+<p>用OD载入，首先查找字符串，但是没有找到“error”等明文。查找导入函数，也没有找到printf等关键，倒确实是发现了EnableWindow。那就先从头开始跑一跑吧。这个程序是在win10上调试的，基地址为0x00D70000。<br>一路F8，到了0xD76A2F时，F8程序就退出了，再跑一次，F7进去看。<br>几次过后定位到了导致退出程序的函数：在0xD720D3 调用的0xD71F60。自己研究一下loc_D71F60这里，但是跑了几遍都是直接正常跑的，没发现什么异常，调用了SendMessageW之后就退出了。暴力地把这个函数nop掉，就可以过了：<br> <img src="/image/看雪CTF2016第十题Writeup/2.png" alt="这里写图片描述"></p>
+<p>往下走，调用了sub_D71D90函数获取输入,比较输入的字符串中有没有字符串“TrustMe”：<br> <img src="/image/看雪CTF2016第十题Writeup/3.png" alt="这里写图片描述"></p>
+<p>通过之后调用ntdll.dll中的ZwSetInformationThread()函数，程序就崩了：<br> <img src="/image/看雪CTF2016第十题Writeup/4.png" alt="这里写图片描述"></p>
+<p>试了几次之后都是这样，猜测应该是反调试。搜一下这个函数，才知道这个函数可以用来将线程隐藏，从而使调试器接收不到信息：<br>其原型如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line">NTSTATUS</div><div class="line">NTAPI</div><div class="line">ZwSetInformationThread (</div><div class="line">    __in HANDLE ThreadHandle,</div><div class="line">    __in THREADINFOCLASS ThreadInformationClass,</div><div class="line">    __in_bcount(ThreadInformationLength) PVOID ThreadInformation,</div><div class="line">    __in ULONG ThreadInformationLength</div><div class="line">    );</div><div class="line">//</div><div class="line">// Thread Information Classes定义如下</div><div class="line">//ntpsapi.h</div><div class="line">typedef enum _THREADINFOCLASS &#123;</div><div class="line">    ThreadBasicInformation,</div><div class="line">    ThreadTimes,</div><div class="line">    ThreadPriority,</div><div class="line">    ThreadBasePriority,</div><div class="line">    ThreadAffinityMask,</div><div class="line">    ThreadImpersonationToken,</div><div class="line">    ThreadDescriptorTableEntry,</div><div class="line">    ThreadEnableAlignmentFaultFixup,</div><div class="line">    ThreadEventPair_Reusable,</div><div class="line">    ThreadQuerySetWin32StartAddress,</div><div class="line">    ThreadZeroTlsCell,</div><div class="line">    ThreadPerformanceCount,</div><div class="line">    ThreadAmILastThread,</div><div class="line">    ThreadIdealProcessor,</div><div class="line">    ThreadPriorityBoost,</div><div class="line">    ThreadSetTlsArrayAddress,</div><div class="line">    ThreadIsIoPending,</div><div class="line">    ThreadHideFromDebugger,//0x11,这个就是用来将线程对调试器隐藏</div><div class="line">    ThreadBreakOnTermination,</div><div class="line">    ThreadSwitchLegacyState,</div><div class="line">    ThreadIsTerminated,</div><div class="line">    MaxThreadInfoClass</div><div class="line">    &#125; THREADINFOCLASS;</div><div class="line">// end_ntddk end_ntifs</div></pre></td></tr></table></figure></p>
+<p>查看此函数调用的参数2是0x11，可以将线程对调试器隐藏。果断修改成0，就绕过了。<br>在0xD72191的地方又调用了一次，照样修改参数，绕过：<br> <img src="/image/看雪CTF2016第十题Writeup/5.png" alt="这里写图片描述"></p>
+<p>接着就到了0xD72194处，调用了sub_D71FE0函数，用IDA看，应该就是判断函数了：<br> <img src="/image/看雪CTF2016第十题Writeup/6.png" alt="这里写图片描述"></p>
+<p>判别方法很简单，长度是15位，取出input[7]之后的八位与20161018比较。结合前面的条件，包含“TrustMe”，注册码就出来了：<br>TrustMe20161018<br> <img src="/image/看雪CTF2016第十题Writeup/7.png" alt="这里写图片描述"></p>
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/12/08/看雪CTF-2016第十题Writeup/" class="archive-article-date">
+  	<time datetime="2016-12-08T01:47:57.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-12-08</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CrackMe/">CrackMe</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/逆向/">逆向</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+
+
+  
     <article id="post-看雪CTF-2016第七题调试部分" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
