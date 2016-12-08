@@ -6,26 +6,31 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://niwbie.github.io">
-  <title>看雪CTF-2016第十题Writeup | isee&#39;blog</title>
+  <title>看雪CTF-2016第七题调试部分 | isee&#39;blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="源程序：http://pan.baidu.com/s/1cCEpMu这是一个很神奇的程序。首先查壳，VS2008写的，无壳。运行起来就退不出了，使用命令行运行，居然连命令行窗口也退不出。估计是调用了EnableWindow之类的函数吧。">
+  <meta name="description" content="源程序：http://pan.baidu.com/s/1c2kiXbi由于最后的算法涉及到数学问题，而且需要枚举85位数字+字母的组合。。。感觉这题的作者是要报复社会！其实这题的难点还是挺多的，有必要记录一下这次的收获，对调试多线程有了更深一步的了解。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="看雪CTF-2016第十题Writeup">
-<meta property="og:url" content="https://niwbie.github.io/2016/11/21/看雪CTF-2016第十题Writeup/index.html">
+<meta property="og:title" content="看雪CTF-2016第七题调试部分">
+<meta property="og:url" content="https://niwbie.github.io/2016/11/19/看雪CTF-2016第七题调试部分/index.html">
 <meta property="og:site_name" content="isee'blog">
-<meta property="og:description" content="源程序：http://pan.baidu.com/s/1cCEpMu这是一个很神奇的程序。首先查壳，VS2008写的，无壳。运行起来就退不出了，使用命令行运行，居然连命令行窗口也退不出。估计是调用了EnableWindow之类的函数吧。">
-<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第十题Writeup/1.png">
-<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第十题Writeup/2.png">
-<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第十题Writeup/3.png">
-<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第十题Writeup/4.png">
-<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第十题Writeup/5.png">
-<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第十题Writeup/6.png">
-<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第十题Writeup/7.png">
-<meta property="og:updated_time" content="2016-12-08T02:30:58.462Z">
+<meta property="og:description" content="源程序：http://pan.baidu.com/s/1c2kiXbi由于最后的算法涉及到数学问题，而且需要枚举85位数字+字母的组合。。。感觉这题的作者是要报复社会！其实这题的难点还是挺多的，有必要记录一下这次的收获，对调试多线程有了更深一步的了解。">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第七题Writeup/1.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第七题Writeup/2.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第七题Writeup/3.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第七题Writeup/4.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第七题Writeup/5.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第七题Writeup/6.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第七题Writeup/7.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第七题Writeup/8.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第七题Writeup/9.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第七题Writeup/10.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第七题Writeup/11.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第七题Writeup/12.png">
+<meta property="og:updated_time" content="2016-12-08T02:32:15.566Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="看雪CTF-2016第十题Writeup">
-<meta name="twitter:description" content="源程序：http://pan.baidu.com/s/1cCEpMu这是一个很神奇的程序。首先查壳，VS2008写的，无壳。运行起来就退不出了，使用命令行运行，居然连命令行窗口也退不出。估计是调用了EnableWindow之类的函数吧。">
-<meta name="twitter:image" content="https://niwbie.github.io/image/看雪CTF2016第十题Writeup/1.png">
+<meta name="twitter:title" content="看雪CTF-2016第七题调试部分">
+<meta name="twitter:description" content="源程序：http://pan.baidu.com/s/1c2kiXbi由于最后的算法涉及到数学问题，而且需要枚举85位数字+字母的组合。。。感觉这题的作者是要报复社会！其实这题的难点还是挺多的，有必要记录一下这次的收获，对调试多线程有了更深一步的了解。">
+<meta name="twitter:image" content="https://niwbie.github.io/image/看雪CTF2016第七题Writeup/1.png">
   
     <link rel="alternative" href="/atom.xml" title="isee&#39;blog" type="application/atom+xml">
   
@@ -141,7 +146,7 @@
 </nav>
 
       <div class="body-wrap">
-        <article id="post-看雪CTF-2016第十题Writeup" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-看雪CTF-2016第七题调试部分" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <input type="hidden" class="isFancy" />
@@ -151,7 +156,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      看雪CTF-2016第十题Writeup
+      看雪CTF-2016第七题调试部分
     </h1>
   
       
@@ -159,23 +164,37 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>源程序：<a href="http://pan.baidu.com/s/1cCEpMu" target="_blank" rel="external">http://pan.baidu.com/s/1cCEpMu</a><br>这是一个很神奇的程序。首先查壳，VS2008写的，无壳。运行起来就退不出了，使用命令行运行，居然连命令行窗口也退不出。估计是调用了EnableWindow之类的函数吧。</p>
-<a id="more"></a>
-<p>随便输一个注册码，弹出“error！”：<br> <img src="/image/看雪CTF2016第十题Writeup/1.png" alt="这里写图片描述"></p>
-<p>用OD载入，首先查找字符串，但是没有找到“error”等明文。查找导入函数，也没有找到printf等关键，倒确实是发现了EnableWindow。那就先从头开始跑一跑吧。这个程序是在win10上调试的，基地址为0x00D70000。<br>一路F8，到了0xD76A2F时，F8程序就退出了，再跑一次，F7进去看。<br>几次过后定位到了导致退出程序的函数：在0xD720D3 调用的0xD71F60。自己研究一下loc_D71F60这里，但是跑了几遍都是直接正常跑的，没发现什么异常，调用了SendMessageW之后就退出了。暴力地把这个函数nop掉，就可以过了：<br> <img src="/image/看雪CTF2016第十题Writeup/2.png" alt="这里写图片描述"></p>
-<p>往下走，调用了sub_D71D90函数获取输入,比较输入的字符串中有没有字符串“TrustMe”：<br> <img src="/image/看雪CTF2016第十题Writeup/3.png" alt="这里写图片描述"></p>
-<p>通过之后调用ntdll.dll中的ZwSetInformationThread()函数，程序就崩了：<br> <img src="/image/看雪CTF2016第十题Writeup/4.png" alt="这里写图片描述"></p>
-<p>试了几次之后都是这样，猜测应该是反调试。搜一下这个函数，才知道这个函数可以用来将线程隐藏，从而使调试器接收不到信息：<br>其原型如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line">NTSTATUS</div><div class="line">NTAPI</div><div class="line">ZwSetInformationThread (</div><div class="line">    __in HANDLE ThreadHandle,</div><div class="line">    __in THREADINFOCLASS ThreadInformationClass,</div><div class="line">    __in_bcount(ThreadInformationLength) PVOID ThreadInformation,</div><div class="line">    __in ULONG ThreadInformationLength</div><div class="line">    );</div><div class="line">//</div><div class="line">// Thread Information Classes定义如下</div><div class="line">//ntpsapi.h</div><div class="line">typedef enum _THREADINFOCLASS &#123;</div><div class="line">    ThreadBasicInformation,</div><div class="line">    ThreadTimes,</div><div class="line">    ThreadPriority,</div><div class="line">    ThreadBasePriority,</div><div class="line">    ThreadAffinityMask,</div><div class="line">    ThreadImpersonationToken,</div><div class="line">    ThreadDescriptorTableEntry,</div><div class="line">    ThreadEnableAlignmentFaultFixup,</div><div class="line">    ThreadEventPair_Reusable,</div><div class="line">    ThreadQuerySetWin32StartAddress,</div><div class="line">    ThreadZeroTlsCell,</div><div class="line">    ThreadPerformanceCount,</div><div class="line">    ThreadAmILastThread,</div><div class="line">    ThreadIdealProcessor,</div><div class="line">    ThreadPriorityBoost,</div><div class="line">    ThreadSetTlsArrayAddress,</div><div class="line">    ThreadIsIoPending,</div><div class="line">    ThreadHideFromDebugger,//0x11,这个就是用来将线程对调试器隐藏</div><div class="line">    ThreadBreakOnTermination,</div><div class="line">    ThreadSwitchLegacyState,</div><div class="line">    ThreadIsTerminated,</div><div class="line">    MaxThreadInfoClass</div><div class="line">    &#125; THREADINFOCLASS;</div><div class="line">// end_ntddk end_ntifs</div></pre></td></tr></table></figure></p>
-<p>查看此函数调用的参数2是0x11，可以将线程对调试器隐藏。果断修改成0，就绕过了。<br>在0xD72191的地方又调用了一次，照样修改参数，绕过：<br> <img src="/image/看雪CTF2016第十题Writeup/5.png" alt="这里写图片描述"></p>
-<p>接着就到了0xD72194处，调用了sub_D71FE0函数，用IDA看，应该就是判断函数了：<br> <img src="/image/看雪CTF2016第十题Writeup/6.png" alt="这里写图片描述"></p>
-<p>判别方法很简单，长度是15位，取出input[7]之后的八位与20161018比较。结合前面的条件，包含“TrustMe”，注册码就出来了：<br>TrustMe20161018<br> <img src="/image/看雪CTF2016第十题Writeup/7.png" alt="这里写图片描述"></p>
+        <p>源程序：<a href="http://pan.baidu.com/s/1c2kiXbi" target="_blank" rel="external">http://pan.baidu.com/s/1c2kiXbi</a><br>由于最后的算法涉及到数学问题，而且需要枚举85位数字+字母的组合。。。感觉这题的作者是要报复社会！其实这题的难点还是挺多的，有必要记录一下这次的收获，对调试多线程有了更深一步的了解。<br> <a id="more"></a><br> 打开一看是个控制台程序，随便输入一个密码，直接就退出了，没弹出任何提示。<br> 再查看字符串，也没有任何明文，肯定是被加密了的。<br> 查看导入表，也发现有什么重要函数，CreateThread什么的也暂时没有思路。<br> 那就载入OD中一步一步调试吧，结合IDA一路F8。</p>
+<p>程序跑到  0x4085FF处，F8后让输入注册码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">004085FF  | .  E8 92AAFFFF   CALL    CM.00403096</div></pre></td></tr></table></figure>
+<p>但是输入注册码后这就直接退出了，也没有打印任何东西。那就在这里下断点。</p>
+<p>然后到了0x4030D0，F8之后又退出了，继续在这里下断：<br>004030D0  |.  E8 C4F5FFFF   CALL    CM.00402699</p>
+<p>然后到了0x4026BB，F8之后又退出了，继续在这里下断：<br>004026BB   &gt; \E8 7D0A0000   CALL    CM.0040313D</p>
+<p>在函数sub_40313D中，第一次跳转到0x404E7E，然后又回到0x4026BB,进入0x40313D后，跳转到了0x404F91,发现在0x404F9C处call完0x4050FE之后又回到0x4026BB，然后发现程序就退出了。这个过程一直开着线程查看的，发现中间有创建新的线程。所以在CreateThread处下断点看看程序做了什么。</p>
+<p>设置内存断点找到调用CreateThread的地方：<br>   <img src="/image/看雪CTF2016第七题Writeup/1.png" alt="这里写图片描述"></p>
+<p>这里创建了3个线程，线程函数分别为：<br>0x402F5B , 0X402E51 ,0X402FFA。<br>先从IDA看一下这三个函数是做什么的。第二个和第三个线程很像：<br>   <img src="/image/看雪CTF2016第七题Writeup/2.png" alt="这里写图片描述"></p>
+<p>有个EidtProcess()。可能退出就是这个函数作怪了。但是第一个函数也有。参数是v4。那么一个个来调试。调试线程的时候把其他的线程挂起，然后直接F5调试：<br>   <img src="/image/看雪CTF2016第七题Writeup/3.png" alt="这里写图片描述"></p>
+<p>发现线程1有明文字符串：<br>       <img src="/image/看雪CTF2016第七题Writeup/4.png" alt="这里写图片描述"></p>
+<p>而且在<br>00402FC9   .  E8 CBF6FFFF   CALL    CM_c.00402699  这里，<br>还会跳到0x4026BB处，一直F8就会出现输入界面，看来这个是我们想要的线程。其间会出现其它两个线程，挂起（包括主线程也挂起，这样在跳转到其它线程之后，可以右键选择在CPU中打开来恢复到我们想要调试的线程中）：<br>   <img src="/image/看雪CTF2016第七题Writeup/5.png" alt="这里写图片描述"></p>
+<p>同样的方法调试其它两个线程后，跑一会儿就退出了。后来经过推测应该是int3断点，因为如果整个程序把断点全部禁用了，则不会退出。作者真是煞费苦心！这样，我们把线程1之外的所有线程都挂起，就能好好地分析了。</p>
+<p>继续不停F8，然后到了这里又等待输入，下断点：<br>004054D8  |.  E8 54000000   CALL    CM_c.00405531</p>
+<p>结合IDA分析这次跳转到了0x402EEF:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">00405588   .^\FF20          JMP     NEAR DWORD PTR DS:[EAX]          ;  CM_c.00402EEF</div></pre></td></tr></table></figure>
+<p>   <img src="/image/看雪CTF2016第七题Writeup/6.png" alt="这里写图片描述"><br>下断点到0x402EEF，发现在<br>00402F0A   .  E8 B50E0000   CALL    CM_c.00403DC4<br>获取注册码，下面有个ExitProcess。通过IDA分析，这里是判断程序运行时间，不满足就退出，我们可以每次手动绕过：<br>   <img src="/image/看雪CTF2016第七题Writeup/7.png" alt="这里写图片描述"></p>
+<p>接着在0x402F45处：<br>       <img src="/image/看雪CTF2016第七题Writeup/8.png" alt="这里写图片描述"></p>
+<p>随便输入的注册码AL为0，直接退出，看来这里的call 0x402B93就是我们要找的判断函数了。</p>
+<p>用IDA看出有4个判断函数：sub_4029D3,sub_402930,sub_40295F,sub_402999。<br>   <img src="/image/看雪CTF2016第七题Writeup/9.png" alt="这里写图片描述"></p>
+<p>OD进去，只满足第一个条件，后面几个函数都没法满足。<br>   <img src="/image/看雪CTF2016第七题Writeup/10.png" alt="这里写图片描述"></p>
+<p>这样就找到了整个程序的判断流程。由于相当复杂，而且我也没有做出来，就不做分析了。<br>不过还是有用到硬件断点等调试方法，从这道题中学到了很多。</p>
+<h1 id="收获"><a href="#收获" class="headerlink" title="收获"></a>收获</h1><p>总结多线程调试的一些经验,主要是多线程调试的一些技巧:<br>由于在OD中只能单线程的调试，所以在主线程调用CreateThread函数时并不会马上出现新的线程，这时如果想立即进入调用新的线程函数threadfun()，则可以把主线程的优先级设置为空闲：<br>   <img src="/image/看雪CTF2016第七题Writeup/11.png" alt="这里写图片描述"></p>
+<p>然后在在线程函数下断，这样F9之后马上就能跳到线程函数中去。<br>这时候可以选择挂起这个新的线程；如果想回到主线程中去，则Alt+M打开内存，在.text处下断，然后F9后就可以回到主线程了：<br>   <img src="/image/看雪CTF2016第七题Writeup/12.png" alt="这里写图片描述"></p>
 
       
     </div>
     <div class="article-info article-info-index">
       
-      <a href="/2016/11/21/看雪CTF-2016第十题Writeup/" class="archive-article-date">
-  	<time datetime="2016-11-21T01:47:57.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-11-21</time>
+      <a href="/2016/11/19/看雪CTF-2016第七题调试部分/" class="archive-article-date">
+  	<time datetime="2016-11-19T02:46:35.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-11-19</time>
 </a>
       
 	<div class="article-tag tagcloud">
@@ -193,9 +212,18 @@
   
 <nav id="article-nav">
   
+    <a href="/2016/11/19/看雪CTF-2016第五题Writeup/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          看雪CTF 2016第五题Writeup(附RC4算法)
+        
+      </div>
+    </a>
   
-    <a href="/2016/11/20/看雪CTF-2016第六题Writeup/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">看雪CTF-2016第六题Writeup</div>
+  
+    <a href="/2016/11/08/Hexo站点优化/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Hexo站点优化</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -229,7 +257,7 @@
 
 <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="看雪CTF-2016第十题Writeup" data-title="看雪CTF-2016第十题Writeup" data-url="https://niwbie.github.io/2016/11/21/看雪CTF-2016第十题Writeup/"></div>
+	<div class="ds-thread" data-thread-key="看雪CTF-2016第七题调试部分" data-title="看雪CTF-2016第七题调试部分" data-url="https://niwbie.github.io/2016/11/19/看雪CTF-2016第七题调试部分/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">
