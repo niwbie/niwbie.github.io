@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <link rel="dns-prefetch" href="https://niwbie.github.io">
+  <title>看雪CTF-2016第十四题Writeup | isee&#39;blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="源程序：http://pan.baidu.com/s/1qXLzbje一道shim利用的题目。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="看雪CTF-2016第十四题Writeup">
+<meta property="og:url" content="https://niwbie.github.io/2016/12/06/看雪CTF-2016第十四题Writeup/index.html">
+<meta property="og:site_name" content="isee'blog">
+<meta property="og:description" content="源程序：http://pan.baidu.com/s/1qXLzbje一道shim利用的题目。">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第十四题Writeup/1.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第十四题Writeup/2.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第十四题Writeup/3.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第十四题Writeup/4.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第十四题Writeup/5.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第十四题Writeup/6.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第十四题Writeup/7.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第十四题Writeup/8.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第十四题Writeup/9.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第十四题Writeup/10.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第十四题Writeup/11.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第十四题Writeup/12.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第十四题Writeup/13.png">
+<meta property="og:updated_time" content="2016-12-09T12:42:00.183Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="看雪CTF-2016第十四题Writeup">
+<meta name="twitter:description" content="源程序：http://pan.baidu.com/s/1qXLzbje一道shim利用的题目。">
+<meta name="twitter:image" content="https://niwbie.github.io/image/看雪CTF2016第十四题Writeup/1.png">
+  
+    <link rel="alternative" href="/atom.xml" title="isee&#39;blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/image/favicon.ico">
+  
+  <link rel="stylesheet" href="/main.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+      <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img src="/image/favicon.jpg" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">isee</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">从未放弃治疗</p>
+		
+
+		<nav class="header-menu">
+			<ul>
+			
+				<li><a href="/">主页</a></li>
+	        
+				<li><a href="/">相册</a></li>
+	        
+			</ul>
+		</nav>
+		<nav class="header-smart-menu">
+	        
+    		
+    			
+    			<a class="js-smart-menu" data-idx="0" href="javascript:void(0)">所有文章</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="1" href="javascript:void(0)">标签</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="2" href="javascript:void(0)">友链</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="3" href="javascript:void(0)">关于我</a>
+    			
+    			
+            
+		</nav>
+		<nav class="header-nav">
+			<div class="social">
+				
+					<a class="rss" target="_blank" href="#" title="rss">rss</a>
+		        
+			</div>
+		</nav>
+	</header>		
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"><i class="icon-list"></i></div>
+  		<h1 class="header-author js-mobile-header hide">isee</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				
+					<img src="/image/favicon.jpg" class="js-avatar">
+				
+			</div>
+			<hgroup>
+			  <h1 class="header-author">isee</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">从未放弃治疗</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/">相册</a></li>
+		        
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="rss" target="_blank" href="#" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap">
+        <article id="post-看雪CTF-2016第十四题Writeup" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      看雪CTF-2016第十四题Writeup
+    </h1>
+  
+      
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>源程序：<a href="http://pan.baidu.com/s/1qXLzbje" target="_blank" rel="external">http://pan.baidu.com/s/1qXLzbje</a><br>一道shim利用的题目。</p>
+<a id="more"></a>     
+<p>打开程序，随便输入一个注册码，弹出错误框：<br><img src="/image/看雪CTF2016第十四题Writeup/1.png" alt="这里写图片描述"></p>
+<p>bp GetWindowTextW定位到处理函数sub_401BD0：<br><img src="/image/看雪CTF2016第十四题Writeup/2.png" alt="这里写图片描述"></p>
+<p>又是长长的一串。。。。。</p>
+<p>首先是做了长度的判断，长度必须为39，且前几位分别是acd_b:</p>
+<p><img src="/image/看雪CTF2016第十四题Writeup/3.png" alt="这里写图片描述"></p>
+<p>然后是后面7个，必须为小写字母:<br><img src="/image/看雪CTF2016第十四题Writeup/4.png" alt="这里写图片描述"></p>
+<p>接着对输入的前32个字符进行了处理，主要是得到了一个0和1组成的矩阵，怎么处理的看不懂。。。后面需要用到这里的矩阵，才能组成正确的信息。<br>我这里先做了一个矩阵的表格，与ida中的变量相对应（左边是变量，右边是后面算出来的）：</p>
+<p><img src="/image/看雪CTF2016第十四题Writeup/5.png" alt="这里写图片描述"></p>
+<p>再来看后面的动作，主要是加载”apphelp.dll”，然后调用和sdb有关的函数，SdbDeclareIndex、SdbCommitIndexes等：</p>
+<p><img src="/image/看雪CTF2016第十四题Writeup/6.png" alt="这里写图片描述"></p>
+<p>查了MSDN后得知，这个和shim有关。利用Windows的补丁机制，将程序信息写入sdb文件中并注册。<br>此cm利用系统AppPatch的机制, 让进程启动时加载crackeme.dll来弹出成功信息<br>生成与查看sdb文件可用微软自带的工具(Microsoft Application Compatibility Toolkit)<br><a href="https://www.microsoft.com/en-us/download/details.aspx?id=7352" target="_blank" rel="external">https://www.microsoft.com/en-us/download/details.aspx?id=7352</a></p>
+<p>右键程序，查看版本信息：<br><img src="/image/看雪CTF2016第十四题Writeup/7.png" alt="这里写图片描述"></p>
+<p>这里就是要利用的了。<br>首先是系统时间，这里的v146参数必须是0x5001，以此推断出v230等参数</p>
+<p><img src="/image/看雪CTF2016第十四题Writeup/8.png" alt="这里写图片描述"></p>
+<p>具体代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line">void calcTagtime()&#123;</div><div class="line"></div><div class="line">	unsigned __int16 test[2] =&#123;0x30,0x31&#125;;</div><div class="line">	unsigned __int16 int sum = 0;</div><div class="line"></div><div class="line">	unsigned __int16 v233 ,v235,v232,v230,v234,v231,v229,v228;</div><div class="line">	for (int i = 0;i&lt;=1; i++)&#123;</div><div class="line">		v233 = test[i];</div><div class="line">		for (int j = 0;j&lt;=1; j++)&#123;</div><div class="line">			v235 = test [j];</div><div class="line">			for (int k = 0;k&lt;=1; k++)&#123;</div><div class="line">				v232 = test[k];</div><div class="line">				for (int m = 0;m&lt;=1; m++)&#123;</div><div class="line">					v230 = test[m];</div><div class="line">					for (int n = 0;n&lt;=1; n++)&#123;</div><div class="line">						v234 = test [n];</div><div class="line">						for (int p = 0;p&lt;=1; p++)&#123;</div><div class="line">							v231 = test [p];</div><div class="line">							for (int q = 0;q&lt;=1; q++)&#123;</div><div class="line">								v229 = test [q];</div><div class="line">								for (int t = 0;t&lt;=1; t++)&#123;</div><div class="line">								v228 = test [t];</div><div class="line">								sum = v233 </div><div class="line">									 + 2 * (v235 + 2 * (v232 - 96 + 2 * v230 - 48))</div><div class="line">									- 144</div><div class="line">									+ ((v234 + 2 * (v231 + 2 * (v229 - 96 + 2 * v228 - 48) - 72)) &lt;&lt; 12); </div><div class="line">									if (sum == 0x5001)&#123;</div><div class="line">										printf(&quot;OK&quot;);			</div><div class="line">									&#125;</div><div class="line">								&#125;</div><div class="line"></div><div class="line">							&#125;</div><div class="line">						&#125;</div><div class="line">					&#125;</div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>接着<br>TAG_COMPANY_NAME:<br><img src="/image/看雪CTF2016第十四题Writeup/9.png" alt="这里写图片描述"></p>
+<p>与进程对应的，必须为<br>10110000011</p>
+<p>然后TAG_PRODUCTION_VERSION为<br>0111101011<br><img src="/image/看雪CTF2016第十四题Writeup/10.png" alt="这里写图片描述"></p>
+<p>代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div></pre></td><td class="code"><pre><div class="line">void calcBinFileVersion()&#123;</div><div class="line">	__int64 out = 0;</div><div class="line">	__int16 v199,v200,v201,v202,tmp,v206,v207,v208,v211,v212,v213,v214,v217,v218,v219,v220;</div><div class="line"></div><div class="line">	for (int i = 0;i&lt;=1; i++)&#123;</div><div class="line">		v199 = test[i];</div><div class="line">		for (int j = 0;j&lt;=1; j++)&#123;</div><div class="line">			v200 = test [j];</div><div class="line">			for (int k = 0;k&lt;=1; k++)&#123;</div><div class="line">				v201 = test[k];</div><div class="line">				for (int m = 0;m&lt;=1; m++)&#123;</div><div class="line">					v202 = test[m];</div><div class="line">					for (int n = 0;n&lt;=1; n++)&#123;</div><div class="line">						tmp = test [n];</div><div class="line">						for (int p = 0;p&lt;=1; p++)&#123;</div><div class="line">							v206 = test [p];</div><div class="line">							for (int q = 0;q&lt;=1; q++)&#123;</div><div class="line">								v207 = test [q];</div><div class="line">								for (int t = 0;t&lt;=1; t++)&#123;</div><div class="line">									v208 = test [t];</div><div class="line">									for (int b = 0;b&lt;=1; b++)&#123;</div><div class="line">										v211 = test [b];</div><div class="line">										for (int f = 0;f&lt;=1; f++)&#123;</div><div class="line">											v212 = test [f];</div><div class="line">											for (int z = 0;z&lt;=1; z++)&#123;</div><div class="line">												v213 = test [z];</div><div class="line">												for (int x = 0;x&lt;=1; x++)&#123;</div><div class="line">													v214 = test [x];</div><div class="line">													for (int y = 0;y&lt;=1; y++)&#123;</div><div class="line">														v217 = test[y];</div><div class="line">														for (int l = 0;l&lt;=1; l++)&#123;</div><div class="line">															v218 = test[l];</div><div class="line">															for (int a = 0;a&lt;=1; a++)&#123;</div><div class="line">																v219 = test [a];</div><div class="line">																for (int c = 0;c&lt;=1; c++)&#123;</div><div class="line">																	v220 = test[c];</div><div class="line"></div><div class="line">																	out = v220</div><div class="line">																	   + 2 * (v219 + 2 * (v218 + 2 * v217))</div><div class="line">																	   - 731</div><div class="line">																	   + ((v214</div><div class="line">																		 + 2 * (v213 + 2 * (v212 + 2 * v211))</div><div class="line">																		 - 725</div><div class="line">																		 + ((v208</div><div class="line">																		   + 2 * (v207 + 2 * (v206 + 2 * tmp))</div><div class="line">																		   - 731</div><div class="line">																		   + ((signed __int64)(v202 + 2 * (v201 + 2 * (v200 + 2 * v199)) - 726) &lt;&lt; 16)) &lt;&lt; 16)) &lt;&lt; 16);</div><div class="line"></div><div class="line">																	if(out == 0x0008000400090003)&#123;</div><div class="line">																		printf(&quot;OK&quot;);</div><div class="line">																	&#125;</div><div class="line">																&#125;&#125;&#125;&#125;&#125;&#125;&#125;&#125;&#125;&#125;&#125;&#125;&#125;&#125;&#125;&#125;</div><div class="line"></div><div class="line">	Sleep(-1);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>接着TAG_PRODUCT_VERSION为 “8, 4, 9, 3”：<br><img src="/image/看雪CTF2016第十四题Writeup/11.png" alt="这里写图片描述"></p>
+<p>代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div></pre></td><td class="code"><pre><div class="line">void calcProductVersion()&#123;</div><div class="line">	WCHAR test1[100] = L&quot;8, 4, 9, 3&quot;;</div><div class="line">	int test2[4] = &#123;0x00300030,0x00300031,0x00310030,0x00310031&#125;;</div><div class="line"></div><div class="line">	__int16 v203,v88,v89,v248;</div><div class="line">	int v204,v205,v209,v210,v215,v216,v221,v222;</div><div class="line">	__int64 v249_lodword,v249hidowrd;</div><div class="line"></div><div class="line">	char  sz_v248[2+16+30] = &#123;0&#125;;</div><div class="line">	char  *sz_v249 = sz_v248+2 ;</div><div class="line"></div><div class="line"></div><div class="line">	for (int i=0; i&lt;=1; i++)&#123;</div><div class="line">		v203 = test[i];</div><div class="line">		for (int j=0; j&lt;=3; j++)&#123;</div><div class="line">			v204 = test2[j];</div><div class="line">			for (int k=0; k&lt;=3; k++)&#123;</div><div class="line">				v205 = test2[k];</div><div class="line">			</div><div class="line">			    v88 = v203;</div><div class="line">				v89 = v204 - 96; </div><div class="line">				</div><div class="line">				v248 = v205 + 2 * (HIWORD(v204) + 2 * (v89 + 2 * v88 - 48)) - 96;</div><div class="line">				if(v248 == 0x38)&#123;</div><div class="line">					printf(&quot;ok&quot;);</div><div class="line">				&#125;</div><div class="line">				</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	for (int i=0; i&lt;=3; i++)&#123;</div><div class="line">		v209 = test2[i];</div><div class="line">		for (int j=0; j&lt;=3; j++)&#123;</div><div class="line">			v210 = test2[j];</div><div class="line"></div><div class="line">			v248 =  HIWORD(v210) + 2 * (v210 + 2 * (HIWORD(v209) - 96 + 2 * v209 - 48)) - 96;</div><div class="line">			if(v248 == 0x34)&#123;</div><div class="line">				printf(&quot;ok&quot;);</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	for (int i=0; i&lt;=3; i++)&#123;</div><div class="line">		v215 = test2[i];</div><div class="line">		for (int j=0; j&lt;=3; j++)&#123;</div><div class="line">			v216 = test2[j];</div><div class="line"></div><div class="line">			v248 =  HIWORD(v216) + 2 * (v216 + 2 * (HIWORD(v215) - 96 + 2 * v215 - 48)) - 96;</div><div class="line">			if(v248 == 0x39)&#123;</div><div class="line">				printf(&quot;ok&quot;);</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	for (int i=0; i&lt;=3; i++)&#123;</div><div class="line">		v209 = test2[i];</div><div class="line">		for (int j=0; j&lt;=3; j++)&#123;</div><div class="line">			v210 = test2[j];</div><div class="line"></div><div class="line">			v248 = HIWORD(v210) + 2 * (v210 + 2 * (HIWORD(v209) - 96 + 2 * v209 - 48)) - 96;</div><div class="line">			if(v248 == 0x34)&#123;</div><div class="line">				printf(&quot;ok&quot;);</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	for (int i=0; i&lt;=3; i++)&#123;</div><div class="line">		v221 = test2[i];</div><div class="line">		for (int j=0; j&lt;=3; j++)&#123;</div><div class="line">			v222 = test2[j];</div><div class="line"></div><div class="line">			v248 =  (unsigned __int16)(HIWORD(v222) + 2 * (v222 + 2 * (HIWORD(v221) - 96 + 2 * v221 - 48)) - 96);</div><div class="line">			if(v248 == 0x33)&#123;</div><div class="line">				printf(&quot;ok&quot;);</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这样就讲整个矩阵算出来了，见上面的图。</p>
+<p>最后是一个名称TAG_NAME，可以看出是I<strong>_</strong>D__,猜测应该是InjectDll，因为下面是crack.dll：<br><img src="/image/看雪CTF2016第十四题Writeup/12.png" alt="这里写图片描述"></p>
+<p>但是这几个位置字符要减去5，所以得出是<br>sojhyqq,应该就是最后7位了。</p>
+<p>现在知道矩阵，再来推输入。做到这里是卡住了，后来看到大神们的解答才得出结论：<br>sn字符(abcd)与bits的映射关系<br>sn[1]=’c’ -&gt; 11<br>sn[2]=’d’ -&gt; 10<br>sn[4]=’b’ -&gt; 00<br>=&gt; ‘a’ -&gt; 01</p>
+<p>这样手动推出注册码为：<br>acddbccabcddacdbcdcbbadccaaddbcasojhyqq</p>
+<p>后面程序运行sdbinst.exe -q <em>*</em>.sdb注册文件可在ACT中看到：<br><img src="/image/看雪CTF2016第十四题Writeup/13.png" alt="这里写图片描述"></p>
+<p>这样，当运行的程序满足这些条件，就会去加载crack.dll，弹框正确。</p>
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/12/06/看雪CTF-2016第十四题Writeup/" class="archive-article-date">
+  	<time datetime="2016-12-06T12:27:46.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-12-06</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CrackMe/">CrackMe</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/逆向/">逆向</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/2016/12/09/看雪CTF-2016第十八题Writeup/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          看雪CTF-2016第十八题Writeup
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/11/21/看雪CTF-2016第十题Writeup/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">看雪CTF-2016第十题Writeup</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+	    <a class="jiathis_button_twitter"></a>
+	    <a class="jiathis_button_plus"></a> 
+	    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="//v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="看雪CTF-2016第十四题Writeup" data-title="看雪CTF-2016第十四题Writeup" data-url="https://niwbie.github.io/2016/12/06/看雪CTF-2016第十四题Writeup/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"isee233"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 isee
+    	</div>
+        <span id="busuanzi_container_site_pv">
+             <i class="fa fa-flag"></i>    你是第<span id="busuanzi_value_site_pv"><i class="fa fa-spinner fa-spin"></i></span>个到访的小伙伴
+        </span>
+    </div>
+  </div>
+</footer>
+    </div>
+    <script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: false,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false,
+		root: "/",
+		innerArchive: true
+	}
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?e437fc8d2c87edc2105c789a41592718";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<script src="/./main.js"></script>
+
+
+    
+<div class="tools-col">
+  <ul class="btn-wrap">
+    
+      <li class="chose" data-hook="tools-section-all"><span class="text">全部</span><i class="icon-book"></i></li>
+    
+    
+      <li data-hook="tools-section-tag"><span class="text">标签</span><i class="icon-price-tags"></i></li>
+    
+    
+      <li data-hook="tools-section-friends"><span class="text">友链</span><i class="icon-link"></i></li>
+    
+    
+      <li data-hook="tools-section-me"><span class="text">我</span><i class="icon-smile"></i></li>
+    
+  </ul>
+  <div class="tools-wrap">
+    
+    	<section class="tools-section tools-section-all chose">
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-tag">
+    			<div class="widget tagcloud" id="js-tagcloud">
+    				<a href="/tags/CrackMe/" style="font-size: 20px;">CrackMe</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/ctf/" style="font-size: 20px;">ctf</a> <a href="/tags/逆向/" style="font-size: 20px;">逆向</a>
+    			</div>
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-friends">
+  		
+  			<div class="friends-wrap" id="js-friends">
+  			
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.youngroe.com/">Lyon&#39;s blog</a>
+  	        
+  	        </div>
+  		
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-me">
+  	  	
+  	  		<div class="aboutme-wrap" id="js-aboutme">汪！</div>
+  	  	
+    	</section>
+    
+  </div>
+  
+</div>
+    <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+  </div>
+</body>
+</html>
