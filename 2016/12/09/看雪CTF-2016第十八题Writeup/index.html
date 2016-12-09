@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <link rel="dns-prefetch" href="https://niwbie.github.io">
+  <title>看雪CTF-2016第十八题Writeup | isee&#39;blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="源程序：http://pan.baidu.com/s/1mhRCPi4这题分析完真的想砸电脑。。。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="看雪CTF-2016第十八题Writeup">
+<meta property="og:url" content="https://niwbie.github.io/2016/12/09/看雪CTF-2016第十八题Writeup/index.html">
+<meta property="og:site_name" content="isee'blog">
+<meta property="og:description" content="源程序：http://pan.baidu.com/s/1mhRCPi4这题分析完真的想砸电脑。。。">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第十八题Writeup/1.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第十八题Writeup/2.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第十八题Writeup/3.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第十八题Writeup/4.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第十八题Writeup/5.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第十八题Writeup/6.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第十八题Writeup/7.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第十八题Writeup/8.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第十八题Writeup/9.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第十八题Writeup/10.png">
+<meta property="og:updated_time" content="2016-12-09T11:47:23.281Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="看雪CTF-2016第十八题Writeup">
+<meta name="twitter:description" content="源程序：http://pan.baidu.com/s/1mhRCPi4这题分析完真的想砸电脑。。。">
+<meta name="twitter:image" content="https://niwbie.github.io/image/看雪CTF2016第十八题Writeup/1.png">
+  
+    <link rel="alternative" href="/atom.xml" title="isee&#39;blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/image/favicon.ico">
+  
+  <link rel="stylesheet" href="/main.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+      <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img src="/image/favicon.jpg" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">isee</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">从未放弃治疗</p>
+		
+
+		<nav class="header-menu">
+			<ul>
+			
+				<li><a href="/">主页</a></li>
+	        
+				<li><a href="/">相册</a></li>
+	        
+			</ul>
+		</nav>
+		<nav class="header-smart-menu">
+	        
+    		
+    			
+    			<a class="js-smart-menu" data-idx="0" href="javascript:void(0)">所有文章</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="1" href="javascript:void(0)">标签</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="2" href="javascript:void(0)">友链</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="3" href="javascript:void(0)">关于我</a>
+    			
+    			
+            
+		</nav>
+		<nav class="header-nav">
+			<div class="social">
+				
+					<a class="rss" target="_blank" href="#" title="rss">rss</a>
+		        
+			</div>
+		</nav>
+	</header>		
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"><i class="icon-list"></i></div>
+  		<h1 class="header-author js-mobile-header hide">isee</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				
+					<img src="/image/favicon.jpg" class="js-avatar">
+				
+			</div>
+			<hgroup>
+			  <h1 class="header-author">isee</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">从未放弃治疗</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/">相册</a></li>
+		        
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="rss" target="_blank" href="#" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap">
+        <article id="post-看雪CTF-2016第十八题Writeup" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      看雪CTF-2016第十八题Writeup
+    </h1>
+  
+      
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>源程序：<a href="http://pan.baidu.com/s/1mhRCPi4" target="_blank" rel="external">http://pan.baidu.com/s/1mhRCPi4</a><br>这题分析完真的想砸电脑。。。</p>
+<a id="more"></a> 
+<p>打开程序：</p>
+<p><img src="/image/看雪CTF2016第十八题Writeup/1.png" alt="这里写图片描述"></p>
+<p>随便输入一个验证码，点击确定后没有反应。那就用IDA先看一下。</p>
+<p>找到success字符串，在sub_4013B0处调用的，向上查找参考引用，没找到调用处。。。<br>那就先用OD下个消息断点，看怎么处理的。</p>
+<p>断在了0x401050处，发现在sub_401120里面进行输入字符串的处理：<br><img src="/image/看雪CTF2016第十八题Writeup/2.png" alt="这里写图片描述"></p>
+<p>进去看发现有类似花指令的处理：<br><img src="/image/看雪CTF2016第十八题Writeup/3.png" alt="这里写图片描述"></p>
+<p>很简单的处理之后，就是正确地函数了.</p>
+<p>但是从这里也看不出有什么分支可以跳转到sub_4013B0处，看GraphView发现偶Call 4013B0,但是并没有分支能跳转到那。倒是发现了一些和异常处理有关的变量：<br><img src="/image/看雪CTF2016第十八题Writeup/4.png" alt="这里写图片描述"></p>
+<p>再看下面有一个“/”的操作，猜想如果除数为0，是不是就会跳转到call 4013B0的地方。</p>
+<p>那就先来看下这里对输入做了什么处理。用OD对着IDA调试，该改的地方改，到了0xD4C2086的地方，把值给成0xD4C2086，结果果然跳转到了0x4013B0:<br><img src="/image/看雪CTF2016第十八题Writeup/5.png" alt="这里写图片描述"></p>
+<p>那么来仔细看下这里做了什么处理：<br>不难看出来，首先是验证输入的长度为0x13：<br><img src="/image/看雪CTF2016第十八题Writeup/6.png" alt="这里写图片描述"></p>
+<p>然后第14位后面必须为数字：<br><img src="/image/看雪CTF2016第十八题Writeup/7.png" alt="这里写图片描述"></p>
+<p>再将1-9位分别于固定数字进行异或：<br><img src="/image/看雪CTF2016第十八题Writeup/8.png" alt="这里写图片描述"></p>
+<p>亦或后减去65，放入数组中：<br><img src="/image/看雪CTF2016第十八题Writeup/9.png" alt="这里写图片描述"></p>
+<p>并且要保证是递减的：<br><img src="/image/看雪CTF2016第十八题Writeup/10.png" alt="这里写图片描述"></p>
+<p>到这里发现1-9位的结果相乘必须为0xD4C2086。<br>算法就是这样了。但如果想爆破还是不行，因为并没有限制必须是数字。再猜会不会是必须是质数相乘的结果，才能保证这里的值是唯一的呢？试了一下果然出来了，质数分解的结果是：2,3,5,7,11,13,17,19,23<br>还原过后的值是:”pediy2016”,肯定是正确的了。代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">BYTE  out[9] = &#123;2,3,5,7,11,13,17,19,23&#125;;</div><div class="line">BYTE  input[9] = &#123;0&#125;;</div><div class="line"></div><div class="line">for (int i=0; i&lt;=8; i++)&#123;</div><div class="line">	input[i] = (out[i]+65) ^ v4[i];</div><div class="line">&#125;</div><div class="line">for (int j=0; j&lt;=8;j++)&#123;</div><div class="line">	printf(&quot;%c&quot;,input[j]);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>接着进入关键的sub_4013B0中了。后来看了别人的破解，才知道这就是传说中的VM。因为并没有研究过，所以只能一步步看它进行了那些处理。主要是根据一个表进行函数的跳转。这里的分析流程确实是太多了，只能说必须要耐心不要砸电脑！草稿就丢在下面吧，不想再整理了。。。。<br>最后分析出来的验证是：<br>先验证“cool1”</p>
+<p>接着是公式：<br>公式1：<br>x<em>x</em>x + y<em>y</em>y + 1 = 100 + 10<em>x + y<br>公式2：<br>a </em> 10 + b + c * 10 + d = 35。</p>
+<p>用程序跑出来：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">void calc_13_15()&#123;</div><div class="line">	for (__int8 i=0;i&lt;=9;i++)&#123;</div><div class="line">		for(__int8 j=;j&lt;=9;j++)&#123;</div><div class="line">			for( __int8 k=1;k&lt;=9;k++)&#123;</div><div class="line">				if( (100*i+10*j+k) == (i*i*i+j*j*j+k*k*k))&#123;</div><div class="line">					printf(&quot;ok&quot;);</div><div class="line">					Sleep(-1);</div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line">void calc_16_19()&#123;</div><div class="line">	for (__int8 x=0;x&lt;=9;x++)&#123;</div><div class="line">		for(__int8 y=0;y&lt;=9;y++)&#123;</div><div class="line">			for( __int8 z=0;z&lt;=9;z++)&#123;</div><div class="line">				for( __int8 k=0;k&lt;=9;k++)&#123;</div><div class="line">					if( (10*x+y) + (10*z+k)== 0x23)&#123;</div><div class="line">						if((10*x+y)*4 + (10*z+k)*2 == 0x5E)&#123;</div><div class="line">							printf(&quot;ok&quot;);</div><div class="line">							Sleep(-1);</div><div class="line">						&#125;</div><div class="line">					&#125;</div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>最终的结果是pediy2016cool1531223。</p>
+<p>草稿：。。。。。。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div></pre></td><td class="code"><pre><div class="line">sum         v3：矩阵[sum-1]</div><div class="line">600A   -&gt;   0x21  -&gt;    loc_4027A5   看(byte) pMem[7] =? 0  !=0 -&gt;sum=sum+2</div><div class="line">															=0 	-&gt;v8 = &amp;矩阵[sum_0x0A], sum--,-&gt;最后sum=6013</div><div class="line"></div><div class="line">600D   -&gt;   0x29  -&gt;    loc_402877   lpMem[0] +=(byte)矩阵[sum] </div><div class="line">600F   -&gt;   0x2b  -&gt;    loc_4028DB   lpMem[2] += 矩阵[sum] ,sium++</div><div class="line">6011   -&gt;   0x27  -&gt;    l0c_402758   sum = 相与操作？。。。 得到sum= 6006, </div><div class="line">6007   -&gt;　　0x96 -&gt;    loc_40408B   逐个取input ，若取完了，lpMem[7]=0; 否则lpMem[7]=1,   sum+2 </div><div class="line"></div><div class="line">6014   &gt;    0x81   -&gt;   loc_403ABD   sum++,比较lpMem[0]和0x14, 不相等： [ebp+0xfffefd54] = 1       -&gt;放入lpMem[7]</div><div class="line">															   相等[ebp+0xfffefd54] = 0</div><div class="line">6016(600A)   0x21  -&gt;   loc_4027A5   lpMem[7] = 0 ?   !=0  sum+2</div><div class="line">													  =0 	-&gt;v8 = &amp;矩阵[sum_0x16], sum--,sum += 矩阵[sum+1]  -&gt;最后sum=6019</div><div class="line">6019        -&gt;0x0       loc_4022CE - loc_404245 -&gt; call 404284(lpMem) -&gt; 退出？ </div><div class="line">601A        -&gt;0x01      loc_402101   lpMem[0] = 矩阵[sum] (0x2E), sum++</div><div class="line">601C        0x12       loc_402401	 v347+0x8000 = lpMem[0] (0x2E) sum+2</div><div class="line">601F        0x01        loc_402101	 lpMem[0] = 矩阵[sum] (0x63), sum++</div><div class="line">6021        0x02        loc_40212D   lpMem[1] = 矩阵[sum] (0x09), sum++</div><div class="line">6023        0x8B        loc_403CE8    比较string[9] = lpMem[0]-&gt;0x63? 相等   lpMem[7] = 0   -&gt;sum+2</div><div class="line">                                                                      不相等 lpMem[7] = 1</div><div class="line">6026        0x21		loc_4027A5   lpMem[7] = 0 ?   !=0  sum+2  错误分支</div><div class="line"></div><div class="line">                                                      =0   [ebp+0xFFFEFD58] = &amp;矩阵[sum_0x04],sum--,sum += 矩阵[sum+1],-&gt;最后sum=6029</div><div class="line">6029		0x00      	loc_4022CE 退出											  </div><div class="line">602A        0x01		loc_402101	 lpMem[0] = 矩阵[sum] (0x6F), sum++</div><div class="line">602c		0x2A    loc_4028A8	 lpMem[1] = 0xA,sum++</div><div class="line">602E        0x8B		loc_403CE8    比较string[10] = lpMem[0]-&gt;0x6F? 相等   lpMem[7] = 0   -&gt;sum+2</div><div class="line">                                                                      不相等  lpMem[7] = 1</div><div class="line">6057		0x21        loc_4027A5   lpMem[7] = 0 ?   !=0  sum+2</div><div class="line">													  =0 	-&gt;v8 = &amp;矩阵[sum_0x04], sum--,sum += 矩阵[sum+1]  -&gt;最后sum=605A</div><div class="line">605B        0xb         loc_40222E	lpMem[1] = 0xD  ,lpMem[0] = input[13],sum+2</div><div class="line">605E		0x29		loc_402877	lpMem[0] +=(byte)矩阵[sum] -&gt;0x1, sum++</div><div class="line">6060		0x08		loc_4021C8	lpMem[2] = lpMem[0]</div><div class="line">6061		0x45		loc_402F39  lpMem[0] = lpMem[0]*lpMem[2]</div><div class="line">6062		0x45		loc_402F39  lpMem[0] = lpMem[0]*lpMem[2]</div><div class="line">6063		0x1B		loc_402665  lpMem[6]-&gt;0xff, [ebp+0xffff00fc+lpMem[6]] = [0x11FAA3] = lpMem[0] = 0x1 ,lpMem[6]--</div><div class="line">6064		0x2A		loc_4028A8  lpMem[1]+=矩阵[sum_0x1] -&gt;lpMem[1] = 0x0D+0x01 = 0x0E,sum++</div><div class="line"></div><div class="line">6066  		0xB         loc_40222E	lpMem[1] -&gt; 0xE  ,lpMem[0] = input[14],sum+2</div><div class="line">6069		0x29		loc_402877	lpMem[0] +=(byte)矩阵[sum] -&gt;0x1, sum++</div><div class="line">606B		0x08		loc_4021C8	lpMem[2] = lpMem[0]</div><div class="line">606c		0x45		loc_402F39  lpMem[0] = lpMem[0]*lpMem[2]</div><div class="line">606D		0x45		loc_402F39  lpMem[0] = lpMem[0]*lpMem[2]</div><div class="line">606E		0x1B		loc_402665  lpMem[6]-&gt;0xfe, [ebp+0xffff00fc+lpMem[6]] = [0x11FAA2] = lpMem[0] = 0x1? ,lpMem[6]--</div><div class="line">606F		0x2A		loc_4028A8	lpMem[1]+=矩阵[sum_0x1] -&gt;lpMem[1] = 0x0D+0x01 = 0x0F,sum++</div><div class="line"></div><div class="line">6071		0xB         loc_40222E	lpMem[1] -&gt; 0xF  ,lpMem[0] = input[15],sum+2</div><div class="line">6074		0x29		loc_402877	lpMem[0] +=(byte)矩阵[sum_0xD0] -&gt;0x02?, sum++</div><div class="line">6076		0x08		loc_4021C8	lpMem[2] = lpMem[0]</div><div class="line">6077		0x45		loc_402F39  lpMem[0] = lpMem[0]*lpMem[2]</div><div class="line">6078		0x45		loc_402F39  lpMem[0] = lpMem[0]*lpMem[2]</div><div class="line"></div><div class="line">6079		0x1D		loc_4026DE	lpMem[6] = 0xFE, lpMem[2] = [0x11fAA2];</div><div class="line">607A		0x2D		loc_402923	lpMem[0] += lpMem[2]</div><div class="line"></div><div class="line">607B		0x1D		loc_4026DE  lpMem[6] = 0xFF, lpMem[2] = [0x11fAA3];</div><div class="line">607C		0x2D		loc_402923	lpMem[0] += lpMem[2]</div><div class="line"></div><div class="line">这里存放 input^3[13] + input^3[14] + input^3[15] </div><div class="line">607D		0x1B		loc_402665  lpMem[6]-&gt;0xff, [ebp+0xffff00fc+lpMem[6]] = [0x11FAA3] = lpMem[0] = 和 ,lpMem[6]--</div><div class="line">607E		0x2         loc_40212D  lpMem[1] = 矩阵[sum] (0x0D), sum++</div><div class="line"></div><div class="line">6080		0xB         loc_40222E	lpMem[1] = 0xD  ,lpMem[0] = input[13],sum+2</div><div class="line"></div><div class="line">6083		0x29		loc_402877	lpMem[0] +=(byte)矩阵[sum_0x0D] -&gt;0x1, sum++</div><div class="line"></div><div class="line">6085		0x41		loc_402E89  lpMem[0] *= 矩阵[sum_0x64], sum++</div><div class="line"></div><div class="line">6087		0x2A		loc_4028A8  lpMem[1]+=矩阵[sum_0x1] -&gt;lpMem[1] = 0x0D+0x01 = 0x0E,sum++</div><div class="line"></div><div class="line">6089		0x11        loc_4023B0	lpMem[2] = string[14], sum+2</div><div class="line"></div><div class="line">608C		0x2B        loc_4028DB  lpMem[2] += 矩阵[sum_0xD0] ,sum++</div><div class="line"></div><div class="line">608E		0x43        loc_402EEF	lpMem[2] *= 0xA ,sum++</div><div class="line">6090		0x2D		loc_402923	lpMem[0] += lpMem[2] -&gt; lpMem[0] = (数字)input[14]*0xA + （数字）input[13]*0x64</div><div class="line"></div><div class="line">6091		0x2A		loc_4028A8	lpMem[1]+=矩阵[sum_0x1] -&gt;lpMem[1] = 0x0E+0x01 = 0x0F,sum++</div><div class="line"></div><div class="line">6093		0x11        loc_4023B0	lpMem[2] = string[15], sum+2</div><div class="line"></div><div class="line">6096		0x2b       loc_4028DB   lpMem[2] += 矩阵[sum_0xD0] ,sum++</div><div class="line">6098		0x2D	   loc_402923   lpMem[0] += lpMem[2] -&gt;   lpMem[0] = (数字)input[14]*0xA + （数字）input[13]*0x64 + （数字）input[15]</div><div class="line">6099        0x1D       loc_4026DE	lpMem[6] = 0xFF, lpMem[2] = [0x11fAA3];</div><div class="line"></div><div class="line">609A		0x85	   loc_403BE6	lpMem[0] == lpMem[2] ? 相等 lpMem[7] = 0</div><div class="line">															不等 lpMem[7] = 1</div><div class="line">609B		0x21  -&gt;   loc_4027A5   lpMem[7] = 0 ?   !=0  sum+2</div><div class="line">													  =0 	-&gt;v8 = &amp;矩阵[sum_0x16], sum--,sum += 矩阵[sum+1]  -&gt;最后sum=6019</div><div class="line">这里根据100*x +10y +z = x*x*x+y*y*y +z*z*z 得出[13-15]为 153</div><div class="line">	</div><div class="line">609F		0x01		loc_402101	 lpMem[0] = 矩阵[sum] (0x2E), sum++</div><div class="line"></div><div class="line">60A1		0x3         loc_40215A   lpMem[2] = 矩阵[sum_0x2]</div><div class="line"></div><div class="line">60A3		0x14		loc_402496	[0x1278A6] = lpMem[0] = 0x2E,sum+2</div><div class="line"></div><div class="line">60A6		0x2A        loc_4028A8	lpMem[1]+=矩阵[sum_0x1] -&gt;lpMem[1] = 0x0F+0x01 = 0x10,sum++</div><div class="line"></div><div class="line">数字input[16]*0xA</div><div class="line">60A8		0xB         loc_40222E	lpMem[1] = 0xD  ,lpMem[0] = input[16],sum+2</div><div class="line">60AB		0x29		loc_402877	lpMem[0] +=(byte)矩阵[sum_0x0D] -&gt;0x1, sum++</div><div class="line">60Ad		0x41		loc_402E89  lpMem[0] *= 矩阵[sum_0xA], sum++</div><div class="line"></div><div class="line">数字input[17]</div><div class="line">60Af		0x2A    	loc_4028A8	lpMem[1]+=矩阵[sum_0x1] -&gt;lpMem[1] = 0x10+0x01 = 0x11,sum++   </div><div class="line">60B1		0x11 		loc_4023B0	lpMem[2] = string[17], sum+2</div><div class="line">60B4		0x2b        loc_4028DB   lpMem[2] += 矩阵[sum_0xD0] ,sum++</div><div class="line"></div><div class="line">数字input[16]*0xA + 数字input[17]</div><div class="line">60B6		0x2D	    loc_402923   lpMem[0] += lpMem[2] -&gt;   lpMem[0] = (数字)input[16]*0xA （数字）input[17]</div><div class="line">60B7		0x1B		loc_402665  lpMem[6]-&gt;0xff, [ebp+0xffff00fc+lpMem[6]] = [0x11FAA3] = lpMem[0] ,lpMem[6]--</div><div class="line"></div><div class="line">数字input[18]*0xA</div><div class="line">60b8		0x2A        loc_4028A8	lpMem[1]+=矩阵[sum_0x1] -&gt;lpMem[1] = 0x11+0x01 = 0x12,sum++</div><div class="line">60BA		0x11      	loc_4023B0	lpMem[2] = string[18], sum+2</div><div class="line">60BD		0x2b        loc_4028DB   lpMem[2] += 矩阵[sum_0xD0] ,sum++</div><div class="line">60BF		0x43		loc_402EEF	lpMem[2] *= 矩阵[sum_0xA] ,sum++</div><div class="line"></div><div class="line">数字input[19]</div><div class="line">60C1		0x2A        loc_4028A8  lpMem[1]+=矩阵[sum_0x1] -&gt;lpMem[1] = 0x12+0x01 = 0x11,sum++ </div><div class="line">60C3		0xB         loc_40222E	lpMem[1] = 0xD  ,lpMem[0] = input[19],sum+2</div><div class="line"></div><div class="line">60C6		0x29		loc_402877	lpMem[0] +=(byte)矩阵[sum_0x0D] -&gt;0x1, sum++</div><div class="line"></div><div class="line">数字input[18]*0xA+数字input[19]</div><div class="line">60C8		0x30	    loc_402965	lpMem[2] += lpMem[0]</div><div class="line">60c9		0x1E		loc_4026B5	lpMem[1] = [11FAA3]</div><div class="line"></div><div class="line">60CA		0x4         loc_402187	lpMem[0] = lpMem[1]</div><div class="line"></div><div class="line">lpMem[0] = 数字input[16]*0xA + 数字input[17] + 数字input[18]*0xA + 数字input[19]</div><div class="line">60CB		0x2D		loc_402923   lpMem[0] += lpMem[2] -&gt;   lpMem[0] = (数字)input[16]*0xA （数字）input[17]</div><div class="line"></div><div class="line">lpMem[1] = (10x+y)*4</div><div class="line">60CC		0x42		             lpMem[1]  *= 矩阵[sum_0x4] ,sum++</div><div class="line"></div><div class="line">lpMem[2] = (10z+k)*2</div><div class="line">60CE		0x43		loc_402EEF	 lpMem[2] *= 矩阵[sum_0x2] ,sum++</div><div class="line"></div><div class="line">lpMem[1] = (10x+y)*4 + (10z+k)*2</div><div class="line">60D0		0x2F		loc_40294E	 lpMem[1] += lpMem[2]</div><div class="line"></div><div class="line">(10x+y) + (10z+k) = 0x23 !</div><div class="line">60D1		0x81		loc_403ABD   sum++,比较lpMem[0]和0x23, 不相等： [ebp+0xfffefd54] = 1       -&gt;放入lpMem[7]</div><div class="line">																 相等[ebp+0xfffefd54] = 0</div><div class="line">60D3		0x26        loc_40280E	比较lpMem[7]</div><div class="line"></div><div class="line">60D6		0x82		loc_403B14	lpMem[1]-矩阵[sum_0x5E]是否为0： 不相等： [ebp+0xfffefd54] = 1    sum++</div><div class="line">															  </div><div class="line"></div><div class="line">矩阵：      0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F</div><div class="line">0 0011F60C  01 00 02 00 03 00 96 00 20 21 0A 00 29 01 2B 01  ...? !..)+</div><div class="line">1 0011F61C  27 F6 FF 81 14 21 04 00 00 01 2E 12 00 80 01 63  &apos;??!....€c</div><div class="line">2 0011F62C  02 09 8B 00 20 21 04 00 00 01 6F 2A 01 8B 00 20  .? !..o*?</div><div class="line">3 0011F63C  21 04 00 00 2A 01 8B 00 20 21 04 00 00 01 6C 2A  !..*? !..l*</div><div class="line">4 0011F64C  01 8B 00 20 21 04 00 00 01 2E 03 01 14 00 80 01  ? !....€</div><div class="line">5 0011F65C  31 2A 01 8B 00 20 21 04 00 00 0B 00 20 29 D0 08  1*? !... )?</div><div class="line">6 0011F66C  45 45 1B 2A 01 0B 00 20 29 D0 08 45 45 1B 2A 01  EE*. )?EE*</div><div class="line">7 0011F67C  0B 00 20 29 D0 08 45 45 1D 2D 1D 2D 1B 02 0D 0B  . )?EE--.</div><div class="line">8 0011F68C  00 20 29 D0 41 64 2A 01 11 00 20 2B D0 43 0A 2D  . )蠥d*. +蠧.-</div><div class="line">9 0011F69C  2A 01 11 00 20 2B D0 2D 1D 85 21 04 00 00 01 2E  *. +??...</div><div class="line">A 0011F6AC  03 02 14 00 80 2A 01 0B 00 20 29 D0 41 0A 2A 01  .€*. )蠥.*</div><div class="line">B 0011F6BC  11 00 20 2B D0 2D 1B 2A 01 11 00 20 2B D0 43 0A  . +?*. +蠧.</div><div class="line">C 0011F6CC  2A 01 0B 00 20 29 D0 30 1E 04 2D 42 04 43 02 2F  *. )?-BC/</div><div class="line">D 0011F6DC  81 23 26 12 00 82 5E 26 0D 00 01 2E 03 03 14 00  ?&amp;.俕&amp;....</div><div class="line">E 0011F6EC  80 27 04 00 00 02 00 01 00 03 2E 98 00 80 26 05  €&apos;.....?€&amp;</div><div class="line">F 0011F6FC  00 29 01 2A 01 82 04 26 F4 FF 81 04 26 04 00 99  .)*?&amp;??&amp;.</div></pre></td></tr></table></figure>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/12/09/看雪CTF-2016第十八题Writeup/" class="archive-article-date">
+  	<time datetime="2016-12-09T11:38:24.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-12-09</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CrackMe/">CrackMe</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/逆向/">逆向</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2016/11/21/看雪CTF-2016第十题Writeup/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">看雪CTF-2016第十题Writeup</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+	    <a class="jiathis_button_twitter"></a>
+	    <a class="jiathis_button_plus"></a> 
+	    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="//v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="看雪CTF-2016第十八题Writeup" data-title="看雪CTF-2016第十八题Writeup" data-url="https://niwbie.github.io/2016/12/09/看雪CTF-2016第十八题Writeup/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"isee233"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 isee
+    	</div>
+        <span id="busuanzi_container_site_pv">
+             <i class="fa fa-flag"></i>    你是第<span id="busuanzi_value_site_pv"><i class="fa fa-spinner fa-spin"></i></span>个到访的小伙伴
+        </span>
+    </div>
+  </div>
+</footer>
+    </div>
+    <script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: false,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false,
+		root: "/",
+		innerArchive: true
+	}
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?e437fc8d2c87edc2105c789a41592718";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<script src="/./main.js"></script>
+
+
+    
+<div class="tools-col">
+  <ul class="btn-wrap">
+    
+      <li class="chose" data-hook="tools-section-all"><span class="text">全部</span><i class="icon-book"></i></li>
+    
+    
+      <li data-hook="tools-section-tag"><span class="text">标签</span><i class="icon-price-tags"></i></li>
+    
+    
+      <li data-hook="tools-section-friends"><span class="text">友链</span><i class="icon-link"></i></li>
+    
+    
+      <li data-hook="tools-section-me"><span class="text">我</span><i class="icon-smile"></i></li>
+    
+  </ul>
+  <div class="tools-wrap">
+    
+    	<section class="tools-section tools-section-all chose">
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-tag">
+    			<div class="widget tagcloud" id="js-tagcloud">
+    				<a href="/tags/CrackMe/" style="font-size: 20px;">CrackMe</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/ctf/" style="font-size: 20px;">ctf</a> <a href="/tags/逆向/" style="font-size: 20px;">逆向</a>
+    			</div>
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-friends">
+  		
+  			<div class="friends-wrap" id="js-friends">
+  			
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.youngroe.com/">Lyon&#39;s blog</a>
+  	        
+  	        </div>
+  		
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-me">
+  	  	
+  	  		<div class="aboutme-wrap" id="js-aboutme">汪！</div>
+  	  	
+    	</section>
+    
+  </div>
+  
+</div>
+    <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+  </div>
+</body>
+</html>
