@@ -6,28 +6,29 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://niwbie.github.io">
-  <title>看雪CTF-2016第十七题Writeup | isee&#39;blog</title>
+  <title>看雪CTF-2016第二十一题Writeup | isee&#39;blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="源程序：http://pan.baidu.com/s/1hs2YT5y题目包含exe和dll。">
+  <meta name="description" content="源程序：http://pan.baidu.com/s/1eR6kCM2">
 <meta property="og:type" content="article">
-<meta property="og:title" content="看雪CTF-2016第十七题Writeup">
-<meta property="og:url" content="https://niwbie.github.io/2016/12/13/看雪CTF-2016第十七题Writeup/index.html">
+<meta property="og:title" content="看雪CTF-2016第二十一题Writeup">
+<meta property="og:url" content="https://niwbie.github.io/2016/12/13/看雪CTF-2016第二十一题Writeup/index.html">
 <meta property="og:site_name" content="isee'blog">
-<meta property="og:description" content="源程序：http://pan.baidu.com/s/1hs2YT5y题目包含exe和dll。">
-<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第十七题Writeup/1.png">
-<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第十七题Writeup/2.png">
-<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第十七题Writeup/3.png">
-<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第十七题Writeup/4.png">
-<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第十七题Writeup/5.png">
-<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第十七题Writeup/6.png">
-<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第十七题Writeup/7.png">
-<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第十七题Writeup/8.png">
-<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第十七题Writeup/9.png">
-<meta property="og:updated_time" content="2016-12-13T09:06:45.583Z">
+<meta property="og:description" content="源程序：http://pan.baidu.com/s/1eR6kCM2">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第二十一题Writeup/1.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第二十一题Writeup/2.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第二十一题Writeup/3.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第二十一题Writeup/4.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第二十一题Writeup/5.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第二十一题Writeup/6.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第二十一题Writeup/7.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第二十一题Writeup/8.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第二十一题Writeup/9.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第二十一题Writeup/10.png">
+<meta property="og:updated_time" content="2016-12-13T10:11:52.214Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="看雪CTF-2016第十七题Writeup">
-<meta name="twitter:description" content="源程序：http://pan.baidu.com/s/1hs2YT5y题目包含exe和dll。">
-<meta name="twitter:image" content="https://niwbie.github.io/image/看雪CTF2016第十七题Writeup/1.png">
+<meta name="twitter:title" content="看雪CTF-2016第二十一题Writeup">
+<meta name="twitter:description" content="源程序：http://pan.baidu.com/s/1eR6kCM2">
+<meta name="twitter:image" content="https://niwbie.github.io/image/看雪CTF2016第二十一题Writeup/1.png">
   
     <link rel="alternative" href="/atom.xml" title="isee&#39;blog" type="application/atom+xml">
   
@@ -143,7 +144,7 @@
 </nav>
 
       <div class="body-wrap">
-        <article id="post-看雪CTF-2016第十七题Writeup" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-看雪CTF-2016第二十一题Writeup" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <input type="hidden" class="isFancy" />
@@ -153,7 +154,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      看雪CTF-2016第十七题Writeup
+      看雪CTF-2016第二十一题Writeup
     </h1>
   
       
@@ -161,32 +162,35 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>源程序：<a href="http://pan.baidu.com/s/1hs2YT5y" target="_blank" rel="external">http://pan.baidu.com/s/1hs2YT5y</a><br>题目包含exe和dll。</p>
-<a id="more"></a>
-<p>首先在xp中跑一遍，但是没有跑起来，没弹出任何信息，只能在win7下先跑试一试。<br>   <img src="/image/看雪CTF2016第十七题Writeup/1.png" alt="这里写图片描述"></p>
-<p>这一题主要是反调试。先用IDA定位成功点，发现是在dll中，查看MessageBoxW函数的引用，可以找到success：<br> <img src="/image/看雪CTF2016第十七题Writeup/2.png" alt="这里写图片描述"></p>
-<p>那么就用OD载入exe。F9后发现程序退出，而且查看模块，并没有这个dll，说明还未加载这个dll前就已经被反调试掉了。只能先想办法绕过反调试了。<br>对IsDebuggerPresent下断，但是没有任何反应。没办法，只能一步一步跑。用的是最笨的办法，在哪个call里退出了，就下断点，F7跟进。最后找到在sub_842640(基地址设置的0x840000),这里包含了3种反调试：</p>
-<p>0x01 检测父进程<br> <img src="/image/看雪CTF2016第十七题Writeup/3.png" alt="这里写图片描述"></p>
-<p>如果父进程不是explorer.exe，则执行memmove后产生异常，程序退出。</p>
-<p>0x02 异常处理<br>这个比较有意思。创建了一个StartAddress线程制造异常，然后自己处理：</p>
-<p> <img src="/image/看雪CTF2016第十七题Writeup/4.png" alt="这里写图片描述"><br>  <img src="/image/看雪CTF2016第十七题Writeup/5.png" alt="这里写图片描述"></p>
-<p>可以看到，在线程函数中，把0xcccc复制到该进程空间的前面（复制前先保存原始数据），使进程产生异常。如果是正常启动程序，会让TopLevelExceptionFilter接管异常，并进行恢复：<br> <img src="/image/看雪CTF2016第十七题Writeup/6.png" alt="这里写图片描述"></p>
-<p>这样，如果使用了调试器，则会由调试器接管异常，使程序出错。</p>
-<p>0x03 检查文件名<br> <img src="/image/看雪CTF2016第十七题Writeup/7.png" alt="这里写图片描述"></p>
-<p>这里就是检查文件名是否为Susuger_CrackMe.exe。这个就比较简单了。</p>
-<p>找到上面3个地方，在OD中jmp掉，就可以正常调试了。<br>在给Go~按钮下了个消息断点，找到消息处理的地方。<br>不过在后面的调试中，到了sub_842B20，这个函数里又进行了一次父进程的判断，绕过即可。在这个函数里加载了CrackMeLibrary.dll。在调用了LoadLibrary函数后立马挂掉。所以猜测这个Dll里也使用了反调试。没办法，用OD直接把这个Dll加载起来看。<br>这个Dll里也是用同样的办法找到反调试，其实和dll是一样的，在sub_522f7940(这里的基地址为0x522F0000)里，存在反调试0x1和0x3。绕过即可。</p>
-<p>这样就可以任意调戏这个程序了。</p>
-<p>exe在加载dll后，调用了dll中的665个导出函数（没看懂是在干嘛。。）。不过之前已经找到了正确的定位点，就是在函数sub_522f7940中，但是用IDA没法看，就只能用OD来看汇编了。好在这题的算法很简单：<br> <img src="/image/看雪CTF2016第十七题Writeup/8.png" alt="这里写图片描述"></p>
-<p>主要是看这个v19,如果v19返回0，则弹出成功。<br>在OD里跟到这个函数里：<br> <img src="/image/看雪CTF2016第十七题Writeup/9.png" alt="这里写图片描述"></p>
-<p>算法如下：<br>长度为11（加上最后的0长度为0xC），将输入的偶数位直接与0xA1异或，奇数位求补后与0xA1异或，最后与固定数据比较：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">009C9B50  F2 03 2A FC D2 03 2A FC C6 03 3A FC D3 03 07 FC  </div><div class="line">009C9B60  F3 03 10 FC 96 03 A1 03 48 00</div></pre></td></tr></table></figure></p>
-<p>逆推出来就可以了：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">__int16 test[] = &#123;0x3f2,0xfc2a,0x03d2,0xfc2a,0x03c6,0xfc3a,0x3d3,0xfc07,0x3f3,0xfc10,0x0396,0x03a1&#125;;</div><div class="line">__int16 out[12] = &#123;0&#125;;</div><div class="line">for(int i=0;i&lt;12;i+=2)&#123;</div><div class="line">	out[i] = test[i]^0xA1;</div><div class="line">&#125;</div><div class="line">for(int i=1;i&lt;12;i+=2)&#123;</div><div class="line">	out[i] = ~(test[i]^0xA1-1);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+        <p>源程序：<a href="http://pan.baidu.com/s/1eR6kCM2" target="_blank" rel="external">http://pan.baidu.com/s/1eR6kCM2</a><br> <a id="more"></a>      </p>
+<p>打开程序，随便输入一个，打印错误：<br><img src="/image/看雪CTF2016第二十一题Writeup/1.png" alt="这里写图片描述"></p>
+<p>先用ExeinfoPe查看，发现加了壳，但什么壳不清楚，那就手动脱壳。<br>用OD载入，发现不止加了壳，还有花指令。那就先脱壳吧。<br>脱壳很简单，根据堆栈平衡原理，定位到OEP为0x447251，直接OllyDump脱壳。</p>
+<p>接下来就是花指令了。IDA查看，有花指令的地方很多，比如这种：<br><img src="/image/看雪CTF2016第二十一题Writeup/2.png" alt="这里写图片描述"></p>
+<p>所以我的想法是先定位到判断函数，然后再对相关函数去花。</p>
+<p>于是先看导入表，发现只有MessageBoxW有点像，但是下了断点之后并没有断在那里，所以行不通。</p>
+<p>再看有CreateThread函数，于是下断。果然发现，输入序列号按下回车后，断在了这里。于是给线程函数0x4044FF下断。然后把主线程挂起，看新创建的线程做了什么。</p>
+<p>在线程函数sub_4044FF中，发现只call了一个函数0x403894。于是跟进去看，果然有很多花指令。主要是两种：</p>
+<p>第一种：<br><img src="/image/看雪CTF2016第二十一题Writeup/3.png" alt="这里写图片描述"></p>
+<p>这里使用了CLC指令之后，用JNB指令跳转到0x4038A8,所以在0x4038A7处nop掉即可。这是第一种花指令，使用的较多。<br>在完全去除第一种花指令之后，发现还是没法用IDA看反汇编，于是又找到第二种花指令：</p>
+<p>第二种：<br><img src="/image/看雪CTF2016第二十一题Writeup/4.png" alt="这里写图片描述"></p>
+<p>这种事在函数4038D8里（下一行）对esp进行重新计算，并通过RETN返回真确的地址。如上，返回的正确地址为4038DCE。所以只需将4038DD处改为0x90(nop)即可，如下图：<br><img src="/image/看雪CTF2016第二十一题Writeup/5.png" alt="这里写图片描述"></p>
+<p>这样讲这一片花指令取完之后，就能看到sub_403894了。</p>
+<p>这里进去先粗略的跑一遍，果然找到了输入的字符串：<br><img src="/image/看雪CTF2016第二十一题Writeup/6.png" alt="这里写图片描述"></p>
+<p>并且也看到了打印错误的分支，结合IDA判断，改线程处理完输入并进行判断后，返回给主线程进行输出。<br>首先定位到正确的分支：<br><img src="/image/看雪CTF2016第二十一题Writeup/7.png" alt="这里写图片描述"></p>
+<p>如果这里满足，进入LABEL_01,那么就输出错误，反之正确。所以这个v15是关键。</p>
+<p>往上看，现在这里找到长度判断：<br><img src="/image/看雪CTF2016第二十一题Writeup/8.png" alt="这里写图片描述"></p>
+<p>看出判断长度0xE。不是0xE则直接跳到LABLE_101，失败。</p>
+<p>然后逐个对输入进行处理，并与固定字符逐个比较：<br><img src="/image/看雪CTF2016第二十一题Writeup/9.png" alt="这里写图片描述"></p>
+<p>若不同，则v29=1, 下面就跳转到失败分支了。</p>
+<p>所以在OD中对这里进行下断：<br><img src="/image/看雪CTF2016第二十一题Writeup/10.png" alt="这里写图片描述"></p>
+<p>这里断下看，看地址0x14D2D8和0x14D848（堆栈里的参数）,比较这两个值，其中一个是我们的输入，一个是正确的SN，最后得出SN为：codebywidesoft</p>
+
       
     </div>
     <div class="article-info article-info-index">
       
-      <a href="/2016/12/13/看雪CTF-2016第十七题Writeup/" class="archive-article-date">
-  	<time datetime="2016-12-13T03:09:33.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-12-13</time>
+      <a href="/2016/12/13/看雪CTF-2016第二十一题Writeup/" class="archive-article-date">
+  	<time datetime="2016-12-13T10:07:41.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-12-13</time>
 </a>
       
 	<div class="article-tag tagcloud">
@@ -204,18 +208,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2016/12/13/看雪CTF-2016第二十一题Writeup/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          看雪CTF-2016第二十一题Writeup
-        
-      </div>
-    </a>
   
-  
-    <a href="/2016/12/09/看雪CTF-2016第十八题Writeup/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">看雪CTF-2016第十八题Writeup</div>
+    <a href="/2016/12/13/看雪CTF-2016第十七题Writeup/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">看雪CTF-2016第十七题Writeup</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -249,7 +244,7 @@
 
 <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="看雪CTF-2016第十七题Writeup" data-title="看雪CTF-2016第十七题Writeup" data-url="https://niwbie.github.io/2016/12/13/看雪CTF-2016第十七题Writeup/"></div>
+	<div class="ds-thread" data-thread-key="看雪CTF-2016第二十一题Writeup" data-title="看雪CTF-2016第二十一题Writeup" data-url="https://niwbie.github.io/2016/12/13/看雪CTF-2016第二十一题Writeup/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">
