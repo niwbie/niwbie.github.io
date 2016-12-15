@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <link rel="dns-prefetch" href="https://niwbie.github.io">
+  <title>看雪CrackMe第二十题之多线程反调试及程序异常处理 | isee&#39;blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="源程序：http://pan.baidu.com/s/1o8wbmVg本题的反调试只有三种，现在理解了之后再去看就比较简单了。由于之前对于多线程的反调试以及程序异常处理（SEH）没有太多的了解，所以结合这题恶补了一下这方面的知识，收获颇多。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="看雪CrackMe第二十题之多线程反调试及程序异常处理">
+<meta property="og:url" content="https://niwbie.github.io/2016/12/15/看雪CTF-2016第二十题Writeup/index.html">
+<meta property="og:site_name" content="isee'blog">
+<meta property="og:description" content="源程序：http://pan.baidu.com/s/1o8wbmVg本题的反调试只有三种，现在理解了之后再去看就比较简单了。由于之前对于多线程的反调试以及程序异常处理（SEH）没有太多的了解，所以结合这题恶补了一下这方面的知识，收获颇多。">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第二十题Writeup/1.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第二十题Writeup/2.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第二十题Writeup/3.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第二十题Writeup/4.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第二十题Writeup/5.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第二十题Writeup/6.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第二十题Writeup/7.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第二十题Writeup/8.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第二十题Writeup/9.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第二十题Writeup/10.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第二十题Writeup/11.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第二十题Writeup/12.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第二十题Writeup/13.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第二十题Writeup/14.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第二十题Writeup/15.png">
+<meta property="og:updated_time" content="2016-12-15T09:16:54.354Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="看雪CrackMe第二十题之多线程反调试及程序异常处理">
+<meta name="twitter:description" content="源程序：http://pan.baidu.com/s/1o8wbmVg本题的反调试只有三种，现在理解了之后再去看就比较简单了。由于之前对于多线程的反调试以及程序异常处理（SEH）没有太多的了解，所以结合这题恶补了一下这方面的知识，收获颇多。">
+<meta name="twitter:image" content="https://niwbie.github.io/image/看雪CTF2016第二十题Writeup/1.png">
+  
+    <link rel="alternative" href="/atom.xml" title="isee&#39;blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/image/favicon.ico">
+  
+  <link rel="stylesheet" href="/main.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+      <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img src="/image/favicon.jpg" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">isee</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">从未放弃治疗</p>
+		
+
+		<nav class="header-menu">
+			<ul>
+			
+				<li><a href="/">主页</a></li>
+	        
+				<li><a href="/">相册</a></li>
+	        
+			</ul>
+		</nav>
+		<nav class="header-smart-menu">
+	        
+    		
+    			
+    			<a class="js-smart-menu" data-idx="0" href="javascript:void(0)">所有文章</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="1" href="javascript:void(0)">标签</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="2" href="javascript:void(0)">友链</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="3" href="javascript:void(0)">关于我</a>
+    			
+    			
+            
+		</nav>
+		<nav class="header-nav">
+			<div class="social">
+				
+					<a class="rss" target="_blank" href="#" title="rss">rss</a>
+		        
+			</div>
+		</nav>
+	</header>		
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"><i class="icon-list"></i></div>
+  		<h1 class="header-author js-mobile-header hide">isee</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				
+					<img src="/image/favicon.jpg" class="js-avatar">
+				
+			</div>
+			<hgroup>
+			  <h1 class="header-author">isee</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">从未放弃治疗</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/">相册</a></li>
+		        
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="rss" target="_blank" href="#" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap">
+        <article id="post-看雪CTF-2016第二十题Writeup" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      看雪CrackMe第二十题之多线程反调试及程序异常处理
+    </h1>
+  
+      
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>源程序：<a href="http://pan.baidu.com/s/1o8wbmVg" target="_blank" rel="external">http://pan.baidu.com/s/1o8wbmVg</a><br>本题的反调试只有三种，现在理解了之后再去看就比较简单了。由于之前对于多线程的反调试以及程序异常处理（SEH）没有太多的了解，所以结合这题恶补了一下这方面的知识，收获颇多。</p>
+<a id="more"></a>     
+<p>首先来说多线程调试。<br>由于OD是单线程工作的，所以在OD中调试多线程程序是会发生一些不确定的错误。以前也发生过，但是都没有深入去解决它。所以做这题时多花了一些时间把这些问题解决掉。</p>
+<p>首先是如下错误：<br><img src="/image/看雪CTF2016第二十题Writeup/1.png" alt="这里写图片描述"></p>
+<p>这个错误是由于在调用创建线程函数CreateThread之前，就对线程函数地址0x3E015C下了断点，所以导致某些时候 ，由于系统未给新线程分配资源，因此出现如下错误。以前我调试时常常迷迷糊糊就进入新线程，而有时又怎么也进不了。。。</p>
+<p>解决的办法是更改StrongOD插件的设置：<br><img src="/image/看雪CTF2016第二十题Writeup/2.png" alt="这里写图片描述"></p>
+<p>如上图，去掉右边”Skip SomeExceptions”前面的勾。<br>这样，就不会出现如上错误。</p>
+<p>同时，如果想在CreateThread之后快速调到线程函数去，只需要在线程中将当前线程设置为“空闲”即可：<br><img src="/image/看雪CTF2016第二十题Writeup/3.png" alt="这里写图片描述"></p>
+<p>一些调试的小技巧而已，接下来就是分析本题的反调试。</p>
+<p>首先定位到main函数：<br><img src="/image/看雪CTF2016第二十题Writeup/4.png" alt="这里写图片描述"></p>
+<p>这里创建了线程（函数）sub_4020F0，然后循环获取输入SN。<br>进去分析线程sub_4020F0:<br><img src="/image/看雪CTF2016第二十题Writeup/5.png" alt="这里写图片描述"></p>
+<p>分别创建了StartAddress和sub_401FA0两个线程。</p>
+<p>0x01 StartAddress线程的反调试<br><img src="/image/看雪CTF2016第二十题Writeup/6.png" alt="这里写图片描述"></p>
+<p>这个线程是通过获取时间来判断是否是调试器，比较简单。OD中找到exit函数把它jmp掉就可以了。</p>
+<p>0x02 sub_401FA0的反调试<br><img src="/image/看雪CTF2016第二十题Writeup/7.png" alt="这里写图片描述"></p>
+<p>可以看到这个线程又创建了两个新的线程：sub_401E60和sub_401EA0。这个下面再说<br>然后判断当前是否是在调试器环境,如果是则执行exit。同样比较简单，OD中找到exit函数jmp掉。</p>
+<p>0x03<br>上面创建的两个线程中，sub_401E60并没有反调试。<br>再看sub_401EA0,有一些获取调试器环境的判断，但是并没有明显的退出。所以这里分析了很久。结合SEH对此处进行分析。其实只要是做了一些迷惑，导致用户如果在调试器环境下，进到错误的判断函数。</p>
+<p>我们从IDA中看这个sub_401EA0函数。如果看反汇编，好像看不出什么。那我们切换到text view就看到猫腻了：<br><img src="/image/看雪CTF2016第二十题Writeup/8.png" alt="这里写图片描述"></p>
+<p>首先是这里有个__except_handler4，说明作者对这里进行了异常处理。那么往下搜索，在这里应该能够找到”Exception filter” 和”Exception handler”：<br><img src="/image/看雪CTF2016第二十题Writeup/9.png" alt="这里写图片描述"></p>
+<p>而且在搜索的过程中，发现软件作者人为在代码中加入了 “int 3”代码，触发异常进入Exception handler，计算[ebp-0x20]的地址来决定跳转的函数，其中[ebp-0x20]由v10决定：<br><img src="/image/看雪CTF2016第二十题Writeup/10.png" alt="这里写图片描述"></p>
+<p>如上图，如果是在调试器环境，v10= 1|2 =3，导致最后跳转到0x401B40，进入到错误的判断函数。<br>正确地情况应该是，应满足输入input[1]%4=1,这样v10|v1 =1 ,最终ecx的值就为1，从Exception handler处跳转到正确地函数sub_401500。所以在调试时，只需将401F2A处改为 “or esi,0x1”即可：<br><img src="/image/看雪CTF2016第二十题Writeup/11.png" alt="这里写图片描述"></p>
+<p>然后开始分sub_401500处的算法分析：<br>先看最底下的成功条件：<br><img src="/image/看雪CTF2016第二十题Writeup/12.png" alt="这里写图片描述"></p>
+<p>计算出v47=4，才能满足调到函数sub_4010C0，打印成功。</p>
+<p>从头开始看：<br><img src="/image/看雪CTF2016第二十题Writeup/13.png" alt="这里写图片描述"></p>
+<p>这里构造了一个11*11的矩阵，其中以[0][0]开头的斜对角线由用户输入决定，这个也是也是由一张表来决定的：<br><img src="/image/看雪CTF2016第二十题Writeup/14.png" alt="这里写图片描述"></p>
+<p>例如如果用户输入e(101),则填入矩阵的数为410ee0[101] （注意为dword，实际看内存地址时要乘以4）。<br>所以可以由以下函数计算出来：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line">char ee[] = &#123;		0x3A,0x5D,0x49,0x5F,0x78,0x51,0x0F,0x55,0x5E,0x12,0x15,0x26,0x58,0x47,0x69,0x6D,</div><div class="line">				0x3F,0x5C,0x56,0x3D,0x29,0x04,0x77,0x4F,0x52,0x6E,0x2C,0x1B,0x44,0x1C,0x14,0x4C,</div><div class="line">				0x46,0x03,0x3B,0x25,0x38,0x06,0x7B,0x7E,0x0C,0x24,0x4E,0x3C,0x1E,0x13,0x1D,0x53,</div><div class="line">				0x40,0x57,0x54,0x6A,0x5B,0x31,0x66,0x27,0x74,0x32,0x2A,0x5A,0x60,0x0A,0x02,0x3E,</div><div class="line">				0x34,0x08,0x6F,0x23,0x7F,0x30,0x10,0x07,0x64,0x17,0x67,0x05,0x48,0x62,0x7A,0x73,</div><div class="line">				0x01,0x71,0x1F,0x37,0x18,0x70,0x4B,0x7C,0x2E,0x79,0x2D,0x33,0x20,0x28,0x2B,0x43,</div><div class="line">				0x22,0x72,0x36,0x41,0x11,0x42,0x6B,0x61,0x59,0x19,0x2F,0x39,0x68,0x45,0x0B,0x76,</div><div class="line">				0x1A,0x21,0x7D,0x80,0x4D,0x63,0x50,0x16,0x65,0x35,0x6C,0x4A,0x0E,0x75,0x09,0x0D&#125;;</div><div class="line"></div><div class="line">//斜对角线的内容暂定为0，且最右下角一定为0x1</div><div class="line">char unkonwnTable[11][11] = &#123;</div><div class="line">						0x00,  0x2D,  0x42,  0x4C,  0x56,  0x60,  0x6A,  0x74,  0x05,  0x0F,  0x19,  </div><div class="line">						0x3B,  0x00,  0x4F,  0x59,  0x6E,  0x78,  0x09,  0x13,  0x1D,  0x27,  0x31,</div><div class="line">						0x53,  0x5D,  0x00,  0x71,  0x02,  0x0C,  0x21,  0x2B,  0x35,  0x3F,  0x49,</div><div class="line">						0x6B,  0x75,  0x06,  0x00,  0x1A,  0x24,  0x2E,  0x38,  0x4D,  0x57,  0x61, </div><div class="line">						0x0A,  0x14,  0x1E,  0x28,  0x00,  0x3C,  0x46,  0x50,  0x5A,  0x64,  0x79,</div><div class="line">						0x17,  0x2C,  0x36,  0x40,  0x4A,  0x00,  0x5E,  0x68,  0x72,  0x03,  0x0D,</div><div class="line">						0x2F,  0x39,  0x43,  0x58,  0x62,  0x6C,  0x00,  0x07,  0x11,  0x1B,  0x25,</div><div class="line">						0x47,  0x51,  0x5B,  0x65,  0x6F,  0x0B,  0x15,  0x00,  0x29,  0x33,  0x3D, </div><div class="line">						0x5F,  0x69,  0x73,  0x04,  0x0E,  0x18,  0x22,  0x37,  0x00,  0x4B,  0x55,</div><div class="line">						0x77,  0x08,  0x12,  0x1C,  0x26,  0x30,  0x3A,  0x44,  0x4E,  0x00,  0x6D,</div><div class="line">						0x16,  0x20,  0x2A,  0x34,  0x3E,  0x48,  0x52,  0x5C,  0x66,  0x70,  0x01</div><div class="line">&#125;;</div><div class="line"></div><div class="line">//正推，根据输入计算应填入的内容</div><div class="line">void calcTable(char a)&#123;</div><div class="line">	</div><div class="line">	char out = ee[(__int8 )a];</div><div class="line">	printf((const char *)ee[a]);</div><div class="line">&#125;</div><div class="line"></div><div class="line">//倒推，根据应填入的内容倒推输入</div><div class="line">void calcInput(__int8 input)&#123;</div><div class="line">	for (int i=0;i&lt;128;i++)&#123;</div><div class="line">		if(input == ee[i])&#123;</div><div class="line">			printf(&quot;%c&quot;,i);</div><div class="line">			</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>之后根据v47倒推了一下其他的，但是没什么结果。只能猜测是否每行每列的值都相等。<br>这样，从最后一行可以得出总和为0x2F9,倒推出其他10个输入，程序如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">__int8 calcSum(int k)&#123;</div><div class="line">	__int8 sum=0;</div><div class="line">	for (int i=0;i&lt;11;i++)</div><div class="line">		sum+=unkonwnTable[k][i];</div><div class="line">	//printf(&quot;%d&quot;,sum);</div><div class="line">	return 0x29F-sum;</div><div class="line">&#125;</div><div class="line">int _tmain(int argc, _TCHAR* argv[])</div><div class="line">&#123;</div><div class="line">	for(int i=0;i&lt;11;i++)</div><div class="line">		calcInput(calcSum(i));</div><div class="line">	Sleep(-1);</div><div class="line">	return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>得出结果：<br><img src="/image/看雪CTF2016第二十题Writeup/15.png" alt="这里写图片描述"></p>
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/12/15/看雪CTF-2016第二十题Writeup/" class="archive-article-date">
+  	<time datetime="2016-12-15T09:09:43.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-12-15</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CrackMe/">CrackMe</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/逆向/">逆向</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2016/12/13/看雪CTF-2016第二十一题Writeup/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">看雪CTF-2016第二十一题Writeup</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+	    <a class="jiathis_button_twitter"></a>
+	    <a class="jiathis_button_plus"></a> 
+	    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="//v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="看雪CTF-2016第二十题Writeup" data-title="看雪CrackMe第二十题之多线程反调试及程序异常处理" data-url="https://niwbie.github.io/2016/12/15/看雪CTF-2016第二十题Writeup/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"isee233"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 isee
+    	</div>
+        <span id="busuanzi_container_site_pv">
+             <i class="fa fa-flag"></i>    你是第<span id="busuanzi_value_site_pv"><i class="fa fa-spinner fa-spin"></i></span>个到访的小伙伴
+        </span>
+    </div>
+  </div>
+</footer>
+    </div>
+    <script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: false,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false,
+		root: "/",
+		innerArchive: true
+	}
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?e437fc8d2c87edc2105c789a41592718";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<script src="/./main.js"></script>
+
+
+    
+<div class="tools-col">
+  <ul class="btn-wrap">
+    
+      <li class="chose" data-hook="tools-section-all"><span class="text">全部</span><i class="icon-book"></i></li>
+    
+    
+      <li data-hook="tools-section-tag"><span class="text">标签</span><i class="icon-price-tags"></i></li>
+    
+    
+      <li data-hook="tools-section-friends"><span class="text">友链</span><i class="icon-link"></i></li>
+    
+    
+      <li data-hook="tools-section-me"><span class="text">我</span><i class="icon-smile"></i></li>
+    
+  </ul>
+  <div class="tools-wrap">
+    
+    	<section class="tools-section tools-section-all chose">
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-tag">
+    			<div class="widget tagcloud" id="js-tagcloud">
+    				<a href="/tags/CrackMe/" style="font-size: 20px;">CrackMe</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/ctf/" style="font-size: 20px;">ctf</a> <a href="/tags/逆向/" style="font-size: 20px;">逆向</a>
+    			</div>
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-friends">
+  		
+  			<div class="friends-wrap" id="js-friends">
+  			
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.youngroe.com/">Lyon&#39;s blog</a>
+  	        
+  	        </div>
+  		
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-me">
+  	  	
+  	  		<div class="aboutme-wrap" id="js-aboutme">汪！</div>
+  	  	
+    	</section>
+    
+  </div>
+  
+</div>
+    <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+  </div>
+</body>
+</html>
