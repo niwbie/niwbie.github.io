@@ -6,14 +6,22 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://niwbie.github.io">
-  <title>Tag: Hexo | isee&#39;blog</title>
+  <title>ZCTF2017 reverse1 writeup | isee&#39;blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="isee'blog">
-<meta property="og:url" content="https://niwbie.github.io/tags/Hexo/index.html">
+  <meta name="description" content="源程序：http://pan.baidu.com/s/1i4MxSmLreverse200">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ZCTF2017 reverse1 writeup">
+<meta property="og:url" content="https://niwbie.github.io/2017/02/27/ZCTF2017 reverse1 writeup - 副本/index.html">
 <meta property="og:site_name" content="isee'blog">
+<meta property="og:description" content="源程序：http://pan.baidu.com/s/1i4MxSmLreverse200">
+<meta property="og:image" content="https://niwbie.github.io/image/ZCTF2017/1.png">
+<meta property="og:image" content="https://niwbie.github.io/image/ZCTF2017/2.png">
+<meta property="og:image" content="https://niwbie.github.io/image/ZCTF2017/3.png">
+<meta property="og:updated_time" content="2017-03-04T08:39:11.527Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="isee'blog">
+<meta name="twitter:title" content="ZCTF2017 reverse1 writeup">
+<meta name="twitter:description" content="源程序：http://pan.baidu.com/s/1i4MxSmLreverse200">
+<meta name="twitter:image" content="https://niwbie.github.io/image/ZCTF2017/1.png">
   
     <link rel="alternative" href="/atom.xml" title="isee&#39;blog" type="application/atom+xml">
   
@@ -129,86 +137,183 @@
 </nav>
 
       <div class="body-wrap">
+        <article id="post-ZCTF2017 reverse1 writeup - 副本" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
         
   
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2016" class="archive-year">2016</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2016/11/08/Hexo站点优化/" class="archive-article-date">
-  	<time datetime="2016-11-08T07:05:22.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-11-08</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/11/08/Hexo站点优化/">Hexo站点优化</a>
+    <h1 class="article-title" itemprop="name">
+      ZCTF2017 reverse1 writeup
     </h1>
   
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hexo/">Hexo</a></li></ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
+      
+      </header>
     
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2016/11/07/使用Hexo-Ghuhub搭建个人博客/" class="archive-article-date">
-  	<time datetime="2016-11-07T02:36:00.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-11-07</time>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>源程序：<a href="http://pan.baidu.com/s/1i4MxSmL" target="_blank" rel="external">http://pan.baidu.com/s/1i4MxSmL</a><br>reverse200</p>
+<a id="more"></a>
+<p>这道题是个dll文件，用IDA查看导出函数：<br><img src="/image/ZCTF2017/1.png" alt="这里写图片描述"></p>
+<p>看了一下，主要的判断函数是在get_stirng里面，所以写了个加载器把dll加载起来，然后调用导出函数get_string。<br>接下来就是一些简单的去花指令，去完之后，看IDA的流程就很清晰了，从encrypt_str函数跟到encrypt函数，大致判断出是经过一系列的处理后，与固定数据进行两两比较：<br><img src="/image/ZCTF2017/2.png" alt="这里写图片描述"></p>
+<p>进行比较的数据：<br>BF F1 6A 2C 10 0B 16 59 BA 3A 8C 49 05 1B 04 E2<br>85 D5 C2 FC D7 9B E9 42 00 EA 87 0A 03 9E D0 00 </p>
+<p>所以直接根据IDA的算法写了爆破程序：</p>
+<pre><code>#include &quot;stdafx.h&quot;
+#include &lt;windows.h&gt;
+
+
+BYTE out[33] = {0};
+int num = 0;
+
+BYTE  *calc(int a , int b){
+    BYTE tmp[3] = {0}; 
+    BYTE input[2] = {0};
+    for (int i=48; i&lt;127; i++){
+        for(int j=48; j&lt;127; j++){
+            input[0] = (BYTE)i;
+            input[1] = (BYTE)j;
+
+            int a2 = 0;
+            int a1 = 0;
+            int v4 = 0;
+            a2 = input[0];
+            a1 = input[1];
+            v4 = 0xb9;
+            int a4[4] = {0xde, 0xad, 0xbe, 0xef};
+
+            do{
+                a2 += (a1 + (((char)a1 &gt;&gt; 5) ^ 16 * (char)a1)) ^ (v4 + a4[v4&amp;3]);
+                a1 += (v4 + a4[((char)v4 &gt;&gt; 11) &amp; 3]) ^ (a2 + (16 * (char)a2 ^ ((char)a2 &gt;&gt; 5)));
+                v4 -= 0x47;
+            }while ( (BYTE)v4 != 0xd9 );
+
+            BYTE out0 = *(BYTE*)&amp;a2;
+            BYTE out1 = *(BYTE*)&amp;a1;
+
+            if(out0==a &amp;&amp; out1==b){
+                tmp[0] = i;
+                tmp[1] = j;
+                memcpy(out + num, tmp, 2);
+                return tmp;
+            }
+        }
+    }
+}
+
+int _tmain(int argc, _TCHAR* argv[])
+{
+
+    calc(0xbf, 0xf1);
+    num += 2;
+    calc(0x6a, 0x2c);
+    num += 2;
+    calc(0x10, 0x0b);
+    num += 2;
+    calc(0x16, 0x59);
+    num += 2;
+    calc(0xba, 0x3a);
+    num += 2;
+    calc(0x8c, 0x49);
+    num += 2;
+    calc(0x05, 0x1b);
+    num += 2;
+    calc(0x04, 0xe2);
+    num += 2;
+    calc(0x85, 0xd5);
+    num += 2;
+    calc(0xc2, 0xfc);
+    num += 2;
+    calc(0xd7, 0x9b);
+    num += 2;
+    calc(0xe9, 0x42);
+    num += 2;
+    printf(&quot;flag: %s\n&quot;, out);
+    Sleep(-1);
+    return 0;
+}
+</code></pre><p>结果：<br><img src="/image/ZCTF2017/3.png" alt="这里写图片描述"></p>
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2017/02/27/ZCTF2017 reverse1 writeup - 副本/" class="archive-article-date">
+  	<time datetime="2017-02-27T06:35:33.000Z" itemprop="datePublished"><i class="icon-clock"></i>2017-02-27</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/11/07/使用Hexo-Ghuhub搭建个人博客/">使用Hexo+Git搭建个人博客</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hexo/">Hexo</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CrackMe/">CrackMe</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/逆向/">逆向</a></li></ul>
 	</div>
 
-          
+      
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
-  
-  
-    </div></section>
-  
 
-    
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2017/02/27/ZCTF2017-reverse1-writeup/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">ZCTF2017 reverse1 writeup</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+	    <a class="jiathis_button_twitter"></a>
+	    <a class="jiathis_button_plus"></a> 
+	    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="//v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="ZCTF2017 reverse1 writeup - 副本" data-title="ZCTF2017 reverse1 writeup" data-url="https://niwbie.github.io/2017/02/27/ZCTF2017 reverse1 writeup - 副本/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"isee233"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
 
 
       </div>
@@ -231,9 +336,9 @@
 		mathjax: false,
 		animate: true,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		root: "/",
