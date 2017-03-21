@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <link rel="dns-prefetch" href="https://niwbie.github.io">
+  <title>爆破一个多线程E语言程序 | isee&#39;blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="附件：最后的CM.zip">
+<meta property="og:type" content="article">
+<meta property="og:title" content="爆破一个多线程E语言程序">
+<meta property="og:url" content="https://niwbie.github.io/2016/10/20/爆破一个多线程E语言程序/index.html">
+<meta property="og:site_name" content="isee'blog">
+<meta property="og:description" content="附件：最后的CM.zip">
+<meta property="og:image" content="https://niwbie.github.io/image/爆破一个多线程E语言程序/1.png">
+<meta property="og:image" content="https://niwbie.github.io/image/爆破一个多线程E语言程序/2.png">
+<meta property="og:image" content="https://niwbie.github.io/image/爆破一个多线程E语言程序/3.png">
+<meta property="og:image" content="https://niwbie.github.io/image/爆破一个多线程E语言程序/4.png">
+<meta property="og:image" content="https://niwbie.github.io/image/爆破一个多线程E语言程序/5.png">
+<meta property="og:image" content="https://niwbie.github.io/image/爆破一个多线程E语言程序/6.png">
+<meta property="og:image" content="https://niwbie.github.io/image/爆破一个多线程E语言程序/7.png">
+<meta property="og:image" content="https://niwbie.github.io/image/爆破一个多线程E语言程序/8.png">
+<meta property="og:image" content="https://niwbie.github.io/image/爆破一个多线程E语言程序/9.png">
+<meta property="og:image" content="https://niwbie.github.io/image/爆破一个多线程E语言程序/10.png">
+<meta property="og:image" content="https://niwbie.github.io/image/爆破一个多线程E语言程序/11.png">
+<meta property="og:image" content="https://niwbie.github.io/image/爆破一个多线程E语言程序/12.png">
+<meta property="og:image" content="https://niwbie.github.io/image/爆破一个多线程E语言程序/13.png">
+<meta property="og:image" content="https://niwbie.github.io/image/爆破一个多线程E语言程序/14.png">
+<meta property="og:image" content="https://niwbie.github.io/image/爆破一个多线程E语言程序/15.png">
+<meta property="og:updated_time" content="2017-03-17T14:07:44.621Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="爆破一个多线程E语言程序">
+<meta name="twitter:description" content="附件：最后的CM.zip">
+<meta name="twitter:image" content="https://niwbie.github.io/image/爆破一个多线程E语言程序/1.png">
+  
+    <link rel="alternative" href="/atom.xml" title="isee&#39;blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/image/favicon.ico">
+  
+  <link rel="stylesheet" href="/main.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+      <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img src="/image/favicon.jpg" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">isee</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">从未放弃治疗</p>
+		
+
+		<nav class="header-menu">
+			<ul>
+			
+				<li><a href="/">主页</a></li>
+	        
+				<li><a href="/">相册</a></li>
+	        
+			</ul>
+		</nav>
+		<nav class="header-smart-menu">
+	        
+    		
+    			
+    			<a class="js-smart-menu" data-idx="0" href="javascript:void(0)">所有文章</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="1" href="javascript:void(0)">标签</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="2" href="javascript:void(0)">友链</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="3" href="javascript:void(0)">关于我</a>
+    			
+    			
+            
+		</nav>
+		<nav class="header-nav">
+			<div class="social">
+				
+					<a class="rss" target="_blank" href="#" title="rss">rss</a>
+		        
+			</div>
+		</nav>
+	</header>		
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"><i class="icon-list"></i></div>
+  		<h1 class="header-author js-mobile-header hide">isee</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				
+					<img src="/image/favicon.jpg" class="js-avatar">
+				
+			</div>
+			<hgroup>
+			  <h1 class="header-author">isee</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">从未放弃治疗</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/">相册</a></li>
+		        
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="rss" target="_blank" href="#" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap">
+        <article id="post-爆破一个多线程E语言程序" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      爆破一个多线程E语言程序
+    </h1>
+  
+      
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>附件：<a href="/image/爆破一个多线程E语言程序/最后的CM.zip">最后的CM.zip</a></p>
+<a id="more"></a>
+<p>首先打开这个CrackMe程序：<br><img src="/image/爆破一个多线程E语言程序/1.png" alt="这里写图片描述"></p>
+<p>看来应该是点击按钮后获取输入的注册码进行验证。</p>
+<p>用IDA打开来看，代码非常的乱，很多地方根本F5不出来。看来应该是作者进行过处理的，反正我是搞不太懂。。。那就直接上OD来一步步调试吧。</p>
+<p>用OD打开，在GetWindowText下断，结果发现它一直会断下来，应该是循环读取的，那么这种下断点的方法也不行了。</p>
+<p>随便输一个注册码吧，弹出这个：<br><img src="/image/爆破一个多线程E语言程序/2.png" alt="这里写图片描述"></p>
+<p>而且点击确定之后它还是循环弹出这个 窗口。什么鬼啊，只能用任务管理器把它关掉。弹出的窗口是空白的，那么这种找关键字符串下断点的方法也行不通了，作者你赢了。</p>
+<p>另外一个办法，就是使用OD找到点击按钮的处理函数。如果是C/C++程序的话，，可以使用RUN跟踪的方法对消息下断点，从而找到处理函数。但是这个E语言程序，试了几个程序这个办法都行不通。后来找到了一个E语言逆向神器：E-Debug。可以很方便快速的找到按钮的事件函数：<br><img src="/image/爆破一个多线程E语言程序/3.png" alt="这里写图片描述"></p>
+<p>就是这里了，我们可以在0x4026B7处下断点。<br>但是进到这里，跑了一段后，根本没有头绪啊！而且用IDA也看不了，作者的心机太深了！</p>
+<p>最后打开IDA看能不能从导入函数里面找到突破点。从导入函数看来，还是有很多我都没有用过的函数，太菜了。找了半天，找到一个CreateThread；因为前面看来它是循环读取的，那么应该是要创建一个线程才行，那就从这个函数入手吧（看来以后搞不定的话，就在CreateThread下个断点，说不定会有收获）：<br><img src="/image/爆破一个多线程E语言程序/4.png" alt="这里写图片描述"></p>
+<p>看到这里的线程函数是0x0040340A,那就在这个地址上下个断点继续跟。这里有个要注意的就是，要先让它执行完这个CreateThread后，到外层有个CloseHandle（)后，再按F9调到线程函数0x0040340A,不然有可能导致程序死掉又得重新跑。</p>
+<p>断到了0x0040340A之后继续F8跑吧，感觉没有什么特别的地方。到了0x00403438后，再F8程序就卡死了，搞了半天不知道是什么原因。那就F7进去继续跑吧。但是进去后也没有发现什么特别的，而且到了0x402825时，再F8又再一次出现卡死：<br><img src="/image/爆破一个多线程E语言程序/5.png" alt="这里写图片描述"></p>
+<p>为什么每次卡死都是call啊，作者的套路太深了。没办法，只能在call的下一个语句下断点，然后F9下去才能跳过这个Call。知道在0x00402841这里，出现了一段不明字符串：<br><img src="/image/爆破一个多线程E语言程序/6.png" alt="这里写图片描述"></p>
+<p>看来应该跟密码有关系。但是再往下跟进一段后，发现根本毫无头绪。而且无法用IDA查看。算法太复杂了，以我的水平根本没法写注册机，看来这个破解只能使用爆破了。</p>
+<p>用上面的办法重复跳过Call之后（好像重复了strlen（input）次），发现断点又来到了CreateThread这个函数里。。。。。看来有创建了个线程 。没办法，分析吧：<br><img src="/image/爆破一个多线程E语言程序/7.png" alt="这里写图片描述"></p>
+<p>在线程函数0x00402612断下，一直F8跑。。。发现到了0x402638又出现卡死的情况。。。还是老办法，在它下一句下断点吧。F9后发现直接就弹出提示框了，看来这个地址有猫腻，我们跟进去看一下：<br><img src="/image/爆破一个多线程E语言程序/8.png" alt="这里写图片描述"></p>
+<p>到了0x0040209C这个call，在下一句下断点的这个办法不好用了。。。调试了半天才找到解决办法。那就是在工具栏打开【查看】-&gt; 【线程】，根据前面创建线程的句柄把该线程激活了（我是一个个点的。。。）。发现可以了。这套路太深了。。。<br>不管它了，接着往下跑，发现到了0040213D，执行完就直接弹出错误窗口了。看来判断函数就在这之间了！<br><img src="/image/爆破一个多线程E语言程序/9.png" alt="这里写图片描述"></p>
+<p>再重新跑一边，发现上边的0x004020B0处push了两个参数：上面提到的字符串和我们输入的注册码“helloworld”：<br><img src="/image/爆破一个多线程E语言程序/10.png" alt="这里写图片描述"></p>
+<p>进去后，看算法应该是每次取4个字节与它的字符串进行比较。不过具体算法我们就不研究了。既然我们想要的是爆破，不写注册机的话，我们只关心这个函数的返回值就好。<br>跳出这个0x00401FE1函数，看EAX的值是1,。看样子应该是不相等就返回1。后面把EAX的值放入[ebp-0xc]处：<br><img src="/image/爆破一个多线程E语言程序/11.png" alt="这里写图片描述"></p>
+<p>那么接下去肯定是条件判断了，一直走到0x004020D6处，这里把[ebp-0xc]的值（就是刚才的返回值）取出来与0x0进行比较，接着是跳转未实现。那么我们想要爆破，那就改成JMP 0x0040214A 让他跳转好了：<br><img src="/image/爆破一个多线程E语言程序/12.png" alt="这里写图片描述"></p>
+<p>以为这下直接F9就可以弹出破解成功的提示，结果还是不行。。。程序直接挂了。估计后面还是有进行判断吧。那就继续单步进去调。</p>
+<p>到了0x0040214A处之后，F8还是停住了，按之前的办法恢复：<br><img src="/image/爆破一个多线程E语言程序/13.png" alt="这里写图片描述"></p>
+<p>在0x402184处又push了我们输入的“helloworld”和已知字符串，我们直接看它call完函数0x401FE1之后的返回值吧。返回值为0xFFFFFFFF，并与0进行比较，不为0则跳转到0x402289:<br><img src="/image/爆破一个多线程E语言程序/14.png" alt="这里写图片描述"></p>
+<p>进到了0x402289后，还是在每个call后面下断点，最后就直接弹出错误提示框了。那么想要爆破，很明显我们就不让程序调到0x402289这里就可以了。直接NOP掉。F9到底，直接弹出成功窗口：<br><img src="/image/爆破一个多线程E语言程序/15.png" alt="这里写图片描述"></p>
+<p>这样，保存刚才修改的程序，或者直接用010打开源程序，在相应的位置把机器码改掉实现爆破。</p>
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/10/20/爆破一个多线程E语言程序/" class="archive-article-date">
+  	<time datetime="2016-10-20T13:57:17.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-10-20</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CrackMe/">CrackMe</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/逆向/">逆向</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/2016/11/03/看雪CTF-2016第一题Writeup/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          看雪CTF 2016第一题Writeup
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/09/22/C函数调用和堆栈/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">C函数调用和堆栈</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+	    <a class="jiathis_button_twitter"></a>
+	    <a class="jiathis_button_plus"></a> 
+	    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="//v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="爆破一个多线程E语言程序" data-title="爆破一个多线程E语言程序" data-url="https://niwbie.github.io/2016/10/20/爆破一个多线程E语言程序/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"isee233"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2017 isee
+    	</div>
+        <span id="busuanzi_container_site_pv">
+             <i class="fa fa-flag"></i>    你是第<span id="busuanzi_value_site_pv"><i class="fa fa-spinner fa-spin"></i></span>个到访的小伙伴
+        </span>
+    </div>
+  </div>
+</footer>
+    </div>
+    <script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: false,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false,
+		root: "/",
+		innerArchive: true
+	}
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?e437fc8d2c87edc2105c789a41592718";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<script src="/./main.js"></script>
+
+
+    
+<div class="tools-col">
+  <ul class="btn-wrap">
+    
+      <li class="chose" data-hook="tools-section-all"><span class="text">全部</span><i class="icon-book"></i></li>
+    
+    
+      <li data-hook="tools-section-tag"><span class="text">标签</span><i class="icon-price-tags"></i></li>
+    
+    
+      <li data-hook="tools-section-friends"><span class="text">友链</span><i class="icon-link"></i></li>
+    
+    
+      <li data-hook="tools-section-me"><span class="text">我</span><i class="icon-smile"></i></li>
+    
+  </ul>
+  <div class="tools-wrap">
+    
+    	<section class="tools-section tools-section-all chose">
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-tag">
+    			<div class="widget tagcloud" id="js-tagcloud">
+    				<a href="/tags/C/" style="font-size: 13.33px;">C</a> <a href="/tags/CrackMe/" style="font-size: 16.67px;">CrackMe</a> <a href="/tags/Hexo/" style="font-size: 11.67px;">Hexo</a> <a href="/tags/Linux/" style="font-size: 15px;">Linux</a> <a href="/tags/ctf/" style="font-size: 18.33px;">ctf</a> <a href="/tags/漏洞挖掘/" style="font-size: 13.33px;">漏洞挖掘</a> <a href="/tags/病毒分析/" style="font-size: 10px;">病毒分析</a> <a href="/tags/逆向/" style="font-size: 20px;">逆向</a>
+    			</div>
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-friends">
+  		
+  			<div class="friends-wrap" id="js-friends">
+  			
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.youngroe.com/">Lyon&#39;s blog</a>
+  	        
+  	        </div>
+  		
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-me">
+  	  	
+  	  		<div class="aboutme-wrap" id="js-aboutme">汪！</div>
+  	  	
+    	</section>
+    
+  </div>
+  
+</div>
+    <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+  </div>
+</body>
+</html>

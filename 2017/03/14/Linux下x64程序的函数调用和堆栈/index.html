@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <link rel="dns-prefetch" href="https://niwbie.github.io">
+  <title>Linux下x64程序的函数调用和堆栈(转) | isee&#39;blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="首先先来科普一下64位CPU的混乱的术语：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux下x64程序的函数调用和堆栈(转)">
+<meta property="og:url" content="https://niwbie.github.io/2017/03/14/Linux下x64程序的函数调用和堆栈/index.html">
+<meta property="og:site_name" content="isee'blog">
+<meta property="og:description" content="首先先来科普一下64位CPU的混乱的术语：">
+<meta property="og:updated_time" content="2017-03-18T01:30:53.132Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux下x64程序的函数调用和堆栈(转)">
+<meta name="twitter:description" content="首先先来科普一下64位CPU的混乱的术语：">
+  
+    <link rel="alternative" href="/atom.xml" title="isee&#39;blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/image/favicon.ico">
+  
+  <link rel="stylesheet" href="/main.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+      <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img src="/image/favicon.jpg" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">isee</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">从未放弃治疗</p>
+		
+
+		<nav class="header-menu">
+			<ul>
+			
+				<li><a href="/">主页</a></li>
+	        
+				<li><a href="/">相册</a></li>
+	        
+			</ul>
+		</nav>
+		<nav class="header-smart-menu">
+	        
+    		
+    			
+    			<a class="js-smart-menu" data-idx="0" href="javascript:void(0)">所有文章</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="1" href="javascript:void(0)">标签</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="2" href="javascript:void(0)">友链</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="3" href="javascript:void(0)">关于我</a>
+    			
+    			
+            
+		</nav>
+		<nav class="header-nav">
+			<div class="social">
+				
+					<a class="rss" target="_blank" href="#" title="rss">rss</a>
+		        
+			</div>
+		</nav>
+	</header>		
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"><i class="icon-list"></i></div>
+  		<h1 class="header-author js-mobile-header hide">isee</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				
+					<img src="/image/favicon.jpg" class="js-avatar">
+				
+			</div>
+			<hgroup>
+			  <h1 class="header-author">isee</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">从未放弃治疗</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/">相册</a></li>
+		        
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="rss" target="_blank" href="#" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap">
+        <article id="post-Linux下x64程序的函数调用和堆栈" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Linux下x64程序的函数调用和堆栈(转)
+    </h1>
+  
+      
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>首先先来科普一下64位CPU的混乱的术语：<br><a id="more"></a><br>术语            |            说明<br>AMD64           |           AMD研制的64位CPU（直接向下兼容x86）.<br>EM64T               |           Intel研制的兼容AMD64的CPU.<br>Intel64            |           EM64T的新名字.<br>IA-64            |           Intel和HP合作开发的64位CPU（可以通过模拟器间接兼容x86）.<br>x86                |           Intel的IA-32、IA-16、IA-8系列的CPU.<br>x64                   |           AMD64&amp;Intel64.</p>
+<p>接下来就让我们一起看下x64中新增或变更的知识点（这里只介绍和逆向分析相关的，更详细内容可以参考Intel用户手册）。</p>
+<h2 id="64位"><a href="#64位" class="headerlink" title="64位"></a>64位</h2><p>内存地址变成64位，当然程序使用的指针也相应的编程64位的指针。所以含有绝对地址（VA）的指令大小比原来增加了4字节。同样，寄存器的大小和栈的基本单元也变成64位。</p>
+<h2 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h2><p>虚拟内存的实际大小为16TB（内核和用户空间各占8TB）。</p>
+<h2 id="通用寄存器"><a href="#通用寄存器" class="headerlink" title="通用寄存器"></a>通用寄存器</h2><p>大小扩大到64（8字节），个数增加到18个（新增了R8~R15寄存器）。x64系统下的所有通用寄存器的名称均以字母”R”开头（x86以字母”E”开头），为了向下兼容，支持访问寄存器的8位、16位、32位（eg：AL、AX、EAX）。</p>
+<p><strong>Note：</strong>64位本地模式中不使用段寄存器：CS、DS、ES、SS、FS、GS，他们仅用于向下兼容32位程序。</p>
+<h2 id="CALL-JMP指令"><a href="#CALL-JMP指令" class="headerlink" title="CALL/JMP指令"></a>CALL/JMP指令</h2><p>仍延续x86相同的指令，eg，CALL XXXXXXXX –&gt; FF15XXXXXXXX，其中XXXXXXXX“绝对地址”指向IAT区域的某个位置。但对地址解析方法不同了。具体解析方式暂时先不深入。</p>
+<h1 id="函数调用约定"><a href="#函数调用约定" class="headerlink" title="函数调用约定"></a>函数调用约定</h1><h2 id="Windows平台"><a href="#Windows平台" class="headerlink" title="Windows平台"></a>Windows平台</h2><h3 id="整数和浮点数参数"><a href="#整数和浮点数参数" class="headerlink" title="整数和浮点数参数"></a>整数和浮点数参数</h3><p>32位：cdecl、stdcall、fastcall等几种，但64位统一为一种变形的fastcall。64位的fastcall中最多可以把函数的4个参数存储到寄存器中传递：</p>
+<p>参数        整数型        浮点数型<br>1st            RCX            XMM0<br>2st            RDX            XMM1<br>3st            R8            XMM2<br>4st            R9            XMM2</p>
+<p>超过4个参数，使用栈来传递，传递顺序依照“从右向左”。此外，函数返回时传递的参数过程中所用的栈由调用者清理。看上去64位的fastcall就像32位下的cdcel和fastcall的结合。函数的前4个参数虽然使用寄存器传递，但在栈中仍为这4个参数预留了空间（32个字节）。</p>
+<p><strong>Note：</strong>当整数和浮点数参数混合出现时，eg：<br>void func(float a, int b, double c, int d);<br>a放入XMM0中，b放入RDX，c放入XMM2，d放入R9。<br>这个存放的顺序很怪异，其实这是严格按照表2.1中整数和浮点数的4个参数一一对应，需要为没用的参数预留空间，eg，c参数没有放到XMM1中，XMM1被预留位置了。</p>
+<h2 id="指针参数"><a href="#指针参数" class="headerlink" title="指针参数"></a>指针参数</h2><p>指针参数的传递遵循整数参数传递的方式。</p>
+<h2 id="结构体参数"><a href="#结构体参数" class="headerlink" title="结构体参数"></a>结构体参数</h2><p>结构体参数比较特殊，如果结构体长度小于64bit，则使用整数参数的传递规则。但如果是一个很大的结构体，那么应该还是要在堆栈中申请临时空间的（但ddk没有明说这一点，参考x86的规则应该如此）。</p>
+<h2 id="未声明函数调用"><a href="#未声明函数调用" class="headerlink" title="未声明函数调用"></a>未声明函数调用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">func1();</div><div class="line">func2()</div><div class="line">&#123;</div><div class="line">    func1(2, 1.0, 7);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在这种情况下，func1()的参数表其实不明确，那么参数的传递要怎样进行？这里采用了一个比较保守的规则，就是：整数参数还是按照寄存器映射关系放入对应的寄存器中，浮点数在按照映射关系放入XMM寄存器后，还需要按照整数参数的寄存器映射关系放入整数寄存器中一次，这就是“比较保守的规则”的意思。就现在这个例子而言，结果如下：<br>2在RCX中，1.0在RDX和XMM1中，7在R8中。</p>
+<h1 id="Linux平台"><a href="#Linux平台" class="headerlink" title="Linux平台"></a>Linux平台</h1><p>和Windows平台的编译器一样，在Linux下的GCC编译器编译的函数，默认也是采用fastcall调用约定，但参数传递的方式却和Windows平台下截然不同，最多会把8个参数存储到寄存器中传递：</p>
+<p>参数        整数型        浮点数型<br>1st            RDI            XMM0<br>2st            RSI            XMM1<br>3st            RDX            XMM2<br>4st            RCX            XMM3<br>5st            R8            XMM4<br>6st            R9            XMM5<br>7st            栈            XMM6<br>8st            栈            XMM7</p>
+<p>这里当参数都是整数时大于6个参数时使用栈传递，浮点数型参数大于8个时，使用栈传递，传递顺序依照“从右向左”。</p>
+<p><strong>Note：</strong><br>    • 当整数和浮点数参数混合出现时，eg：<br>      void func(float a, int b, double c, int d);<br>      a放在XMM0，b放在RDI，c放在XMM1，d放在RSI。<br>      可以看到Linux的GCC下正浮混合时没有为没用到得参数预留空间。<br>    • RAX、RCX、RDX、RSI、RDI、R8、R9都是易失寄存器（它们的值经常被改变），所以被调用函数不必恢复它们的值，可以看到上述几个寄存器大多被用于函数传参，值被修改了也无妨。其他的寄存器是非易失寄存器（RBX、RBP、RSP、R10~R15），通常在函数中使用时需要保存原值，并在函数返回时恢复它们的值。</p>
+<h2 id="从Windows和Linux的64位函数调用约定不同可以总结出两点："><a href="#从Windows和Linux的64位函数调用约定不同可以总结出两点：" class="headerlink" title="从Windows和Linux的64位函数调用约定不同可以总结出两点："></a>从Windows和Linux的64位函数调用约定不同可以总结出两点：</h2><p>• 随着x64位引入更多的寄存器后，传递参数也相应的更多使用寄存器。也可以说有钱更任性。<br>• 两个平台的代码移植问题很不乐观。想了一下好像和逆向分析无关。</p>
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2017/03/14/Linux下x64程序的函数调用和堆栈/" class="archive-article-date">
+  	<time datetime="2017-03-14T14:21:57.000Z" itemprop="datePublished"><i class="icon-clock"></i>2017-03-14</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/逆向/">逆向</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/2017/03/18/一道简单的Linux-x64逆向/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          一道简单的Linux x64逆向
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/03/11/百度CTF-reverse1/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">百度CTF reverse1</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+	    <a class="jiathis_button_twitter"></a>
+	    <a class="jiathis_button_plus"></a> 
+	    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="//v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="Linux下x64程序的函数调用和堆栈" data-title="Linux下x64程序的函数调用和堆栈(转)" data-url="https://niwbie.github.io/2017/03/14/Linux下x64程序的函数调用和堆栈/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"isee233"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2017 isee
+    	</div>
+        <span id="busuanzi_container_site_pv">
+             <i class="fa fa-flag"></i>    你是第<span id="busuanzi_value_site_pv"><i class="fa fa-spinner fa-spin"></i></span>个到访的小伙伴
+        </span>
+    </div>
+  </div>
+</footer>
+    </div>
+    <script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: false,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false,
+		root: "/",
+		innerArchive: true
+	}
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?e437fc8d2c87edc2105c789a41592718";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<script src="/./main.js"></script>
+
+
+    
+<div class="tools-col">
+  <ul class="btn-wrap">
+    
+      <li class="chose" data-hook="tools-section-all"><span class="text">全部</span><i class="icon-book"></i></li>
+    
+    
+      <li data-hook="tools-section-tag"><span class="text">标签</span><i class="icon-price-tags"></i></li>
+    
+    
+      <li data-hook="tools-section-friends"><span class="text">友链</span><i class="icon-link"></i></li>
+    
+    
+      <li data-hook="tools-section-me"><span class="text">我</span><i class="icon-smile"></i></li>
+    
+  </ul>
+  <div class="tools-wrap">
+    
+    	<section class="tools-section tools-section-all chose">
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-tag">
+    			<div class="widget tagcloud" id="js-tagcloud">
+    				<a href="/tags/C/" style="font-size: 13.33px;">C</a> <a href="/tags/CrackMe/" style="font-size: 16.67px;">CrackMe</a> <a href="/tags/Hexo/" style="font-size: 11.67px;">Hexo</a> <a href="/tags/Linux/" style="font-size: 15px;">Linux</a> <a href="/tags/ctf/" style="font-size: 18.33px;">ctf</a> <a href="/tags/漏洞挖掘/" style="font-size: 13.33px;">漏洞挖掘</a> <a href="/tags/病毒分析/" style="font-size: 10px;">病毒分析</a> <a href="/tags/逆向/" style="font-size: 20px;">逆向</a>
+    			</div>
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-friends">
+  		
+  			<div class="friends-wrap" id="js-friends">
+  			
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.youngroe.com/">Lyon&#39;s blog</a>
+  	        
+  	        </div>
+  		
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-me">
+  	  	
+  	  		<div class="aboutme-wrap" id="js-aboutme">汪！</div>
+  	  	
+    	</section>
+    
+  </div>
+  
+</div>
+    <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+  </div>
+</body>
+</html>

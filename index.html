@@ -131,7 +131,7 @@
       <div class="body-wrap">
         
   
-    <article id="post-ZCTF2017 reverse1 writeup - 副本" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-逆向及病毒分析技术" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <input type="hidden" class="isFancy" />
@@ -141,7 +141,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/02/27/ZCTF2017 reverse1 writeup - 副本/">ZCTF2017 reverse1 writeup</a>
+      <a class="article-title" href="/2017/03/19/逆向及病毒分析技术/">逆向及病毒分析技术</a>
     </h1>
   
       
@@ -149,16 +149,180 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>源程序：<a href="http://pan.baidu.com/s/1i4MxSmL">http://pan.baidu.com/s/1i4MxSmL</a><br>reverse200</p>
+        <h1 id="整理了一下逆向及病毒分析的学习历程"><a href="#整理了一下逆向及病毒分析的学习历程" class="headerlink" title="整理了一下逆向及病毒分析的学习历程"></a>整理了一下逆向及病毒分析的学习历程</h1>
         <p class="article-more-link">
-          <a class="article-more-a"  href="/2017/02/27/ZCTF2017 reverse1 writeup - 副本/#more">more >></a>
+          <a class="article-more-a"  href="/2017/03/19/逆向及病毒分析技术/#more">more >></a>
         </p>
       
     </div>
     <div class="article-info article-info-index">
       
-      <a href="/2017/02/27/ZCTF2017 reverse1 writeup - 副本/" class="archive-article-date">
-  	<time datetime="2017-02-27T06:35:33.000Z" itemprop="datePublished"><i class="icon-clock"></i>2017-02-27</time>
+      <a href="/2017/03/19/逆向及病毒分析技术/" class="archive-article-date">
+  	<time datetime="2017-03-19T08:05:41.000Z" itemprop="datePublished"><i class="icon-clock"></i>2017-03-19</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/逆向/">逆向</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-一道简单的Linux-x64逆向" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/03/18/一道简单的Linux-x64逆向/">一道简单的Linux x64逆向</a>
+    </h1>
+  
+      
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>附件：<a href="/image/一道简单的Linux x64逆向/rock.zip">rock.zip</a></p>
+<p>第一次做Linux的下的x64逆向题，主要是熟悉一下Linux x64中函数参数的传递。<br>用IDA打开，先看一下字符串：<br><img src="/image/一道简单的Linux x64逆向/1.png" alt="这里写图片描述"></p>
+<p>随便找一个查看引用，就来到了主函数sub_401260;<br>先获取输入：<br><img src="/image/一道简单的Linux x64逆向/2.png" alt="这里写图片描述"></p>
+<p>然后函数sub_4015DC字符串的格式化，存放到v20中：<br><img src="/image/一道简单的Linux x64逆向/3.png" alt="这里写图片描述"></p>
+<p>可以查看字符串“pass”的交叉引用，发现在这个地方：<br><img src="/image/一道简单的Linux x64逆向/4.png" alt="这里写图片描述"></p>
+<p>所以最后的验证应该是在函数 sub_4017E6, 进去直接看反汇编，可以看出是和字符串：<br><img src="/image/一道简单的Linux x64逆向/5.png" alt="这里写图片描述"></p>
+<p>进行比较。所以我们在往前面看对v20做了哪些处理。</p>
+<p>再往前就是函数sub_4016BA了 ，<br><img src="/image/一道简单的Linux x64逆向/6.png" alt="这里写图片描述"></p>
+<p>在这里面首先比较输入字符串的长度是不是30，然后在逐个取出(记为i)进行处理，步骤如下：<br><img src="/image/一道简单的Linux x64逆向/7.png" alt="这里写图片描述"></p>
+<p>((i^0x50)+20)^0x10+9 = y</p>
+<p>所以最后写个脚本结果就出来了：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">import binascii</div><div class="line">char = &apos;464c41473233343536393132333635343533343735383937383334353637&apos;</div><div class="line"></div><div class="line">flag = binascii.a2b_hex(char)</div><div class="line"></div><div class="line">out = &apos;&apos;</div><div class="line">for i in flag:</div><div class="line">	out += chr((( ( ord(i)-9 ) ^ 0x10 ) - 20) ^ 0x50)</div><div class="line"></div><div class="line">print out</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2017/03/18/一道简单的Linux-x64逆向/" class="archive-article-date">
+  	<time datetime="2017-03-18T01:28:19.000Z" itemprop="datePublished"><i class="icon-clock"></i>2017-03-18</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/逆向/">逆向</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-Linux下x64程序的函数调用和堆栈" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/03/14/Linux下x64程序的函数调用和堆栈/">Linux下x64程序的函数调用和堆栈(转)</a>
+    </h1>
+  
+      
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>首先先来科普一下64位CPU的混乱的术语：<br>
+        <p class="article-more-link">
+          <a class="article-more-a"  href="/2017/03/14/Linux下x64程序的函数调用和堆栈/#more">more >></a>
+        </p>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2017/03/14/Linux下x64程序的函数调用和堆栈/" class="archive-article-date">
+  	<time datetime="2017-03-14T14:21:57.000Z" itemprop="datePublished"><i class="icon-clock"></i>2017-03-14</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/逆向/">逆向</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-百度CTF-reverse1" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/03/11/百度CTF-reverse1/">百度CTF reverse1</a>
+    </h1>
+  
+      
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>附件：<a href="/image/百度CTF reverse1/Project1.zip">Project1.zip</a><br>一道有趣的迷宫题。</p>
+        <p class="article-more-link">
+          <a class="article-more-a"  href="/2017/03/11/百度CTF-reverse1/#more">more >></a>
+        </p>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2017/03/11/百度CTF-reverse1/" class="archive-article-date">
+  	<time datetime="2017-03-11T14:13:42.000Z" itemprop="datePublished"><i class="icon-clock"></i>2017-03-11</time>
 </a>
       
 	<div class="article-tag tagcloud">
@@ -495,165 +659,9 @@
 
 
   
-    <article id="post-看雪CTF-2016第十题Writeup" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/11/21/看雪CTF-2016第十题Writeup/">看雪CTF-2016第十题Writeup</a>
-    </h1>
-  
-      
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>源程序：<a href="http://pan.baidu.com/s/1cCEpMu">http://pan.baidu.com/s/1cCEpMu</a><br>这是一个很神奇的程序。首先查壳，VS2008写的，无壳。运行起来就退不出了，使用命令行运行，居然连命令行窗口也退不出。估计是调用了EnableWindow之类的函数吧。</p>
-        <p class="article-more-link">
-          <a class="article-more-a"  href="/2016/11/21/看雪CTF-2016第十题Writeup/#more">more >></a>
-        </p>
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      <a href="/2016/11/21/看雪CTF-2016第十题Writeup/" class="archive-article-date">
-  	<time datetime="2016-11-21T01:47:57.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-11-21</time>
-</a>
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CrackMe/">CrackMe</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/逆向/">逆向</a></li></ul>
-	</div>
-
-      
-
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-看雪CTF-2016第六题Writeup" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/11/20/看雪CTF-2016第六题Writeup/">看雪CTF-2016第六题Writeup</a>
-    </h1>
-  
-      
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>源程序：<a href="http://pan.baidu.com/s/1eSNu1sI">http://pan.baidu.com/s/1eSNu1sI</a></p>
-        <p class="article-more-link">
-          <a class="article-more-a"  href="/2016/11/20/看雪CTF-2016第六题Writeup/#more">more >></a>
-        </p>
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      <a href="/2016/11/20/看雪CTF-2016第六题Writeup/" class="archive-article-date">
-  	<time datetime="2016-11-20T05:26:38.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-11-20</time>
-</a>
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CrackMe/">CrackMe</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/逆向/">逆向</a></li></ul>
-	</div>
-
-      
-
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-看雪CTF-2016第五题Writeup" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/11/19/看雪CTF-2016第五题Writeup/">看雪CTF 2016第五题Writeup(附RC4算法)</a>
-    </h1>
-  
-      
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>源程序：<a href="http://pan.baidu.com/s/1bpsYvd9">http://pan.baidu.com/s/1bpsYvd9</a><br>首先打开程序，看是VC6写的MFC程序。随便输入一个，点击按钮并没有什么反应。那么就手动去找它的验证函数。</p>
-        <p class="article-more-link">
-          <a class="article-more-a"  href="/2016/11/19/看雪CTF-2016第五题Writeup/#more">more >></a>
-        </p>
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      <a href="/2016/11/19/看雪CTF-2016第五题Writeup/" class="archive-article-date">
-  	<time datetime="2016-11-19T10:51:03.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-11-19</time>
-</a>
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CrackMe/">CrackMe</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/逆向/">逆向</a></li></ul>
-	</div>
-
-      
-
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-
-
-  
   
     <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
     </nav>
   
 
@@ -729,7 +737,7 @@ var _hmt = _hmt || [];
     
     	<section class="tools-section tools-section-tag">
     			<div class="widget tagcloud" id="js-tagcloud">
-    				<a href="/tags/CrackMe/" style="font-size: 20px;">CrackMe</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/ctf/" style="font-size: 20px;">ctf</a> <a href="/tags/逆向/" style="font-size: 20px;">逆向</a>
+    				<a href="/tags/C/" style="font-size: 13.33px;">C</a> <a href="/tags/CrackMe/" style="font-size: 16.67px;">CrackMe</a> <a href="/tags/Hexo/" style="font-size: 11.67px;">Hexo</a> <a href="/tags/Linux/" style="font-size: 15px;">Linux</a> <a href="/tags/ctf/" style="font-size: 18.33px;">ctf</a> <a href="/tags/漏洞挖掘/" style="font-size: 13.33px;">漏洞挖掘</a> <a href="/tags/病毒分析/" style="font-size: 10px;">病毒分析</a> <a href="/tags/逆向/" style="font-size: 20px;">逆向</a>
     			</div>
     	</section>
     

@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <link rel="dns-prefetch" href="https://niwbie.github.io">
+  <title>一个简单的QQ盗号木马分析 | isee&#39;blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="附件：样本">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一个简单的QQ盗号木马分析">
+<meta property="og:url" content="https://niwbie.github.io/2016/07/15/一个简单的QQ盗号木马分析/index.html">
+<meta property="og:site_name" content="isee'blog">
+<meta property="og:description" content="附件：样本">
+<meta property="og:image" content="https://niwbie.github.io/image/一个简单的QQ盗号木马分析/23.png">
+<meta property="og:image" content="https://niwbie.github.io/image/一个简单的QQ盗号木马分析/1.png">
+<meta property="og:image" content="https://niwbie.github.io/image/一个简单的QQ盗号木马分析/2.png">
+<meta property="og:image" content="https://niwbie.github.io/image/一个简单的QQ盗号木马分析/3.png">
+<meta property="og:image" content="https://niwbie.github.io/image/一个简单的QQ盗号木马分析/4.png">
+<meta property="og:image" content="https://niwbie.github.io/image/一个简单的QQ盗号木马分析/5.png">
+<meta property="og:image" content="https://niwbie.github.io/image/一个简单的QQ盗号木马分析/6.png">
+<meta property="og:image" content="https://niwbie.github.io/image/一个简单的QQ盗号木马分析/7.png">
+<meta property="og:image" content="https://niwbie.github.io/image/一个简单的QQ盗号木马分析/8.png">
+<meta property="og:image" content="https://niwbie.github.io/image/一个简单的QQ盗号木马分析/9.png">
+<meta property="og:image" content="https://niwbie.github.io/image/一个简单的QQ盗号木马分析/10.png">
+<meta property="og:image" content="https://niwbie.github.io/image/一个简单的QQ盗号木马分析/11.png">
+<meta property="og:image" content="https://niwbie.github.io/image/一个简单的QQ盗号木马分析/12.png">
+<meta property="og:image" content="https://niwbie.github.io/image/一个简单的QQ盗号木马分析/13.png">
+<meta property="og:image" content="https://niwbie.github.io/image/一个简单的QQ盗号木马分析/14.png">
+<meta property="og:image" content="https://niwbie.github.io/image/一个简单的QQ盗号木马分析/15.png">
+<meta property="og:image" content="https://niwbie.github.io/image/一个简单的QQ盗号木马分析/16.png">
+<meta property="og:image" content="https://niwbie.github.io/image/一个简单的QQ盗号木马分析/17.png">
+<meta property="og:image" content="https://niwbie.github.io/image/一个简单的QQ盗号木马分析/18.png">
+<meta property="og:image" content="https://niwbie.github.io/image/一个简单的QQ盗号木马分析/19.png">
+<meta property="og:image" content="https://niwbie.github.io/image/一个简单的QQ盗号木马分析/20.png">
+<meta property="og:image" content="https://niwbie.github.io/image/一个简单的QQ盗号木马分析/21.png">
+<meta property="og:image" content="https://niwbie.github.io/image/一个简单的QQ盗号木马分析/22.png">
+<meta property="og:updated_time" content="2017-03-17T11:29:26.442Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="一个简单的QQ盗号木马分析">
+<meta name="twitter:description" content="附件：样本">
+<meta name="twitter:image" content="https://niwbie.github.io/image/一个简单的QQ盗号木马分析/23.png">
+  
+    <link rel="alternative" href="/atom.xml" title="isee&#39;blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/image/favicon.ico">
+  
+  <link rel="stylesheet" href="/main.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+      <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img src="/image/favicon.jpg" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">isee</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">从未放弃治疗</p>
+		
+
+		<nav class="header-menu">
+			<ul>
+			
+				<li><a href="/">主页</a></li>
+	        
+				<li><a href="/">相册</a></li>
+	        
+			</ul>
+		</nav>
+		<nav class="header-smart-menu">
+	        
+    		
+    			
+    			<a class="js-smart-menu" data-idx="0" href="javascript:void(0)">所有文章</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="1" href="javascript:void(0)">标签</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="2" href="javascript:void(0)">友链</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="3" href="javascript:void(0)">关于我</a>
+    			
+    			
+            
+		</nav>
+		<nav class="header-nav">
+			<div class="social">
+				
+					<a class="rss" target="_blank" href="#" title="rss">rss</a>
+		        
+			</div>
+		</nav>
+	</header>		
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"><i class="icon-list"></i></div>
+  		<h1 class="header-author js-mobile-header hide">isee</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				
+					<img src="/image/favicon.jpg" class="js-avatar">
+				
+			</div>
+			<hgroup>
+			  <h1 class="header-author">isee</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">从未放弃治疗</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/">相册</a></li>
+		        
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="rss" target="_blank" href="#" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap">
+        <article id="post-一个简单的QQ盗号木马分析" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      一个简单的QQ盗号木马分析
+    </h1>
+  
+      
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>附件：<a href="/image/一个简单的QQ盗号木马分析/xx.rar">样本</a><br><a id="more"></a></p>
+<p><img src="/image/一个简单的QQ盗号木马分析/23.png" alt="这里写图片描述"></p>
+<p>一、行为<br>    运行木马后，如果没有运行QQ，则没有任何反应；如果检测到QQ进程窗口，则会弹出钓鱼框，欺骗用户输入，达到盗号的目的。<br>    <img src="/image/一个简单的QQ盗号木马分析/1.png" alt="这里写图片描述"></p>
+<p>二、简单分析</p>
+<p>首先用PEiD查看，貌似没有加壳<br><img src="/image/一个简单的QQ盗号木马分析/2.png" alt="这里写图片描述"></p>
+<p>那么我们就祭出分析的两大神器:IDA和OD。俗话说，IDA看流程，OD看数据。先用IDA看看，再配合OD跑起来具体分析，肯定是没错的。</p>
+<p>打开IDA，从入口函数start看不到什么有用的信息，那就从导入表中看看有没有熟悉的API。<br>找到了GetWindowsTextA。然后一直溯源到地址0x402970。<br><img src="/image/一个简单的QQ盗号木马分析/3.png" alt="这里写图片描述"></p>
+<p>看来就是这里了。LoadString从资源里加载字符串，为后面做准备。<br>点到sub_402BF0 和 sub_402D00进去看，基本上就是一些注册窗口、创建窗口的操作。再往下就是消息的分发。可以猜测获取到密码后，就发消息到窗口函数的处理函数中去进行处理。所以分析的重点应该就是这两个函数了。</p>
+<p>注册窗口的函数 sub_402BF0只有一个重点，那就是它的窗口处理函数：sub_4034B0，待会用OD调试的时候下个断点进去调试一下。<br><img src="/image/一个简单的QQ盗号木马分析/4.png" alt="这里写图片描述"></p>
+<p>接下来就是sub_402D00这个创建窗口的函数了。<br><img src="/image/一个简单的QQ盗号木马分析/5.png" alt="这里写图片描述"></p>
+<p>用OD调试处分别创建了两个窗口，就是用户名框和密码框。并通过API设置了创建风格等。其中窗口1【0x45F7D4】为edit类型，其中窗口2【0x45F7D8】为edit类型.然后把窗口2移动到指定位置。<br><img src="/image/一个简单的QQ盗号木马分析/6.png" alt="这里写图片描述"><br><img src="/image/一个简单的QQ盗号木马分析/7.png" alt="这里写图片描述"><br><img src="/image/一个简单的QQ盗号木马分析/8.png" alt="这里写图片描述"></p>
+<p>再往下就是乱序插入字符串，用OD调试后得到的结果是：a=x12x&amp;b_)&amp;c=(*<br><img src="/image/一个简单的QQ盗号木马分析/9.png" alt="这里写图片描述"></p>
+<p>接下来进入sub_0c4010C0函数，分析得到是先创建互斥句柄”wanxinyi”,读取相同目录下的sed文件的某个字符串，用OD调试的结果是读取字符串 amr。<br><img src="/image/一个简单的QQ盗号木马分析/10.png" alt="这里写图片描述"><br><img src="/image/一个简单的QQ盗号木马分析/11.png" alt="这里写图片描述"><br>退出sub_0c4010C0函数，初始化Winsock库。然后就是一些设置定时器、窗口设置等一些操作了，没什么重要的。再往上就退出sub_402D00函数，往下也就是消息分发的循环了。那么就回到前面说的窗口处理函数sub_4034B0继续分析。</p>
+<p>因为消息类型比较多，我们要在重点的地方下断点。先用IDA看流程：<br><img src="/image/一个简单的QQ盗号木马分析/12.png" alt="这里写图片描述"></p>
+<p>那么首先看  msg&gt;0x113里面，地址是0x00403549。但是下了断点都跳不进去。先不管了，我们看下面一个:<br><img src="/image/一个简单的QQ盗号木马分析/13.png" alt="这里写图片描述"></p>
+<p>V18==275这个。地址是：0x4036f4。这里的重点就是函数sub_401DD0了:<br><img src="/image/一个简单的QQ盗号木马分析/14.png" alt="这里写图片描述"></p>
+<p>跟到sub_401DD0里面去看一下：<br><img src="/image/一个简单的QQ盗号木马分析/15.png" alt="这里写图片描述"></p>
+<p>通过分析，这个函数先调用sub_401A30加载user32.dll并获取当前焦点窗口的句柄，接着再调用sub_401C10获取当前窗口的ClassName，判断是否为”TXGuiFoundation”（QQ窗口的类名称是这个），如果不是就跳过。如果是的话，说明当前窗口是QQ进程，则获取QQ号。然后弹出钓鱼窗口。这里的两个函数分析比较简单，就不做具体解释了。<br><img src="/image/一个简单的QQ盗号木马分析/16.png" alt="这里写图片描述"></p>
+<p>然后就是刚才的  msg&gt;0x113里面（地址是0x00403549），我们猜测这个消息应该是和钓鱼窗口的登录按钮有关，那就从GetWindowTextA下断点吧，我就不信你不获取密码。果然，向上溯源找到sub_401420,就是在0x00403549中调用的：<br><img src="/image/一个简单的QQ盗号木马分析/17.png" alt="这里写图片描述"></p>
+<p>用IDA看看sub_0x401420：<br><img src="/image/一个简单的QQ盗号木马分析/18.png" alt="这里写图片描述"></p>
+<p>再进到sub_4026C0,这里就是GetWindowTextA之后的处理了：<br><img src="/image/一个简单的QQ盗号木马分析/19.png" alt="这里写图片描述"></p>
+<p>这里用OD看sub_402430，现在这里下个断电，然后在钓鱼窗口输入密码之后点击登录，就在这里断下来了：<br><img src="/image/一个简单的QQ盗号木马分析/20.png" alt="这里写图片描述"></p>
+<p>发现这里有个ip地址，看来就是接收数据的地址了：<br><img src="/image/一个简单的QQ盗号木马分析/21.png" alt="这里写图片描述"></p>
+<p>在sub_402230函数中调用sendto发送字符串：“a=qq号码&amp;b=密码&amp;c=amr”<br><img src="/image/一个简单的QQ盗号木马分析/22.png" alt="这里写图片描述"></p>
+<p>至此，整个盗号木马的分析就结束了。<br>这个qq钓鱼木马做的比较隐藏，伪装的比较好，当普通用户点击后，没有点击qq窗口他会一直常驻内存，当用户点击qq窗口，就会弹出自己伪造的框。该木马没有使用任何反跟踪技术和变形技术，也没有对注册表，服务等操作，对一些关键的函数，字符串也是做了处理 比如 GetForegroundWindow, TXGuiFoundtion(因为以前的盗号木马都包含这个字符信息)，没有危险api的操作，所以一开始跟多杀毒软件无动于衷。</p>
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/07/15/一个简单的QQ盗号木马分析/" class="archive-article-date">
+  	<time datetime="2016-07-15T09:31:41.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-07-15</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/病毒分析/">病毒分析</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/逆向/">逆向</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/2016/09/22/C函数调用和堆栈/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          C函数调用和堆栈
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/05/17/retn的作用/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">retn的作用</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+	    <a class="jiathis_button_twitter"></a>
+	    <a class="jiathis_button_plus"></a> 
+	    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="//v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="一个简单的QQ盗号木马分析" data-title="一个简单的QQ盗号木马分析" data-url="https://niwbie.github.io/2016/07/15/一个简单的QQ盗号木马分析/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"isee233"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2017 isee
+    	</div>
+        <span id="busuanzi_container_site_pv">
+             <i class="fa fa-flag"></i>    你是第<span id="busuanzi_value_site_pv"><i class="fa fa-spinner fa-spin"></i></span>个到访的小伙伴
+        </span>
+    </div>
+  </div>
+</footer>
+    </div>
+    <script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: false,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false,
+		root: "/",
+		innerArchive: true
+	}
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?e437fc8d2c87edc2105c789a41592718";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<script src="/./main.js"></script>
+
+
+    
+<div class="tools-col">
+  <ul class="btn-wrap">
+    
+      <li class="chose" data-hook="tools-section-all"><span class="text">全部</span><i class="icon-book"></i></li>
+    
+    
+      <li data-hook="tools-section-tag"><span class="text">标签</span><i class="icon-price-tags"></i></li>
+    
+    
+      <li data-hook="tools-section-friends"><span class="text">友链</span><i class="icon-link"></i></li>
+    
+    
+      <li data-hook="tools-section-me"><span class="text">我</span><i class="icon-smile"></i></li>
+    
+  </ul>
+  <div class="tools-wrap">
+    
+    	<section class="tools-section tools-section-all chose">
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-tag">
+    			<div class="widget tagcloud" id="js-tagcloud">
+    				<a href="/tags/C/" style="font-size: 13.33px;">C</a> <a href="/tags/CrackMe/" style="font-size: 16.67px;">CrackMe</a> <a href="/tags/Hexo/" style="font-size: 11.67px;">Hexo</a> <a href="/tags/Linux/" style="font-size: 15px;">Linux</a> <a href="/tags/ctf/" style="font-size: 18.33px;">ctf</a> <a href="/tags/漏洞挖掘/" style="font-size: 13.33px;">漏洞挖掘</a> <a href="/tags/病毒分析/" style="font-size: 10px;">病毒分析</a> <a href="/tags/逆向/" style="font-size: 20px;">逆向</a>
+    			</div>
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-friends">
+  		
+  			<div class="friends-wrap" id="js-friends">
+  			
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.youngroe.com/">Lyon&#39;s blog</a>
+  	        
+  	        </div>
+  		
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-me">
+  	  	
+  	  		<div class="aboutme-wrap" id="js-aboutme">汪！</div>
+  	  	
+    	</section>
+    
+  </div>
+  
+</div>
+    <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+  </div>
+</body>
+</html>

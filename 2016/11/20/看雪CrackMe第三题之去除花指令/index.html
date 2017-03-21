@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <link rel="dns-prefetch" href="https://niwbie.github.io">
+  <title>看雪CTF-2016第三题之去除花指令 | isee&#39;blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="附件：样本这道题之做了去花指令的部分，后面的没做出来。。。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="看雪CTF-2016第三题之去除花指令">
+<meta property="og:url" content="https://niwbie.github.io/2016/11/20/看雪CrackMe第三题之去除花指令/index.html">
+<meta property="og:site_name" content="isee'blog">
+<meta property="og:description" content="附件：样本这道题之做了去花指令的部分，后面的没做出来。。。">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第三题之去除花指令/1.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第三题之去除花指令/2.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第三题之去除花指令/3.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第三题之去除花指令/4.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第三题之去除花指令/5.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第三题之去除花指令/6.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第三题之去除花指令/7.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第三题之去除花指令/8.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第三题之去除花指令/9.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第三题之去除花指令/10.png">
+<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第三题之去除花指令/11.png">
+<meta property="og:updated_time" content="2017-03-17T11:54:51.633Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="看雪CTF-2016第三题之去除花指令">
+<meta name="twitter:description" content="附件：样本这道题之做了去花指令的部分，后面的没做出来。。。">
+<meta name="twitter:image" content="https://niwbie.github.io/image/看雪CTF2016第三题之去除花指令/1.png">
+  
+    <link rel="alternative" href="/atom.xml" title="isee&#39;blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/image/favicon.ico">
+  
+  <link rel="stylesheet" href="/main.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+      <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img src="/image/favicon.jpg" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">isee</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">从未放弃治疗</p>
+		
+
+		<nav class="header-menu">
+			<ul>
+			
+				<li><a href="/">主页</a></li>
+	        
+				<li><a href="/">相册</a></li>
+	        
+			</ul>
+		</nav>
+		<nav class="header-smart-menu">
+	        
+    		
+    			
+    			<a class="js-smart-menu" data-idx="0" href="javascript:void(0)">所有文章</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="1" href="javascript:void(0)">标签</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="2" href="javascript:void(0)">友链</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="3" href="javascript:void(0)">关于我</a>
+    			
+    			
+            
+		</nav>
+		<nav class="header-nav">
+			<div class="social">
+				
+					<a class="rss" target="_blank" href="#" title="rss">rss</a>
+		        
+			</div>
+		</nav>
+	</header>		
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"><i class="icon-list"></i></div>
+  		<h1 class="header-author js-mobile-header hide">isee</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				
+					<img src="/image/favicon.jpg" class="js-avatar">
+				
+			</div>
+			<hgroup>
+			  <h1 class="header-author">isee</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">从未放弃治疗</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/">相册</a></li>
+		        
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="rss" target="_blank" href="#" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap">
+        <article id="post-看雪CrackMe第三题之去除花指令" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      看雪CTF-2016第三题之去除花指令
+    </h1>
+  
+      
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>附件：<a href="/image/看雪CTF2016第三题之去除花指令/gxustudent.zip">样本</a><br>这道题之做了去花指令的部分，后面的没做出来。。。<br><a id="more"></a></p>
+<p>获取输入后 给.text下断，给输入下硬件断点0x440320，找到处理函数sub_423F0E。向上查找参考找到调用过程：<br>Fgetc -&gt; sub_41F512 -&gt; sub_423DFA -&gt; sub_423F0E。但是分析了半天感觉不对劲。。。</p>
+<p>看了大神们的分析才知道这道题是加了花指令的。正好趁此机会学习一下去除花指令。</p>
+<p>这道题从_tmainCRTStartup()函数中的  函数sub_4034D0()就加入了花指令，导致IDA不能正常CreateFunction：<br><img src="/image/看雪CTF2016第三题之去除花指令/1.png" alt="这里写图片描述"></p>
+<p>那么就进入sub_4034D0看看具体情况。</p>
+<p>来到这里：<br><img src="/image/看雪CTF2016第三题之去除花指令/2.png" alt="这里写图片描述"></p>
+<p> 在PUSH了一堆参数并调整了ESP的值之后，在地址0x403566处 call 0040356D，但是再OD调试中发现找不到这个地址，原因是OD将0x40356D的指令识别到0x40356B中去了：<br> <img src="/image/看雪CTF2016第三题之去除花指令/3.png" alt="这里写图片描述"></p>
+<p>但其实F7之后还是会跳转到正确的地址去，这也是为什么程序能够运行的原因。加了花指令就是为了迷惑调试器，导致其不能正常静态识别函数。</p>
+<p>来看看这个花指令到底做了什么：<br><img src="/image/看雪CTF2016第三题之去除花指令/4.png" alt="这里写图片描述"></p>
+<p>都知道在call函数的第一个语句之前，程序会自动将调用call指令的下一条语句的地址压入堆栈中，也就是0x40356B：<br><img src="/image/看雪CTF2016第三题之去除花指令/5.png" alt="这里写图片描述"></p>
+<p>这个花指令将esp的值取出来，进行了加减运算后，又放回到堆栈中，这样，当执行到0x403581时RETN 0x78后，就会放回到计算后的地址中去，这样执行完花指令后返回到一个新的地址中去：<br><img src="/image/看雪CTF2016第三题之去除花指令/6.png" alt="这里写图片描述"></p>
+<p>F7到0x403588中去，查看其它地址后发现，OD的静态汇编还是讲0x403588识别错了：<br><img src="/image/看雪CTF2016第三题之去除花指令/7.png" alt="这里写图片描述"></p>
+<p>因此，静态汇编看出来的其实是错误的。<br>去除花指令，我们可以将这些无用的指令nop掉，然后在加一条jmp语句就OK 了：<br><img src="/image/看雪CTF2016第三题之去除花指令/8.png" alt="这里写图片描述"><br><img src="/image/看雪CTF2016第三题之去除花指令/9.png" alt="这里写图片描述"></p>
+<p>整个程序共有二、三十条这样的花指令，都是同样的特征。全部手工去掉后就可以正常识别出0x4034D0函数了：<br><img src="/image/看雪CTF2016第三题之去除花指令/10.png" alt="这里写图片描述"></p>
+<p>总结：</p>
+<p>实际上，在去除的过程中，有一个函数中的花指令还未去除干净，导致不能正常编译，找了很久才找到：<br><img src="/image/看雪CTF2016第三题之去除花指令/11.png" alt="这里写图片描述"></p>
+<p>这个线程函数0x403120中，因为调用了比较多的函数，所以没有一个个去排除花指令，导致还是不能F5，提示的错误是：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sp-analysis failed</div></pre></td></tr></table></figure></p>
+<p>其实以前学习逆向的时候也是出现过这个错误的，只是当时对逆向的了解实在有限，所以就只是略过了。<br>一般是程序代码有一些干扰代码，让IDA的反汇编分析出现错误。比如用push + n条指令 + retn来实际跳转，而IDA会以为retn是函数要结束，结果它分析后发现调用栈不平衡，因此就提示sp analysis failed.</p>
+<p>这里的解决办法是：<br>1）用Option-&gt;General-&gt;Disassembly, 将选项Stack pointer打钩；<br>2）仔细观察每条call sub_xxxxxx前后的堆栈指针是否平衡；<br>3）有时还要看被调用的sub_xxxxxx内部的堆栈情况，主要是看入栈的参数与ret xx是否匹配；<br>4）注意观察jmp指令前后的堆栈是否有变化；</p>
+<p><strong>这个程序我是通过call前后的堆栈指针不平衡，发现某个函数中的花指令还未去掉，导致IDA不能反汇编。</strong></p>
+<p>这里有个找花指令的小技巧，当发现jmp或者call的地址在OD中没显示的话，就把jmp或者call指令的下一个指令nop掉吧，肯定是花指令，如果还没有显示的话就继续nop下一条，直到显示的指令和执行的指令一致。</p>
+<p>后来又找到aspack壳也是这种加的花指令，原理如下：</p>
+<p>call指令等于两条指令：一是把自身所在位置的下一条指令的地址压入堆栈，二是jmp到call的地址处去。<br>而ret指令可以在pop出栈后，然程序jmp到一中call指令压入堆栈的地址。</p>
+<p>利用这个call可以构造花指令：</p>
+<ol>
+<li>call一个地址，在这个指令下面随便写一点花指令，并记住这段花指令占了多少个字节。</li>
+<li>在call里面，也就是函数中，首先pop处压入的地址（这题中是直接取出来放到ebx中），然后把这个地址加上花指令占用的字节数，在重新放回堆栈中，接着ret</li>
+<li>这样，call结束后执行的下一条语句就是ret的地址，也就是我们想要去的函数地址了。</li>
+</ol>
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/11/20/看雪CrackMe第三题之去除花指令/" class="archive-article-date">
+  	<time datetime="2016-11-20T05:26:38.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-11-20</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CrackMe/">CrackMe</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/逆向/">逆向</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/2016/11/20/看雪CTF-2016第六题Writeup/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          看雪CTF-2016第六题Writeup
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/11/19/看雪CTF-2016第五题Writeup/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">看雪CTF 2016第五题Writeup(附RC4算法)</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+	    <a class="jiathis_button_twitter"></a>
+	    <a class="jiathis_button_plus"></a> 
+	    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="//v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="看雪CrackMe第三题之去除花指令" data-title="看雪CTF-2016第三题之去除花指令" data-url="https://niwbie.github.io/2016/11/20/看雪CrackMe第三题之去除花指令/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"isee233"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2017 isee
+    	</div>
+        <span id="busuanzi_container_site_pv">
+             <i class="fa fa-flag"></i>    你是第<span id="busuanzi_value_site_pv"><i class="fa fa-spinner fa-spin"></i></span>个到访的小伙伴
+        </span>
+    </div>
+  </div>
+</footer>
+    </div>
+    <script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: false,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false,
+		root: "/",
+		innerArchive: true
+	}
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?e437fc8d2c87edc2105c789a41592718";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<script src="/./main.js"></script>
+
+
+    
+<div class="tools-col">
+  <ul class="btn-wrap">
+    
+      <li class="chose" data-hook="tools-section-all"><span class="text">全部</span><i class="icon-book"></i></li>
+    
+    
+      <li data-hook="tools-section-tag"><span class="text">标签</span><i class="icon-price-tags"></i></li>
+    
+    
+      <li data-hook="tools-section-friends"><span class="text">友链</span><i class="icon-link"></i></li>
+    
+    
+      <li data-hook="tools-section-me"><span class="text">我</span><i class="icon-smile"></i></li>
+    
+  </ul>
+  <div class="tools-wrap">
+    
+    	<section class="tools-section tools-section-all chose">
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-tag">
+    			<div class="widget tagcloud" id="js-tagcloud">
+    				<a href="/tags/C/" style="font-size: 13.33px;">C</a> <a href="/tags/CrackMe/" style="font-size: 16.67px;">CrackMe</a> <a href="/tags/Hexo/" style="font-size: 11.67px;">Hexo</a> <a href="/tags/Linux/" style="font-size: 15px;">Linux</a> <a href="/tags/ctf/" style="font-size: 18.33px;">ctf</a> <a href="/tags/漏洞挖掘/" style="font-size: 13.33px;">漏洞挖掘</a> <a href="/tags/病毒分析/" style="font-size: 10px;">病毒分析</a> <a href="/tags/逆向/" style="font-size: 20px;">逆向</a>
+    			</div>
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-friends">
+  		
+  			<div class="friends-wrap" id="js-friends">
+  			
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.youngroe.com/">Lyon&#39;s blog</a>
+  	        
+  	        </div>
+  		
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-me">
+  	  	
+  	  		<div class="aboutme-wrap" id="js-aboutme">汪！</div>
+  	  	
+    	</section>
+    
+  </div>
+  
+</div>
+    <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+  </div>
+</body>
+</html>

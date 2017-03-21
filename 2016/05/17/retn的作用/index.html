@@ -6,22 +6,21 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://niwbie.github.io">
-  <title>ZCTF2017 reverse1 writeup | isee&#39;blog</title>
+  <title>retn的作用 | isee&#39;blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="源程序：http://pan.baidu.com/s/1i4MxSmLreverse200">
+  <meta name="description" content="就是子程序返回，然后把堆栈的N个字节弹出来。其实就是执行ret后，将n加入sp中，实际上是从堆栈中弹出n个字节的数据，以冲掉在call指令前压入堆栈的参数。相当于这样：12retadd sp，n
+因为8086/8088的堆栈是字堆栈（就是说进栈出栈都是16位的），所以，ret n中的n必须是偶数。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="ZCTF2017 reverse1 writeup">
-<meta property="og:url" content="https://niwbie.github.io/2017/02/27/ZCTF2017 reverse1 writeup - 副本/index.html">
+<meta property="og:title" content="retn的作用">
+<meta property="og:url" content="https://niwbie.github.io/2016/05/17/retn的作用/index.html">
 <meta property="og:site_name" content="isee'blog">
-<meta property="og:description" content="源程序：http://pan.baidu.com/s/1i4MxSmLreverse200">
-<meta property="og:image" content="https://niwbie.github.io/image/ZCTF2017/1.png">
-<meta property="og:image" content="https://niwbie.github.io/image/ZCTF2017/2.png">
-<meta property="og:image" content="https://niwbie.github.io/image/ZCTF2017/3.png">
-<meta property="og:updated_time" content="2017-03-04T08:39:11.527Z">
+<meta property="og:description" content="就是子程序返回，然后把堆栈的N个字节弹出来。其实就是执行ret后，将n加入sp中，实际上是从堆栈中弹出n个字节的数据，以冲掉在call指令前压入堆栈的参数。相当于这样：12retadd sp，n
+因为8086/8088的堆栈是字堆栈（就是说进栈出栈都是16位的），所以，ret n中的n必须是偶数。">
+<meta property="og:updated_time" content="2017-03-17T09:30:53.504Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ZCTF2017 reverse1 writeup">
-<meta name="twitter:description" content="源程序：http://pan.baidu.com/s/1i4MxSmLreverse200">
-<meta name="twitter:image" content="https://niwbie.github.io/image/ZCTF2017/1.png">
+<meta name="twitter:title" content="retn的作用">
+<meta name="twitter:description" content="就是子程序返回，然后把堆栈的N个字节弹出来。其实就是执行ret后，将n加入sp中，实际上是从堆栈中弹出n个字节的数据，以冲掉在call指令前压入堆栈的参数。相当于这样：12retadd sp，n
+因为8086/8088的堆栈是字堆栈（就是说进栈出栈都是16位的），所以，ret n中的n必须是偶数。">
   
     <link rel="alternative" href="/atom.xml" title="isee&#39;blog" type="application/atom+xml">
   
@@ -137,7 +136,7 @@
 </nav>
 
       <div class="body-wrap">
-        <article id="post-ZCTF2017 reverse1 writeup - 副本" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-retn的作用" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <input type="hidden" class="isFancy" />
@@ -147,7 +146,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      ZCTF2017 reverse1 writeup
+      retn的作用
     </h1>
   
       
@@ -155,98 +154,21 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>源程序：<a href="http://pan.baidu.com/s/1i4MxSmL" target="_blank" rel="external">http://pan.baidu.com/s/1i4MxSmL</a><br>reverse200</p>
-<a id="more"></a>
-<p>这道题是个dll文件，用IDA查看导出函数：<br><img src="/image/ZCTF2017/1.png" alt="这里写图片描述"></p>
-<p>看了一下，主要的判断函数是在get_stirng里面，所以写了个加载器把dll加载起来，然后调用导出函数get_string。<br>接下来就是一些简单的去花指令，去完之后，看IDA的流程就很清晰了，从encrypt_str函数跟到encrypt函数，大致判断出是经过一系列的处理后，与固定数据进行两两比较：<br><img src="/image/ZCTF2017/2.png" alt="这里写图片描述"></p>
-<p>进行比较的数据：<br>BF F1 6A 2C 10 0B 16 59 BA 3A 8C 49 05 1B 04 E2<br>85 D5 C2 FC D7 9B E9 42 00 EA 87 0A 03 9E D0 00 </p>
-<p>所以直接根据IDA的算法写了爆破程序：</p>
-<pre><code>#include &quot;stdafx.h&quot;
-#include &lt;windows.h&gt;
-
-
-BYTE out[33] = {0};
-int num = 0;
-
-BYTE  *calc(int a , int b){
-    BYTE tmp[3] = {0}; 
-    BYTE input[2] = {0};
-    for (int i=48; i&lt;127; i++){
-        for(int j=48; j&lt;127; j++){
-            input[0] = (BYTE)i;
-            input[1] = (BYTE)j;
-
-            int a2 = 0;
-            int a1 = 0;
-            int v4 = 0;
-            a2 = input[0];
-            a1 = input[1];
-            v4 = 0xb9;
-            int a4[4] = {0xde, 0xad, 0xbe, 0xef};
-
-            do{
-                a2 += (a1 + (((char)a1 &gt;&gt; 5) ^ 16 * (char)a1)) ^ (v4 + a4[v4&amp;3]);
-                a1 += (v4 + a4[((char)v4 &gt;&gt; 11) &amp; 3]) ^ (a2 + (16 * (char)a2 ^ ((char)a2 &gt;&gt; 5)));
-                v4 -= 0x47;
-            }while ( (BYTE)v4 != 0xd9 );
-
-            BYTE out0 = *(BYTE*)&amp;a2;
-            BYTE out1 = *(BYTE*)&amp;a1;
-
-            if(out0==a &amp;&amp; out1==b){
-                tmp[0] = i;
-                tmp[1] = j;
-                memcpy(out + num, tmp, 2);
-                return tmp;
-            }
-        }
-    }
-}
-
-int _tmain(int argc, _TCHAR* argv[])
-{
-
-    calc(0xbf, 0xf1);
-    num += 2;
-    calc(0x6a, 0x2c);
-    num += 2;
-    calc(0x10, 0x0b);
-    num += 2;
-    calc(0x16, 0x59);
-    num += 2;
-    calc(0xba, 0x3a);
-    num += 2;
-    calc(0x8c, 0x49);
-    num += 2;
-    calc(0x05, 0x1b);
-    num += 2;
-    calc(0x04, 0xe2);
-    num += 2;
-    calc(0x85, 0xd5);
-    num += 2;
-    calc(0xc2, 0xfc);
-    num += 2;
-    calc(0xd7, 0x9b);
-    num += 2;
-    calc(0xe9, 0x42);
-    num += 2;
-    printf(&quot;flag: %s\n&quot;, out);
-    Sleep(-1);
-    return 0;
-}
-</code></pre><p>结果：<br><img src="/image/ZCTF2017/3.png" alt="这里写图片描述"></p>
+        <a id="more"></a>
+<p>就是子程序返回，然后把堆栈的N个字节弹出来。<br>其实就是执行ret后，将n加入sp中，实际上是从堆栈中弹出n个字节的数据，以冲掉在call指令前压入堆栈的参数。<br>相当于这样：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ret</div><div class="line">add sp，n</div></pre></td></tr></table></figure></p>
+<p>因为8086/8088的堆栈是字堆栈（就是说进栈出栈都是16位的），所以，ret n中的n必须是偶数。</p>
 
       
     </div>
     <div class="article-info article-info-index">
       
-      <a href="/2017/02/27/ZCTF2017 reverse1 writeup - 副本/" class="archive-article-date">
-  	<time datetime="2017-02-27T06:35:33.000Z" itemprop="datePublished"><i class="icon-clock"></i>2017-02-27</time>
+      <a href="/2016/05/17/retn的作用/" class="archive-article-date">
+  	<time datetime="2016-05-17T09:29:28.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-05-17</time>
 </a>
       
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CrackMe/">CrackMe</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/逆向/">逆向</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/逆向/">逆向</a></li></ul>
 	</div>
 
       
@@ -259,9 +181,18 @@ int _tmain(int argc, _TCHAR* argv[])
   
 <nav id="article-nav">
   
+    <a href="/2016/07/15/一个简单的QQ盗号木马分析/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          一个简单的QQ盗号木马分析
+        
+      </div>
+    </a>
   
-    <a href="/2017/02/27/ZCTF2017-reverse1-writeup/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">ZCTF2017 reverse1 writeup</div>
+  
+    <a href="/2016/05/11/简单的分配栈帧及溢出修改相邻变量/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">简单的分配栈帧及溢出修改相邻变量</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -295,7 +226,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
 <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="ZCTF2017 reverse1 writeup - 副本" data-title="ZCTF2017 reverse1 writeup" data-url="https://niwbie.github.io/2017/02/27/ZCTF2017 reverse1 writeup - 副本/"></div>
+	<div class="ds-thread" data-thread-key="retn的作用" data-title="retn的作用" data-url="https://niwbie.github.io/2016/05/17/retn的作用/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">
@@ -387,7 +318,7 @@ var _hmt = _hmt || [];
     
     	<section class="tools-section tools-section-tag">
     			<div class="widget tagcloud" id="js-tagcloud">
-    				<a href="/tags/CrackMe/" style="font-size: 20px;">CrackMe</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/ctf/" style="font-size: 20px;">ctf</a> <a href="/tags/逆向/" style="font-size: 20px;">逆向</a>
+    				<a href="/tags/C/" style="font-size: 13.33px;">C</a> <a href="/tags/CrackMe/" style="font-size: 16.67px;">CrackMe</a> <a href="/tags/Hexo/" style="font-size: 11.67px;">Hexo</a> <a href="/tags/Linux/" style="font-size: 15px;">Linux</a> <a href="/tags/ctf/" style="font-size: 18.33px;">ctf</a> <a href="/tags/漏洞挖掘/" style="font-size: 13.33px;">漏洞挖掘</a> <a href="/tags/病毒分析/" style="font-size: 10px;">病毒分析</a> <a href="/tags/逆向/" style="font-size: 20px;">逆向</a>
     			</div>
     	</section>
     
