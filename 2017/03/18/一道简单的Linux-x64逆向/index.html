@@ -8,22 +8,12 @@
   <link rel="dns-prefetch" href="https://niwbie.github.io">
   <title>一道简单的Linux x64逆向 | isee&#39;blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="附件：rock.zip
-第一次做Linux的下的x64逆向题，主要是熟悉一下Linux x64中函数参数的传递。用IDA打开，先看一下字符串：
-随便找一个查看引用，就来到了主函数sub_401260;先获取输入：
-然后函数sub_4015DC字符串的格式化，存放到v20中：
-可以查看字符串“pass”的交叉引用，发现在这个地方：
-所以最后的验证应该是在函数 sub_4017E6, 进去直接看反汇编">
+  <meta name="description" content="附件：rock.zip">
 <meta property="og:type" content="article">
 <meta property="og:title" content="一道简单的Linux x64逆向">
 <meta property="og:url" content="https://niwbie.github.io/2017/03/18/一道简单的Linux-x64逆向/index.html">
 <meta property="og:site_name" content="isee'blog">
-<meta property="og:description" content="附件：rock.zip
-第一次做Linux的下的x64逆向题，主要是熟悉一下Linux x64中函数参数的传递。用IDA打开，先看一下字符串：
-随便找一个查看引用，就来到了主函数sub_401260;先获取输入：
-然后函数sub_4015DC字符串的格式化，存放到v20中：
-可以查看字符串“pass”的交叉引用，发现在这个地方：
-所以最后的验证应该是在函数 sub_4017E6, 进去直接看反汇编">
+<meta property="og:description" content="附件：rock.zip">
 <meta property="og:image" content="https://niwbie.github.io/image/一道简单的Linux x64逆向/1.png">
 <meta property="og:image" content="https://niwbie.github.io/image/一道简单的Linux x64逆向/2.png">
 <meta property="og:image" content="https://niwbie.github.io/image/一道简单的Linux x64逆向/3.png">
@@ -31,15 +21,10 @@
 <meta property="og:image" content="https://niwbie.github.io/image/一道简单的Linux x64逆向/5.png">
 <meta property="og:image" content="https://niwbie.github.io/image/一道简单的Linux x64逆向/6.png">
 <meta property="og:image" content="https://niwbie.github.io/image/一道简单的Linux x64逆向/7.png">
-<meta property="og:updated_time" content="2017-03-18T06:34:46.580Z">
+<meta property="og:updated_time" content="2017-03-22T01:37:32.029Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="一道简单的Linux x64逆向">
-<meta name="twitter:description" content="附件：rock.zip
-第一次做Linux的下的x64逆向题，主要是熟悉一下Linux x64中函数参数的传递。用IDA打开，先看一下字符串：
-随便找一个查看引用，就来到了主函数sub_401260;先获取输入：
-然后函数sub_4015DC字符串的格式化，存放到v20中：
-可以查看字符串“pass”的交叉引用，发现在这个地方：
-所以最后的验证应该是在函数 sub_4017E6, 进去直接看反汇编">
+<meta name="twitter:description" content="附件：rock.zip">
 <meta name="twitter:image" content="https://niwbie.github.io/image/一道简单的Linux x64逆向/1.png">
   
     <link rel="alternative" href="/atom.xml" title="isee&#39;blog" type="application/atom+xml">
@@ -175,6 +160,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>附件：<a href="/image/一道简单的Linux x64逆向/rock.zip">rock.zip</a></p>
+<a id="more"></a>
 <p>第一次做Linux的下的x64逆向题，主要是熟悉一下Linux x64中函数参数的传递。<br>用IDA打开，先看一下字符串：<br><img src="/image/一道简单的Linux x64逆向/1.png" alt="这里写图片描述"></p>
 <p>随便找一个查看引用，就来到了主函数sub_401260;<br>先获取输入：<br><img src="/image/一道简单的Linux x64逆向/2.png" alt="这里写图片描述"></p>
 <p>然后函数sub_4015DC字符串的格式化，存放到v20中：<br><img src="/image/一道简单的Linux x64逆向/3.png" alt="这里写图片描述"></p>
