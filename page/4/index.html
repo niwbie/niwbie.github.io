@@ -131,6 +131,117 @@
       <div class="body-wrap">
         
   
+    <article id="post-declspec-naked-详解" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/03/17/declspec-naked-详解/">__declspec(naked)作用</a>
+    </h1>
+  
+      
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <a id="more"></a>  
+<p>__declspec(naked)是用来告诉编译器函数代码的汇编语言为自己的所写，不需要编译器添加任何汇编代码。</p>
+<p>注意，__declspec(naked)是编译器直接拿来用的汇编函数代码，所以一定要记得在开始的时候保存上下文标志位（压栈），在结束的时候要记得恢复上下文（出栈），并且在结尾要加上ret命令</p>
+<p>对于jmp类型的hook， 如果自己的过程没有使用_declspec(naked)，那么系统会自动给添加一些额外的代码，控制堆栈平衡，但是这些额外的代码会破坏被hook函数的堆栈。对于call类型的hook，如果使用_declspec(naked)修饰的话，要注意自己恢复堆栈平衡。</p>
+<ol>
+<li>使用 naked 关键字必须自己构建 EBP 指针 (如果用到了的话,如果最后是JMP到原函数，要自己在开始构建:<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">push ebp </div><div class="line">mov ebp, esp</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>最后加<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">mov esp, ebp</div><div class="line">pop ebp </div><div class="line">jmp xxxx</div></pre></td></tr></table></figure></p>
+<ol>
+<li>必须自己使用 RET 或 RET n 指令返回 (除非你不返回，比如JMP到原函数); 对于一般的汇编内嵌代码(没有使用_declspec(naked))，不必保存上下文了，保存也不会有事，但是不能再加ret命令，因为编译器也会为其加一个，ret命令不能同时执行两次,会导致越界错误。</li>
+</ol>
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/03/17/declspec-naked-详解/" class="archive-article-date">
+  	<time datetime="2016-03-17T09:14:47.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-03-17</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/逆向/">逆向</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-JMP指令转换公式" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/03/17/JMP指令转换公式/">JMP指令转换公式</a>
+    </h1>
+  
+      
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <pre><code>JMP的地址 - 代码地址（eip） -5（字节） = 机器码跳转地址
+</code></pre>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/03/17/JMP指令转换公式/" class="archive-article-date">
+  	<time datetime="2016-03-17T09:13:36.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-03-17</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/逆向/">逆向</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+
+
+  
     <article id="post-第一次逆向分析" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
