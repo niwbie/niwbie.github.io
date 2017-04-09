@@ -407,6 +407,126 @@
 
 
   
+    <article id="post-一道unlink的pwn练习" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/04/09/一道unlink的pwn练习/">一道unlink的pwn练习</a>
+    </h1>
+  
+      
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a href="/image/一道unlink的pwn练习/unlink">unlink</a><br>
+        <p class="article-more-link">
+          <a class="article-more-a"  href="/2016/04/09/一道unlink的pwn练习/#more">more >></a>
+        </p>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/04/09/一道unlink的pwn练习/" class="archive-article-date">
+  	<time datetime="2016-04-09T11:32:39.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-04-09</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/漏洞挖掘/">漏洞挖掘</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-堆溢出的unlink利用" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/04/09/堆溢出的unlink利用/">堆溢出的unlink利用</a>
+    </h1>
+  
+      
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <a id="more"></a>
+<h2 id="0x01-关于chunk："><a href="#0x01-关于chunk：" class="headerlink" title="0x01 关于chunk："></a>0x01 关于chunk：</h2><p>当一个chunk被分配使用，最开始只有前两个变量会被用到，prev_size是前一块chunk的大小，前提是前一块chunk状态是free，如果前一块还在被使用，这4个字节会被前一块chunk共享使用以提高空间使用率，也就是说前一块chunk多了4字节。size是当前chunk的大小。如果当前块的状态是free，就会使用两个额外的变量：fd和bk，这两个变量指向双向链表中的前后节点。</p>
+<p>如何知道一个chunk是处于use还是free状态呢？<br>chunk的结构被强加了一个8字节对齐，这就导致块大小的最低三位总是零，所以只用高29位储存size，低三位储存其他东西，这种情况下，chunk的最低位被指派为标记它的前一块是已分配还是空闲。<br>比如<br>一个24（0x18）大小的块，它的前一块chunk是已分配:<br>0x00000018 | 0x1 = 0x00000019</p>
+<p>一个40（0x28）大小的块，它的前一块chunk是空闲:<br>0x00000028 | 0x0 = 0x00000028</p>
+<p>通过将自身chunk的地址+size就能得到下一个chunk的地址，然后检查它的头部最低位就能得到自己的状态</p>
+<h2 id="0x02-unlink利用"><a href="#0x02-unlink利用" class="headerlink" title="0x02 unlink利用"></a>0x02 unlink利用</h2><p>关于堆的unlink利用，在低版本的libc中，因为没加入校验，导致unlink的时候可以通过构造对快进行dordshoot，从而任意执行代码。<br>详情参考：<br><a href="http://www.tuicool.com/articles/E3Ezu2u" target="_blank" rel="external">http://www.tuicool.com/articles/E3Ezu2u</a></p>
+<p>主要是利用了free当前chunk时，会去检查前一个chunk和后一个chunk是否是空闲状态，如果是空闲，则会执行unlink，这就让我们有机可乘。但是，由于如今的glibc加入了校验机制，所以就要另想办法进行绕过。</p>
+<p>一下通过一个例子来说明：<br><img src="/image/堆溢出的unlink利用/1.png" alt="这里写图片描述"></p>
+<p>如图，通过两个malloc分配了两个内存：<br>ptr0 = malloc(128)  #返回0x804a008<br>ptr1 = malloc(128)  #返回0x804a090</p>
+<p>我们可以在内存中找到这两个变量存放的地址，假设为0x8049d60:<br><img src="/image/堆溢出的unlink利用/2.png" alt="这里写图片描述"></p>
+<p>这样，我们通过制造chunk0的溢出为如下图：<br><img src="/image/堆溢出的unlink利用/3.png" alt="这里写图片描述"></p>
+<p>这样，我们free掉chunk1之后，会检测chunk1的prev_size(被我们构造成0x80)，这时检测到前一个chunk（即chunk0）为空闲状态（实际上是我们伪造的），就会触发unlink（chunk0）：</p>
+<p>触发unlink时，会检测:（FD指针为chunk头部的指针地址，而不是数据段的指针地址）<br>FD-&gt;bk(0x8049d54+0xc) 的值是否为当前chunk(0x809a008)<br>BK-&gt;fd(0x8049d58+0x8) 的值知否为当前chunk(0x809a008)<br>因为上述两项满足条件，即绕过了检测，所以就glibc就会：<br>FD-&gt;bk = BK   #FD-&gt;bk 为(0x8049d54+0xc)， BK为0x8049d58 ，所以就是将0x8049d60的值设为0x8049d54<br>BK-&gt;fd = FD   #BK-&gt;fd为(0x8049d58+0x8), FD位0x8049d54, 所以还是将0x8049d60的值设为0x8049d54</p>
+<p>这样，在0x8049d60附近的内存就变成了：<br><img src="/image/堆溢出的unlink利用/4.png" alt="这里写图片描述"></p>
+<p>这样，我们如果在通过read(0, ptr1, len)写入数据时，就相当于在0x8049d54处输入数据，我们可以构造这样一个payload：</p>
+<p>payload = ‘A’ * 12 + p32(free_got)<br>内存又变成了：<br>这样，在0x8049d60附近的内存就变成了：<br><img src="/image/堆溢出的unlink利用/5.png" alt="这里写图片描述"></p>
+<p>当再一次通过read(0, ptr1, len)写入数据时，就将free_got指向的内存地址改成我们的输入了（可以是system），当再次调用free时，就是任我们摆布了。</p>
+<p><a href="/2016/04/09/一道unlink的pwn练习/index.html">一道练习加深对unlink的理解</a></p>
+<p>参考链接：<br><a href="http://www.cnblogs.com/0xmuhe/p/5190132.html" target="_blank" rel="external">http://www.cnblogs.com/0xmuhe/p/5190132.html</a><br><a href="http://www.tuicool.com/articles/E3Ezu2u" target="_blank" rel="external">http://www.tuicool.com/articles/E3Ezu2u</a><br><a href="http://www.tuicool.com/articles/IfYZri3" target="_blank" rel="external">http://www.tuicool.com/articles/IfYZri3</a></p>
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/04/09/堆溢出的unlink利用/" class="archive-article-date">
+  	<time datetime="2016-04-09T03:32:39.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-04-09</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/漏洞挖掘/">漏洞挖掘</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+
+
+  
     <article id="post-PWN练习之爆破绕过canary" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -582,113 +702,9 @@
 
 
   
-    <article id="post-Windows下漏洞调试神器mona" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/03/30/Windows下漏洞调试神器mona/">Windows下漏洞调试神器之mona</a>
-    </h1>
-  
-      
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>corelan团队的mona插件，可以运行在Windbg和ImmunityDebugger中。</p>
-        <p class="article-more-link">
-          <a class="article-more-a"  href="/2016/03/30/Windows下漏洞调试神器mona/#more">more >></a>
-        </p>
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      <a href="/2016/03/30/Windows下漏洞调试神器mona/" class="archive-article-date">
-  	<time datetime="2016-03-30T13:28:12.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-03-30</time>
-</a>
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Windows/">Windows</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/漏洞挖掘/">漏洞挖掘</a></li></ul>
-	</div>
-
-      
-
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-在栈中利用SEH" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/03/29/在栈中利用SEH/">在栈中利用SEH</a>
-    </h1>
-  
-      
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>文中用到的两个插件：<br><a href="/image/在栈中利用SEH/ollysseh.zip">ollysseh</a><br><a href="/image/在栈中利用SEH/findjmp.exe">findjmp.exe</a><br>
-        <p class="article-more-link">
-          <a class="article-more-a"  href="/2016/03/29/在栈中利用SEH/#more">more >></a>
-        </p>
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      <a href="/2016/03/29/在栈中利用SEH/" class="archive-article-date">
-  	<time datetime="2016-03-29T13:28:12.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-03-29</time>
-</a>
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Windows/">Windows</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/漏洞挖掘/">漏洞挖掘</a></li></ul>
-	</div>
-
-      
-
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
     </nav>
   
 

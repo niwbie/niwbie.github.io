@@ -6,26 +6,24 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://niwbie.github.io">
-  <title>看雪CTF-2016第六题Writeup | isee&#39;blog</title>
+  <title>堆溢出的unlink利用 | isee&#39;blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="源程序：http://pan.baidu.com/s/1eSNu1sI">
+  <meta name="description" content="0x01 关于chunk：当一个chunk被分配使用，最开始只有前两个变量会被用到，prev_size是前一块chunk的大小，前提是前一块chunk状态是free，如果前一块还在被使用，这4个字节会被前一块chunk共享使用以提高空间使用率，也就是说前一块chunk多了4字节。size是当前chunk的大小。如果当前块的状态是free，就会使用两个额外的变量：fd和bk，这两个变量指向双向链表">
 <meta property="og:type" content="article">
-<meta property="og:title" content="看雪CTF-2016第六题Writeup">
-<meta property="og:url" content="https://niwbie.github.io/2016/11/20/看雪CTF-2016第六题Writeup/index.html">
+<meta property="og:title" content="堆溢出的unlink利用">
+<meta property="og:url" content="https://niwbie.github.io/2016/04/09/堆溢出的unlink利用/index.html">
 <meta property="og:site_name" content="isee'blog">
-<meta property="og:description" content="源程序：http://pan.baidu.com/s/1eSNu1sI">
-<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第六题Writeup/1.png">
-<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第六题Writeup/2.png">
-<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第六题Writeup/3.png">
-<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第六题Writeup/4.png">
-<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第六题Writeup/5.png">
-<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第六题Writeup/6.png">
-<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第六题Writeup/7.png">
-<meta property="og:updated_time" content="2016-11-20T05:31:50.102Z">
+<meta property="og:description" content="0x01 关于chunk：当一个chunk被分配使用，最开始只有前两个变量会被用到，prev_size是前一块chunk的大小，前提是前一块chunk状态是free，如果前一块还在被使用，这4个字节会被前一块chunk共享使用以提高空间使用率，也就是说前一块chunk多了4字节。size是当前chunk的大小。如果当前块的状态是free，就会使用两个额外的变量：fd和bk，这两个变量指向双向链表">
+<meta property="og:image" content="https://niwbie.github.io/image/堆溢出的unlink利用/1.png">
+<meta property="og:image" content="https://niwbie.github.io/image/堆溢出的unlink利用/2.png">
+<meta property="og:image" content="https://niwbie.github.io/image/堆溢出的unlink利用/3.png">
+<meta property="og:image" content="https://niwbie.github.io/image/堆溢出的unlink利用/4.png">
+<meta property="og:image" content="https://niwbie.github.io/image/堆溢出的unlink利用/5.png">
+<meta property="og:updated_time" content="2017-04-09T11:18:16.429Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="看雪CTF-2016第六题Writeup">
-<meta name="twitter:description" content="源程序：http://pan.baidu.com/s/1eSNu1sI">
-<meta name="twitter:image" content="https://niwbie.github.io/image/看雪CTF2016第六题Writeup/1.png">
+<meta name="twitter:title" content="堆溢出的unlink利用">
+<meta name="twitter:description" content="0x01 关于chunk：当一个chunk被分配使用，最开始只有前两个变量会被用到，prev_size是前一块chunk的大小，前提是前一块chunk状态是free，如果前一块还在被使用，这4个字节会被前一块chunk共享使用以提高空间使用率，也就是说前一块chunk多了4字节。size是当前chunk的大小。如果当前块的状态是free，就会使用两个额外的变量：fd和bk，这两个变量指向双向链表">
+<meta name="twitter:image" content="https://niwbie.github.io/image/堆溢出的unlink利用/1.png">
   
     <link rel="alternative" href="/atom.xml" title="isee&#39;blog" type="application/atom+xml">
   
@@ -141,7 +139,7 @@
 </nav>
 
       <div class="body-wrap">
-        <article id="post-看雪CTF-2016第六题Writeup" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-堆溢出的unlink利用" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <input type="hidden" class="isFancy" />
@@ -151,7 +149,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      看雪CTF-2016第六题Writeup
+      堆溢出的unlink利用
     </h1>
   
       
@@ -159,31 +157,37 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>源程序：<a href="http://pan.baidu.com/s/1eSNu1sI" target="_blank" rel="external">http://pan.baidu.com/s/1eSNu1sI</a></p>
-<a id="more"></a>
-<p>先用peid查壳，什么都没查到。上ExeinfoPE，感觉是个E语言写的程序：<br>      <img src="/image/看雪CTF2016第六题Writeup/1.png" alt="这里写图片描述"></p>
-<p>打开，输入注册码，点击注册，程序就崩了。。。<br>   <img src="/image/看雪CTF2016第六题Writeup/2.png" alt="这里写图片描述"></p>
-<p>祭出神器E-Debug，找到注册按钮的处理函数：<br>   <img src="/image/看雪CTF2016第六题Writeup/3.png" alt="这里写图片描述"></p>
-<p>但是这一次神器失效了，用IDA打开什么也没找到。。。</p>
-<p>换一种方法，在IDA导入表中看到有GetWindowTextA函数，下断。这里有个要注意，因为本程序是循环不停调用GetWindowTextA，所以要在0x40115C处断下后在给GetWindowTextA下断：<br>   <img src="/image/看雪CTF2016第六题Writeup/4.png" alt="这里写图片描述"></p>
-<p>字符串存在了地址0xA44058处。</p>
-<p>查看后是在0x404e07处调用的类方法CWnd::GetWindowTextA，接着函数退回到0x414BB5处：<br>   <img src="/image/看雪CTF2016第六题Writeup/5.png" alt="这里写图片描述"></p>
-<p>给地址0xA44058下一个硬件断点，继续往下走，然后硬件断点断在了0x4103DC处。这个流程可以通过IDA查看，函数为sub_4026B0。处理完后跳到0x401910,将输入与字符串 “33053055C3055C2E3030553055C2”逐个比较。这个比较是在函数sub_40197F中进行的，调用了sub_4018E2进行比较，返回值赋给v19：<br>   <img src="/image/看雪CTF2016第六题Writeup/6.png" alt="这里写图片描述"></p>
-<p>在OD中进入v43==1 的这个分支，发现push了一个注册成功的参数：<br>   <img src="/image/看雪CTF2016第六题Writeup/7.png" alt="这里写图片描述"></p>
-<p>直接F9，发现打印注册成功。看来这里只是将输入与字符串”33053055C3055C2E3030553055C2”进行比较 。那么这个字符串就是要找的注册码了。</p>
-<p>整个流程为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">sub_40197F()&#123;</div><div class="line">	sub_40234A()&#123;</div><div class="line">		sub_402810()&#123;</div><div class="line">			4026B0()&#123;</div><div class="line">				4103D0()&#123;</div><div class="line">					处理输入的注册码</div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	  v19 = sub_4018E2(v18, (int)v47) == 0;</div><div class="line">	 if(v19)</div><div class="line">		注册成功！</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+        <a id="more"></a>
+<h2 id="0x01-关于chunk："><a href="#0x01-关于chunk：" class="headerlink" title="0x01 关于chunk："></a>0x01 关于chunk：</h2><p>当一个chunk被分配使用，最开始只有前两个变量会被用到，prev_size是前一块chunk的大小，前提是前一块chunk状态是free，如果前一块还在被使用，这4个字节会被前一块chunk共享使用以提高空间使用率，也就是说前一块chunk多了4字节。size是当前chunk的大小。如果当前块的状态是free，就会使用两个额外的变量：fd和bk，这两个变量指向双向链表中的前后节点。</p>
+<p>如何知道一个chunk是处于use还是free状态呢？<br>chunk的结构被强加了一个8字节对齐，这就导致块大小的最低三位总是零，所以只用高29位储存size，低三位储存其他东西，这种情况下，chunk的最低位被指派为标记它的前一块是已分配还是空闲。<br>比如<br>一个24（0x18）大小的块，它的前一块chunk是已分配:<br>0x00000018 | 0x1 = 0x00000019</p>
+<p>一个40（0x28）大小的块，它的前一块chunk是空闲:<br>0x00000028 | 0x0 = 0x00000028</p>
+<p>通过将自身chunk的地址+size就能得到下一个chunk的地址，然后检查它的头部最低位就能得到自己的状态</p>
+<h2 id="0x02-unlink利用"><a href="#0x02-unlink利用" class="headerlink" title="0x02 unlink利用"></a>0x02 unlink利用</h2><p>关于堆的unlink利用，在低版本的libc中，因为没加入校验，导致unlink的时候可以通过构造对快进行dordshoot，从而任意执行代码。<br>详情参考：<br><a href="http://www.tuicool.com/articles/E3Ezu2u" target="_blank" rel="external">http://www.tuicool.com/articles/E3Ezu2u</a></p>
+<p>主要是利用了free当前chunk时，会去检查前一个chunk和后一个chunk是否是空闲状态，如果是空闲，则会执行unlink，这就让我们有机可乘。但是，由于如今的glibc加入了校验机制，所以就要另想办法进行绕过。</p>
+<p>一下通过一个例子来说明：<br><img src="/image/堆溢出的unlink利用/1.png" alt="这里写图片描述"></p>
+<p>如图，通过两个malloc分配了两个内存：<br>ptr0 = malloc(128)  #返回0x804a008<br>ptr1 = malloc(128)  #返回0x804a090</p>
+<p>我们可以在内存中找到这两个变量存放的地址，假设为0x8049d60:<br><img src="/image/堆溢出的unlink利用/2.png" alt="这里写图片描述"></p>
+<p>这样，我们通过制造chunk0的溢出为如下图：<br><img src="/image/堆溢出的unlink利用/3.png" alt="这里写图片描述"></p>
+<p>这样，我们free掉chunk1之后，会检测chunk1的prev_size(被我们构造成0x80)，这时检测到前一个chunk（即chunk0）为空闲状态（实际上是我们伪造的），就会触发unlink（chunk0）：</p>
+<p>触发unlink时，会检测:（FD指针为chunk头部的指针地址，而不是数据段的指针地址）<br>FD-&gt;bk(0x8049d54+0xc) 的值是否为当前chunk(0x809a008)<br>BK-&gt;fd(0x8049d58+0x8) 的值知否为当前chunk(0x809a008)<br>因为上述两项满足条件，即绕过了检测，所以就glibc就会：<br>FD-&gt;bk = BK   #FD-&gt;bk 为(0x8049d54+0xc)， BK为0x8049d58 ，所以就是将0x8049d60的值设为0x8049d54<br>BK-&gt;fd = FD   #BK-&gt;fd为(0x8049d58+0x8), FD位0x8049d54, 所以还是将0x8049d60的值设为0x8049d54</p>
+<p>这样，在0x8049d60附近的内存就变成了：<br><img src="/image/堆溢出的unlink利用/4.png" alt="这里写图片描述"></p>
+<p>这样，我们如果在通过read(0, ptr1, len)写入数据时，就相当于在0x8049d54处输入数据，我们可以构造这样一个payload：</p>
+<p>payload = ‘A’ * 12 + p32(free_got)<br>内存又变成了：<br>这样，在0x8049d60附近的内存就变成了：<br><img src="/image/堆溢出的unlink利用/5.png" alt="这里写图片描述"></p>
+<p>当再一次通过read(0, ptr1, len)写入数据时，就将free_got指向的内存地址改成我们的输入了（可以是system），当再次调用free时，就是任我们摆布了。</p>
+<p><a href="/2016/04/09/一道unlink的pwn练习/index.html">一道练习加深对unlink的理解</a></p>
+<p>参考链接：<br><a href="http://www.cnblogs.com/0xmuhe/p/5190132.html" target="_blank" rel="external">http://www.cnblogs.com/0xmuhe/p/5190132.html</a><br><a href="http://www.tuicool.com/articles/E3Ezu2u" target="_blank" rel="external">http://www.tuicool.com/articles/E3Ezu2u</a><br><a href="http://www.tuicool.com/articles/IfYZri3" target="_blank" rel="external">http://www.tuicool.com/articles/IfYZri3</a></p>
 
       
     </div>
     <div class="article-info article-info-index">
       
-      <a href="/2016/11/20/看雪CTF-2016第六题Writeup/" class="archive-article-date">
-  	<time datetime="2016-11-20T05:26:38.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-11-20</time>
+      <a href="/2016/04/09/堆溢出的unlink利用/" class="archive-article-date">
+  	<time datetime="2016-04-09T03:32:39.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-04-09</time>
 </a>
       
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CrackMe/">CrackMe</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/逆向/">逆向</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/漏洞挖掘/">漏洞挖掘</a></li></ul>
 	</div>
 
       
@@ -196,18 +200,18 @@
   
 <nav id="article-nav">
   
-    <a href="/2016/11/20/看雪CrackMe第三题之去除花指令/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2016/04/09/一道unlink的pwn练习/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          看雪CTF-2016第三题之去除花指令
+          一道unlink的pwn练习
         
       </div>
     </a>
   
   
-    <a href="/2016/11/19/看雪CTF-2016第五题Writeup/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">看雪CTF 2016第五题Writeup(附RC4算法)</div>
+    <a href="/2016/04/02/PWN练习之爆破绕过canary/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">PWN练习之爆破绕过canary</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -241,7 +245,7 @@
 
 <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="看雪CTF-2016第六题Writeup" data-title="看雪CTF-2016第六题Writeup" data-url="https://niwbie.github.io/2016/11/20/看雪CTF-2016第六题Writeup/"></div>
+	<div class="ds-thread" data-thread-key="堆溢出的unlink利用" data-title="堆溢出的unlink利用" data-url="https://niwbie.github.io/2016/04/09/堆溢出的unlink利用/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">

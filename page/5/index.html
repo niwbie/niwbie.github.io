@@ -6,26 +6,14 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://niwbie.github.io">
-  <title>看雪CTF-2016第六题Writeup | isee&#39;blog</title>
+  <title>isee&#39;blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="源程序：http://pan.baidu.com/s/1eSNu1sI">
-<meta property="og:type" content="article">
-<meta property="og:title" content="看雪CTF-2016第六题Writeup">
-<meta property="og:url" content="https://niwbie.github.io/2016/11/20/看雪CTF-2016第六题Writeup/index.html">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="isee'blog">
+<meta property="og:url" content="https://niwbie.github.io/page/5/index.html">
 <meta property="og:site_name" content="isee'blog">
-<meta property="og:description" content="源程序：http://pan.baidu.com/s/1eSNu1sI">
-<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第六题Writeup/1.png">
-<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第六题Writeup/2.png">
-<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第六题Writeup/3.png">
-<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第六题Writeup/4.png">
-<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第六题Writeup/5.png">
-<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第六题Writeup/6.png">
-<meta property="og:image" content="https://niwbie.github.io/image/看雪CTF2016第六题Writeup/7.png">
-<meta property="og:updated_time" content="2016-11-20T05:31:50.102Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="看雪CTF-2016第六题Writeup">
-<meta name="twitter:description" content="源程序：http://pan.baidu.com/s/1eSNu1sI">
-<meta name="twitter:image" content="https://niwbie.github.io/image/看雪CTF2016第六题Writeup/1.png">
+<meta name="twitter:title" content="isee'blog">
   
     <link rel="alternative" href="/atom.xml" title="isee&#39;blog" type="application/atom+xml">
   
@@ -141,7 +129,9 @@
 </nav>
 
       <div class="body-wrap">
-        <article id="post-看雪CTF-2016第六题Writeup" class="article article-type-post" itemscope itemprop="blogPost">
+        
+  
+    <article id="post-第一次逆向分析" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <input type="hidden" class="isFancy" />
@@ -150,8 +140,8 @@
       <header class="article-header">
         
   
-    <h1 class="article-title" itemprop="name">
-      看雪CTF-2016第六题Writeup
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/07/21/第一次逆向分析/">第一次逆向分析</a>
     </h1>
   
       
@@ -159,31 +149,21 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>源程序：<a href="http://pan.baidu.com/s/1eSNu1sI" target="_blank" rel="external">http://pan.baidu.com/s/1eSNu1sI</a></p>
-<a id="more"></a>
-<p>先用peid查壳，什么都没查到。上ExeinfoPE，感觉是个E语言写的程序：<br>      <img src="/image/看雪CTF2016第六题Writeup/1.png" alt="这里写图片描述"></p>
-<p>打开，输入注册码，点击注册，程序就崩了。。。<br>   <img src="/image/看雪CTF2016第六题Writeup/2.png" alt="这里写图片描述"></p>
-<p>祭出神器E-Debug，找到注册按钮的处理函数：<br>   <img src="/image/看雪CTF2016第六题Writeup/3.png" alt="这里写图片描述"></p>
-<p>但是这一次神器失效了，用IDA打开什么也没找到。。。</p>
-<p>换一种方法，在IDA导入表中看到有GetWindowTextA函数，下断。这里有个要注意，因为本程序是循环不停调用GetWindowTextA，所以要在0x40115C处断下后在给GetWindowTextA下断：<br>   <img src="/image/看雪CTF2016第六题Writeup/4.png" alt="这里写图片描述"></p>
-<p>字符串存在了地址0xA44058处。</p>
-<p>查看后是在0x404e07处调用的类方法CWnd::GetWindowTextA，接着函数退回到0x414BB5处：<br>   <img src="/image/看雪CTF2016第六题Writeup/5.png" alt="这里写图片描述"></p>
-<p>给地址0xA44058下一个硬件断点，继续往下走，然后硬件断点断在了0x4103DC处。这个流程可以通过IDA查看，函数为sub_4026B0。处理完后跳到0x401910,将输入与字符串 “33053055C3055C2E3030553055C2”逐个比较。这个比较是在函数sub_40197F中进行的，调用了sub_4018E2进行比较，返回值赋给v19：<br>   <img src="/image/看雪CTF2016第六题Writeup/6.png" alt="这里写图片描述"></p>
-<p>在OD中进入v43==1 的这个分支，发现push了一个注册成功的参数：<br>   <img src="/image/看雪CTF2016第六题Writeup/7.png" alt="这里写图片描述"></p>
-<p>直接F9，发现打印注册成功。看来这里只是将输入与字符串”33053055C3055C2E3030553055C2”进行比较 。那么这个字符串就是要找的注册码了。</p>
-<p>整个流程为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">sub_40197F()&#123;</div><div class="line">	sub_40234A()&#123;</div><div class="line">		sub_402810()&#123;</div><div class="line">			4026B0()&#123;</div><div class="line">				4103D0()&#123;</div><div class="line">					处理输入的注册码</div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	  v19 = sub_4018E2(v18, (int)v47) == 0;</div><div class="line">	 if(v19)</div><div class="line">		注册成功！</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-
+        <p>第一次逆向分析，忘记保存源程序了。。。</p>
+        <p class="article-more-link">
+          <a class="article-more-a"  href="/2015/07/21/第一次逆向分析/#more">more >></a>
+        </p>
       
     </div>
     <div class="article-info article-info-index">
       
-      <a href="/2016/11/20/看雪CTF-2016第六题Writeup/" class="archive-article-date">
-  	<time datetime="2016-11-20T05:26:38.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-11-20</time>
+      <a href="/2015/07/21/第一次逆向分析/" class="archive-article-date">
+  	<time datetime="2015-07-21T08:14:51.000Z" itemprop="datePublished"><i class="icon-clock"></i>2015-07-21</time>
 </a>
       
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CrackMe/">CrackMe</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/逆向/">逆向</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/逆向/">逆向</a></li></ul>
 	</div>
 
       
@@ -193,73 +173,21 @@
   </div>
 </article>
 
-  
-<nav id="article-nav">
-  
-    <a href="/2016/11/20/看雪CrackMe第三题之去除花指令/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          看雪CTF-2016第三题之去除花指令
-        
-      </div>
-    </a>
+
+
+
+
+
+
+
+
+
   
   
-    <a href="/2016/11/19/看雪CTF-2016第五题Writeup/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">看雪CTF 2016第五题Writeup(附RC4算法)</div>
-      <i class="icon-circle-right"></i>
-    </a>
+    <nav id="page-nav">
+      <a class="extend prev" rel="prev" href="/page/4/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span>
+    </nav>
   
-</nav>
-
-
-
-
-<div class="share_jia">
-	<!-- JiaThis Button BEGIN -->
-	<div class="jiathis_style">
-		<span class="jiathis_txt">Share to: &nbsp; </span>
-		<a class="jiathis_button_facebook"></a> 
-	    <a class="jiathis_button_twitter"></a>
-	    <a class="jiathis_button_plus"></a> 
-	    <a class="jiathis_button_tsina"></a>
-		<a class="jiathis_button_cqq"></a>
-		<a class="jiathis_button_douban"></a>
-		<a class="jiathis_button_weixin"></a>
-		<a class="jiathis_button_tumblr"></a>
-    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
-	</div>
-	<script type="text/javascript" src="//v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
-	<!-- JiaThis Button END -->
-</div>
-
-
-
-
-
-
-<div class="duoshuo">
-	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="看雪CTF-2016第六题Writeup" data-title="看雪CTF-2016第六题Writeup" data-url="https://niwbie.github.io/2016/11/20/看雪CTF-2016第六题Writeup/"></div>
-	<!-- 多说评论框 end -->
-	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-	<script type="text/javascript">
-	var duoshuoQuery = {short_name:"isee233"};
-	(function() {
-		var ds = document.createElement('script');
-		ds.type = 'text/javascript';ds.async = true;
-		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-		ds.charset = 'UTF-8';
-		(document.getElementsByTagName('head')[0] 
-		 || document.getElementsByTagName('body')[0]).appendChild(ds);
-	})();
-	</script>
-	<!-- 多说公共JS代码 end -->
-</div>
-
-
-
 
 
       </div>
@@ -281,8 +209,8 @@
 		fancybox: true,
 		mathjax: false,
 		animate: true,
-		isHome: false,
-		isPost: true,
+		isHome: true,
+		isPost: false,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,
