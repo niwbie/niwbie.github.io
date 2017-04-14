@@ -131,6 +131,77 @@
       <div class="body-wrap">
         
   
+    <article id="post-Windows下的ROP绕过DEP保护" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/03/30/Windows下的ROP绕过DEP保护/">Windows下的ROP绕过DEP保护</a>
+    </h1>
+  
+      
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>这篇介绍经典的DEP绕过方法：通过VirtualProtect绕过DEP。<br><a href="/image/Windows下的ROP绕过DEP保护/test.exe）
+什么是DEP呢？
+溢出攻击的根源在于计算机对数据和代码没有明确区分，如果将代码放置于数据段，那么系统就会去执行
+为了弥补这一缺陷，微软从XP SP2开始支持数据执行保护(Data Exection Prevention">test.exe</a></p>
+<p>DEP保护的原理，就是将数据所在内存页标识为不可执行，当程序溢出成功转入shellcode时，程序会尝试在数据页面上执行指令，而有了DEP，此时CPU会抛出异常，而不是去执行指令</p>
+<p>如果我们让程序跳转到一个已经存在的系统函数中去呢？这时的DEP是不会拦截的，也就有了我们的ROP攻击。<br>简而言之，只要为shellcode中的每条指令都在代码区找到替代指令，就可以完成我们的功能了。但是这种操作难度极大，并不是每条指令都能找到，所以就有了以下三种折中的办法:</p>
+<pre><code>通过跳转到ZwSetInformationProcess函数将DEP关闭后再转入shellcode执行
+通过跳转到VirtualProtect函数来讲shellcode所在内存页设置为可执行状态，然后再转入shellcode执行。
+通过跳转到VirtualAllloc函数开辟一段具有执行权限的内存空间，然后将shellcode复制到这段内存中执行。
+</code></pre><p>这一节根据实例，介绍通过方法2来绕过DEP。</p>
+<p>先来看VirtualProtect函数：</p>
+<p>BOOL VirtualProtect{<br>LPVOID lpAddress,<br>DWORD dwsize,<br>DWORD flNewProtect,<br>PDWORD lpflOldProtect<br>}</p>
+<p>lpAddress:内存起始地址<br>dwsize:内存区域大小<br>flNewProtect:内存属性，PAGE_EXECUTE_READWRITE(0x40)<br>lpflOldProtect:内存原始属性保存地址</p>
+<p>先看程序，还是简单的栈溢出，只不过开了DEP保护：<br><img src="/image/Windows下的ROP绕过DEP保护/1.png" alt="这里写图片描述"></p>
+<p>使用ImmunityDebugger和插件mona，可以构造rop链：</p>
+<p>!mona rop -m *.dll -cp nonull</p>
+<p>执行后，会在ImmunityDebugger文件夹下生成<br>rop.txt、rop_chains.txt、rop_suggestions.txt、stackpivot.txt。<br>我们查看其中的rop_chains，选择其中的[C]：<br><img src="/image/Windows下的ROP绕过DEP保护/2.png" alt="这里写图片描述"></p>
+<p>这就是我们需要的ROP链了，前面跟上溢出长度，后面跟上我们的shellcode即可。</p>
+<p>执行起来，可以看到我们的堆栈编程这样：<br><img src="/image/Windows下的ROP绕过DEP保护/3.png" alt="这里写图片描述"></p>
+<p>F8往下走，可以看到经过一系列pop和retn可以在栈上构造VrtualProtect函数需要的参数，并调用该函数，可以通过eax判断是否调用成功：<br><img src="/image/Windows下的ROP绕过DEP保护/4.png" alt="这里写图片描述"></p>
+<p>然后就走到call esp：<br><img src="/image/Windows下的ROP绕过DEP保护/5.png" alt="这里写图片描述"></p>
+<p>这里到后面都是我们自己构造的shellcode了。</p>
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/03/30/Windows下的ROP绕过DEP保护/" class="archive-article-date">
+  	<time datetime="2016-03-30T14:28:12.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-03-30</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Windows/">Windows</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/漏洞挖掘/">漏洞挖掘</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+
+
+  
     <article id="post-Windows下漏洞调试神器mona" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -183,58 +254,6 @@
 
 
   
-    <article id="post-PWN练习(绕过GS保护)" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/03/29/PWN练习(绕过GS保护)/">PWN练习（绕过GS保护）</a>
-    </h1>
-  
-      
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>程序：<a href="/image/PWN练习_绕过GS保护/test_x86_wo_safeseh_dep.exe">test</a><br>
-        <p class="article-more-link">
-          <a class="article-more-a"  href="/2016/03/29/PWN练习(绕过GS保护)/#more">more >></a>
-        </p>
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      <a href="/2016/03/29/PWN练习(绕过GS保护)/" class="archive-article-date">
-  	<time datetime="2016-03-29T13:28:12.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-03-29</time>
-</a>
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Windows/">Windows</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/漏洞挖掘/">漏洞挖掘</a></li></ul>
-	</div>
-
-      
-
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-
-
-  
     <article id="post-在栈中利用SEH" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -262,6 +281,58 @@
     <div class="article-info article-info-index">
       
       <a href="/2016/03/29/在栈中利用SEH/" class="archive-article-date">
+  	<time datetime="2016-03-29T13:28:12.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-03-29</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Windows/">Windows</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/漏洞挖掘/">漏洞挖掘</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-PWN练习(绕过GS保护)" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/03/29/PWN练习(绕过GS保护)/">PWN练习（绕过GS保护）</a>
+    </h1>
+  
+      
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>程序：<a href="/image/PWN练习_绕过GS保护/test_x86_wo_safeseh_dep.exe">test</a><br>
+        <p class="article-more-link">
+          <a class="article-more-a"  href="/2016/03/29/PWN练习(绕过GS保护)/#more">more >></a>
+        </p>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/03/29/PWN练习(绕过GS保护)/" class="archive-article-date">
   	<time datetime="2016-03-29T13:28:12.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-03-29</time>
 </a>
       
@@ -595,56 +666,6 @@
       
       <a href="/2016/03/17/declspec-naked-详解/" class="archive-article-date">
   	<time datetime="2016-03-17T09:14:47.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-03-17</time>
-</a>
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/逆向/">逆向</a></li></ul>
-	</div>
-
-      
-
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-JMP指令转换公式" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/03/17/JMP指令转换公式/">JMP指令转换公式</a>
-    </h1>
-  
-      
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <pre><code>JMP的地址 - 代码地址（eip） -5（字节） = 机器码跳转地址
-</code></pre>
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      <a href="/2016/03/17/JMP指令转换公式/" class="archive-article-date">
-  	<time datetime="2016-03-17T09:13:36.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-03-17</time>
 </a>
       
 	<div class="article-tag tagcloud">

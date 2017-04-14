@@ -131,6 +131,58 @@
       <div class="body-wrap">
         
   
+    <article id="post-C函数调用和堆栈" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/09/22/C函数调用和堆栈/">C函数调用和堆栈</a>
+    </h1>
+  
+      
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>函数传递参数有三种方式：堆栈方式、寄存器方式以及通过全局变量进行隐含参数的传递。如果参数是通过堆栈传递的，就需要定义参数在堆栈中的顺序，并约定函数被调用后，由谁来平衡堆栈。如果参数是通过寄存器传递的，就要确定参数存放在哪个寄存器中。</p>
+        <p class="article-more-link">
+          <a class="article-more-a"  href="/2016/09/22/C函数调用和堆栈/#more">more >></a>
+        </p>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/09/22/C函数调用和堆栈/" class="archive-article-date">
+  	<time datetime="2016-09-22T08:22:08.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-09-22</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/漏洞挖掘/">漏洞挖掘</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+
+
+  
     <article id="post-一个简单的QQ盗号木马分析" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -489,7 +541,7 @@
 <p>我们可以在内存中找到这两个变量存放的地址，假设为0x8049d60:<br><img src="/image/堆溢出的unlink利用/2.png" alt="这里写图片描述"></p>
 <p>这样，我们通过制造chunk0的溢出为如下图：<br><img src="/image/堆溢出的unlink利用/3.png" alt="这里写图片描述"></p>
 <p>这样，我们free掉chunk1之后，会检测chunk1的prev_size(被我们构造成0x80)，这时检测到前一个chunk（即chunk0）为空闲状态（实际上是我们伪造的），就会触发unlink（chunk0）：</p>
-<p>触发unlink时，会检测:（FD指针为chunk头部的指针地址，而不是数据段的指针地址）<br>FD-&gt;bk(0x8049d54+0xc) 的值是否为当前chunk(0x809a008)<br>BK-&gt;fd(0x8049d58+0x8) 的值知否为当前chunk(0x809a008)<br>因为上述两项满足条件，即绕过了检测，所以就glibc就会：<br>FD-&gt;bk = BK   #FD-&gt;bk 为(0x8049d54+0xc)， BK为0x8049d58 ，所以就是将0x8049d60的值设为0x8049d54<br>BK-&gt;fd = FD   #BK-&gt;fd为(0x8049d58+0x8), FD位0x8049d54, 所以还是将0x8049d60的值设为0x8049d54</p>
+<p>触发unlink时，会检测:（FD指针为chunk头部的指针地址，而不是数据段的指针地址）<br>FD-&gt;bk(0x8049d54+0xc) 的值是否为当前chunk(0x809a008)<br>BK-&gt;fd(0x8049d58+0x8) 的值知否为当前chunk(0x809a008)<br>因为上述两项满足条件，即绕过了检测，所以就glibc就会：<br>FD-&gt;bk = BK   #FD-&gt;bk 为(0x8049d54+0xc)， BK为0x8049d58 ，所以就是将0x8049d60的值设为0x8049d58<br>BK-&gt;fd = FD   #BK-&gt;fd为(0x8049d58+0x8), FD位0x8049d54, 所以就是将0x8049d60的值设为0x8049d54</p>
 <p>这样，在0x8049d60附近的内存就变成了：<br><img src="/image/堆溢出的unlink利用/4.png" alt="这里写图片描述"></p>
 <p>这样，我们如果在通过read(0, ptr1, len)写入数据时，就相当于在0x8049d54处输入数据，我们可以构造这样一个payload：</p>
 <p>payload = ‘A’ * 12 + p32(free_got)<br>内存又变成了：<br>这样，在0x8049d60附近的内存就变成了：<br><img src="/image/堆溢出的unlink利用/5.png" alt="这里写图片描述"></p>
@@ -612,77 +664,6 @@
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags"></i>
 		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/漏洞挖掘/">漏洞挖掘</a></li></ul>
-	</div>
-
-      
-
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-Windows下的ROP绕过DEP保护" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/03/30/Windows下的ROP绕过DEP保护/">Windows下的ROP绕过DEP保护</a>
-    </h1>
-  
-      
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>这篇介绍经典的DEP绕过方法：通过VirtualProtect绕过DEP。<br><a href="/image/Windows下的ROP绕过DEP保护/test.exe）
-什么是DEP呢？
-溢出攻击的根源在于计算机对数据和代码没有明确区分，如果将代码放置于数据段，那么系统就会去执行
-为了弥补这一缺陷，微软从XP SP2开始支持数据执行保护(Data Exection Prevention">test.exe</a></p>
-<p>DEP保护的原理，就是将数据所在内存页标识为不可执行，当程序溢出成功转入shellcode时，程序会尝试在数据页面上执行指令，而有了DEP，此时CPU会抛出异常，而不是去执行指令</p>
-<p>如果我们让程序跳转到一个已经存在的系统函数中去呢？这时的DEP是不会拦截的，也就有了我们的ROP攻击。<br>简而言之，只要为shellcode中的每条指令都在代码区找到替代指令，就可以完成我们的功能了。但是这种操作难度极大，并不是每条指令都能找到，所以就有了以下三种折中的办法:</p>
-<pre><code>通过跳转到ZwSetInformationProcess函数将DEP关闭后再转入shellcode执行
-通过跳转到VirtualProtect函数来讲shellcode所在内存页设置为可执行状态，然后再转入shellcode执行。
-通过跳转到VirtualAllloc函数开辟一段具有执行权限的内存空间，然后将shellcode复制到这段内存中执行。
-</code></pre><p>这一节根据实例，介绍通过方法2来绕过DEP。</p>
-<p>先来看VirtualProtect函数：</p>
-<p>BOOL VirtualProtect{<br>LPVOID lpAddress,<br>DWORD dwsize,<br>DWORD flNewProtect,<br>PDWORD lpflOldProtect<br>}</p>
-<p>lpAddress:内存起始地址<br>dwsize:内存区域大小<br>flNewProtect:内存属性，PAGE_EXECUTE_READWRITE(0x40)<br>lpflOldProtect:内存原始属性保存地址</p>
-<p>先看程序，还是简单的栈溢出，只不过开了DEP保护：<br><img src="/image/Windows下的ROP绕过DEP保护/1.png" alt="这里写图片描述"></p>
-<p>使用ImmunityDebugger和插件mona，可以构造rop链：</p>
-<p>!mona rop -m *.dll -cp nonull</p>
-<p>执行后，会在ImmunityDebugger文件夹下生成<br>rop.txt、rop_chains.txt、rop_suggestions.txt、stackpivot.txt。<br>我们查看其中的rop_chains，选择其中的[C]：<br><img src="/image/Windows下的ROP绕过DEP保护/2.png" alt="这里写图片描述"></p>
-<p>这就是我们需要的ROP链了，前面跟上溢出长度，后面跟上我们的shellcode即可。</p>
-<p>执行起来，可以看到我们的堆栈编程这样：<br><img src="/image/Windows下的ROP绕过DEP保护/3.png" alt="这里写图片描述"></p>
-<p>F8往下走，可以看到经过一系列pop和retn可以在栈上构造VrtualProtect函数需要的参数，并调用该函数，可以通过eax判断是否调用成功：<br><img src="/image/Windows下的ROP绕过DEP保护/4.png" alt="这里写图片描述"></p>
-<p>然后就走到call esp：<br><img src="/image/Windows下的ROP绕过DEP保护/5.png" alt="这里写图片描述"></p>
-<p>这里到后面都是我们自己构造的shellcode了。</p>
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      <a href="/2016/03/30/Windows下的ROP绕过DEP保护/" class="archive-article-date">
-  	<time datetime="2016-03-30T14:28:12.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-03-30</time>
-</a>
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Windows/">Windows</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/漏洞挖掘/">漏洞挖掘</a></li></ul>
 	</div>
 
       

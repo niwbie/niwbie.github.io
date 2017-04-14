@@ -19,7 +19,7 @@
 <meta property="og:image" content="https://niwbie.github.io/image/堆溢出的unlink利用/3.png">
 <meta property="og:image" content="https://niwbie.github.io/image/堆溢出的unlink利用/4.png">
 <meta property="og:image" content="https://niwbie.github.io/image/堆溢出的unlink利用/5.png">
-<meta property="og:updated_time" content="2017-04-09T11:18:16.429Z">
+<meta property="og:updated_time" content="2017-04-10T08:49:37.959Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="堆溢出的unlink利用">
 <meta name="twitter:description" content="0x01 关于chunk：当一个chunk被分配使用，最开始只有前两个变量会被用到，prev_size是前一块chunk的大小，前提是前一块chunk状态是free，如果前一块还在被使用，这4个字节会被前一块chunk共享使用以提高空间使用率，也就是说前一块chunk多了4字节。size是当前chunk的大小。如果当前块的状态是free，就会使用两个额外的变量：fd和bk，这两个变量指向双向链表">
@@ -169,7 +169,7 @@
 <p>我们可以在内存中找到这两个变量存放的地址，假设为0x8049d60:<br><img src="/image/堆溢出的unlink利用/2.png" alt="这里写图片描述"></p>
 <p>这样，我们通过制造chunk0的溢出为如下图：<br><img src="/image/堆溢出的unlink利用/3.png" alt="这里写图片描述"></p>
 <p>这样，我们free掉chunk1之后，会检测chunk1的prev_size(被我们构造成0x80)，这时检测到前一个chunk（即chunk0）为空闲状态（实际上是我们伪造的），就会触发unlink（chunk0）：</p>
-<p>触发unlink时，会检测:（FD指针为chunk头部的指针地址，而不是数据段的指针地址）<br>FD-&gt;bk(0x8049d54+0xc) 的值是否为当前chunk(0x809a008)<br>BK-&gt;fd(0x8049d58+0x8) 的值知否为当前chunk(0x809a008)<br>因为上述两项满足条件，即绕过了检测，所以就glibc就会：<br>FD-&gt;bk = BK   #FD-&gt;bk 为(0x8049d54+0xc)， BK为0x8049d58 ，所以就是将0x8049d60的值设为0x8049d54<br>BK-&gt;fd = FD   #BK-&gt;fd为(0x8049d58+0x8), FD位0x8049d54, 所以还是将0x8049d60的值设为0x8049d54</p>
+<p>触发unlink时，会检测:（FD指针为chunk头部的指针地址，而不是数据段的指针地址）<br>FD-&gt;bk(0x8049d54+0xc) 的值是否为当前chunk(0x809a008)<br>BK-&gt;fd(0x8049d58+0x8) 的值知否为当前chunk(0x809a008)<br>因为上述两项满足条件，即绕过了检测，所以就glibc就会：<br>FD-&gt;bk = BK   #FD-&gt;bk 为(0x8049d54+0xc)， BK为0x8049d58 ，所以就是将0x8049d60的值设为0x8049d58<br>BK-&gt;fd = FD   #BK-&gt;fd为(0x8049d58+0x8), FD位0x8049d54, 所以就是将0x8049d60的值设为0x8049d54</p>
 <p>这样，在0x8049d60附近的内存就变成了：<br><img src="/image/堆溢出的unlink利用/4.png" alt="这里写图片描述"></p>
 <p>这样，我们如果在通过read(0, ptr1, len)写入数据时，就相当于在0x8049d54处输入数据，我们可以构造这样一个payload：</p>
 <p>payload = ‘A’ * 12 + p32(free_got)<br>内存又变成了：<br>这样，在0x8049d60附近的内存就变成了：<br><img src="/image/堆溢出的unlink利用/5.png" alt="这里写图片描述"></p>
