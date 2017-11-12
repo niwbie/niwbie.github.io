@@ -11,7 +11,7 @@
   <meta name="description" content="0x01 关于chunk：当一个chunk被分配使用，最开始只有前两个变量会被用到，prev_size是前一块chunk的大小，前提是前一块chunk状态是free，如果前一块还在被使用，这4个字节会被前一块chunk共享使用以提高空间使用率，也就是说前一块chunk多了4字节。size是当前chunk的大小。如果当前块的状态是free，就会使用两个额外的变量：fd和bk，这两个变量指向双向链表">
 <meta property="og:type" content="article">
 <meta property="og:title" content="堆溢出的unlink利用">
-<meta property="og:url" content="https://niwbie.github.io/2016/04/09/堆溢出的unlink利用/index.html">
+<meta property="og:url" content="https://niwbie.github.io/2017/02/04/堆溢出的unlink利用/index.html">
 <meta property="og:site_name" content="isee'blog">
 <meta property="og:description" content="0x01 关于chunk：当一个chunk被分配使用，最开始只有前两个变量会被用到，prev_size是前一块chunk的大小，前提是前一块chunk状态是free，如果前一块还在被使用，这4个字节会被前一块chunk共享使用以提高空间使用率，也就是说前一块chunk多了4字节。size是当前chunk的大小。如果当前块的状态是free，就会使用两个额外的变量：fd和bk，这两个变量指向双向链表">
 <meta property="og:image" content="https://niwbie.github.io/image/堆溢出的unlink利用/1.png">
@@ -19,7 +19,7 @@
 <meta property="og:image" content="https://niwbie.github.io/image/堆溢出的unlink利用/3.png">
 <meta property="og:image" content="https://niwbie.github.io/image/堆溢出的unlink利用/4.png">
 <meta property="og:image" content="https://niwbie.github.io/image/堆溢出的unlink利用/5.png">
-<meta property="og:updated_time" content="2017-04-10T08:49:37.959Z">
+<meta property="og:updated_time" content="2017-11-12T07:47:01.598Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="堆溢出的unlink利用">
 <meta name="twitter:description" content="0x01 关于chunk：当一个chunk被分配使用，最开始只有前两个变量会被用到，prev_size是前一块chunk的大小，前提是前一块chunk状态是free，如果前一块还在被使用，这4个字节会被前一块chunk共享使用以提高空间使用率，也就是说前一块chunk多了4字节。size是当前chunk的大小。如果当前块的状态是free，就会使用两个额外的变量：fd和bk，这两个变量指向双向链表">
@@ -181,8 +181,8 @@
     </div>
     <div class="article-info article-info-index">
       
-      <a href="/2016/04/09/堆溢出的unlink利用/" class="archive-article-date">
-  	<time datetime="2016-04-09T03:32:39.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-04-09</time>
+      <a href="/2017/02/04/堆溢出的unlink利用/" class="archive-article-date">
+  	<time datetime="2017-02-04T03:32:39.000Z" itemprop="datePublished"><i class="icon-clock"></i>2017-02-04</time>
 </a>
       
 	<div class="article-tag tagcloud">
@@ -200,18 +200,18 @@
   
 <nav id="article-nav">
   
-    <a href="/2016/04/09/一道unlink的pwn练习/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2017/02/10/Linux下x64程序的函数调用和堆栈(转)/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          一道unlink的pwn练习
+          堆溢出的unlink利用
         
       </div>
     </a>
   
   
-    <a href="/2016/03/30/Windows下的ROP绕过DEP保护/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Windows下的ROP绕过DEP保护</div>
+    <a href="/2017/01/23/pwnable.tw第一题starrt/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">pwnable.tw第一题start</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -245,7 +245,7 @@
 
 <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="堆溢出的unlink利用" data-title="堆溢出的unlink利用" data-url="https://niwbie.github.io/2016/04/09/堆溢出的unlink利用/"></div>
+	<div class="ds-thread" data-thread-key="堆溢出的unlink利用" data-title="堆溢出的unlink利用" data-url="https://niwbie.github.io/2017/02/04/堆溢出的unlink利用/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">
@@ -337,7 +337,7 @@ var _hmt = _hmt || [];
     
     	<section class="tools-section tools-section-tag">
     			<div class="widget tagcloud" id="js-tagcloud">
-    				<a href="/tags/C/" style="font-size: 18.57px;">C</a> <a href="/tags/CrackMe/" style="font-size: 14.29px;">CrackMe</a> <a href="/tags/Hexo/" style="font-size: 11.43px;">Hexo</a> <a href="/tags/Linux/" style="font-size: 15.71px;">Linux</a> <a href="/tags/Windows/" style="font-size: 12.86px;">Windows</a> <a href="/tags/ctf/" style="font-size: 17.14px;">ctf</a> <a href="/tags/漏洞挖掘/" style="font-size: 18.57px;">漏洞挖掘</a> <a href="/tags/病毒分析/" style="font-size: 10px;">病毒分析</a> <a href="/tags/逆向/" style="font-size: 20px;">逆向</a>
+    				<a href="/tags/C/" style="font-size: 18.57px;">C</a> <a href="/tags/CrackMe/" style="font-size: 14.29px;">CrackMe</a> <a href="/tags/Hexo/" style="font-size: 11.43px;">Hexo</a> <a href="/tags/Linux/" style="font-size: 17.14px;">Linux</a> <a href="/tags/Windows/" style="font-size: 12.86px;">Windows</a> <a href="/tags/ctf/" style="font-size: 15.71px;">ctf</a> <a href="/tags/漏洞挖掘/" style="font-size: 18.57px;">漏洞挖掘</a> <a href="/tags/病毒分析/" style="font-size: 10px;">病毒分析</a> <a href="/tags/逆向/" style="font-size: 20px;">逆向</a>
     			</div>
     	</section>
     

