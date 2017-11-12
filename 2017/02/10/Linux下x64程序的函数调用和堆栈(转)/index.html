@@ -6,17 +6,17 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://niwbie.github.io">
-  <title>堆溢出的unlink利用 | isee&#39;blog</title>
+  <title>Linux下x64程序的函数调用和堆栈(转) | isee&#39;blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="首先先来科普一下64位CPU的混乱的术语：术语    说明AMD64    AMD研制的64位CPU（直接向下兼容x86）.EM64T    Intel研制的兼容AMD64的CPU.Intel64    EM64T的新名字.IA-64    Intel和HP合作开发的64位CPU（可以通过模拟器间接兼容x86）.x86    Intel的IA-32、IA-16、IA-8系列的CPU.x64">
 <meta property="og:type" content="article">
-<meta property="og:title" content="堆溢出的unlink利用">
+<meta property="og:title" content="Linux下x64程序的函数调用和堆栈(转)">
 <meta property="og:url" content="https://niwbie.github.io/2017/02/10/Linux下x64程序的函数调用和堆栈(转)/index.html">
 <meta property="og:site_name" content="isee'blog">
 <meta property="og:description" content="首先先来科普一下64位CPU的混乱的术语：术语    说明AMD64    AMD研制的64位CPU（直接向下兼容x86）.EM64T    Intel研制的兼容AMD64的CPU.Intel64    EM64T的新名字.IA-64    Intel和HP合作开发的64位CPU（可以通过模拟器间接兼容x86）.x86    Intel的IA-32、IA-16、IA-8系列的CPU.x64">
-<meta property="og:updated_time" content="2017-11-12T07:50:07.314Z">
+<meta property="og:updated_time" content="2017-11-12T08:41:47.459Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="堆溢出的unlink利用">
+<meta name="twitter:title" content="Linux下x64程序的函数调用和堆栈(转)">
 <meta name="twitter:description" content="首先先来科普一下64位CPU的混乱的术语：术语    说明AMD64    AMD研制的64位CPU（直接向下兼容x86）.EM64T    Intel研制的兼容AMD64的CPU.Intel64    EM64T的新名字.IA-64    Intel和HP合作开发的64位CPU（可以通过模拟器间接兼容x86）.x86    Intel的IA-32、IA-16、IA-8系列的CPU.x64">
   
     <link rel="alternative" href="/atom.xml" title="isee&#39;blog" type="application/atom+xml">
@@ -143,7 +143,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      堆溢出的unlink利用
+      Linux下x64程序的函数调用和堆栈(转)
     </h1>
   
       
@@ -224,7 +224,7 @@
 
 <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="Linux下x64程序的函数调用和堆栈(转)" data-title="堆溢出的unlink利用" data-url="https://niwbie.github.io/2017/02/10/Linux下x64程序的函数调用和堆栈(转)/"></div>
+	<div class="ds-thread" data-thread-key="Linux下x64程序的函数调用和堆栈(转)" data-title="Linux下x64程序的函数调用和堆栈(转)" data-url="https://niwbie.github.io/2017/02/10/Linux下x64程序的函数调用和堆栈(转)/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">
