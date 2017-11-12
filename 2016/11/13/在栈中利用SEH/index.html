@@ -6,30 +6,30 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://niwbie.github.io">
-  <title>Windows下的ROP绕过DEP保护 | isee&#39;blog</title>
+  <title>在栈中利用SEH | isee&#39;blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="这篇介绍经典的DEP绕过方法：通过VirtualProtect绕过DEP。test.exe
-DEP保护的原理，就是将数据所在内存页标识为不可执行，当程序溢出成功转入shellcode时，程序会尝试在数据页面上执行指令，而有了DEP，此时CPU会抛出异常，而不是去执行指令
-如果我们让程序跳转到一个已经存在的系统函数中去呢？这时的DEP是不会拦截的，也就有了我们的ROP攻击。简而言之，只要为shell">
+  <meta name="description" content="文中用到的两个插件：ollyssehfindjmp.exe">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Windows下的ROP绕过DEP保护">
-<meta property="og:url" content="https://niwbie.github.io/2016/03/30/Windows下的ROP绕过DEP保护/index.html">
+<meta property="og:title" content="在栈中利用SEH">
+<meta property="og:url" content="https://niwbie.github.io/2016/11/13/在栈中利用SEH/index.html">
 <meta property="og:site_name" content="isee'blog">
-<meta property="og:description" content="这篇介绍经典的DEP绕过方法：通过VirtualProtect绕过DEP。test.exe
-DEP保护的原理，就是将数据所在内存页标识为不可执行，当程序溢出成功转入shellcode时，程序会尝试在数据页面上执行指令，而有了DEP，此时CPU会抛出异常，而不是去执行指令
-如果我们让程序跳转到一个已经存在的系统函数中去呢？这时的DEP是不会拦截的，也就有了我们的ROP攻击。简而言之，只要为shell">
-<meta property="og:image" content="https://niwbie.github.io/image/Windows下的ROP绕过DEP保护/1.png">
-<meta property="og:image" content="https://niwbie.github.io/image/Windows下的ROP绕过DEP保护/2.png">
-<meta property="og:image" content="https://niwbie.github.io/image/Windows下的ROP绕过DEP保护/3.png">
-<meta property="og:image" content="https://niwbie.github.io/image/Windows下的ROP绕过DEP保护/4.png">
-<meta property="og:image" content="https://niwbie.github.io/image/Windows下的ROP绕过DEP保护/5.png">
-<meta property="og:updated_time" content="2017-03-30T12:46:36.056Z">
+<meta property="og:description" content="文中用到的两个插件：ollyssehfindjmp.exe">
+<meta property="og:image" content="https://niwbie.github.io/image/在栈中利用SEH/1.png">
+<meta property="og:image" content="https://niwbie.github.io/image/在栈中利用SEH/2.png">
+<meta property="og:image" content="https://niwbie.github.io/image/在栈中利用SEH/3.png">
+<meta property="og:image" content="https://niwbie.github.io/image/在栈中利用SEH/4.png">
+<meta property="og:image" content="https://niwbie.github.io/image/在栈中利用SEH/5.png">
+<meta property="og:image" content="https://niwbie.github.io/image/在栈中利用SEH/6.png">
+<meta property="og:image" content="https://niwbie.github.io/image/在栈中利用SEH/7.png">
+<meta property="og:image" content="https://niwbie.github.io/image/在栈中利用SEH/8.png">
+<meta property="og:image" content="https://niwbie.github.io/image/在栈中利用SEH/9.png">
+<meta property="og:image" content="https://niwbie.github.io/image/在栈中利用SEH/10.png">
+<meta property="og:image" content="https://niwbie.github.io/image/在栈中利用SEH/11.png">
+<meta property="og:updated_time" content="2017-11-12T07:58:48.857Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Windows下的ROP绕过DEP保护">
-<meta name="twitter:description" content="这篇介绍经典的DEP绕过方法：通过VirtualProtect绕过DEP。test.exe
-DEP保护的原理，就是将数据所在内存页标识为不可执行，当程序溢出成功转入shellcode时，程序会尝试在数据页面上执行指令，而有了DEP，此时CPU会抛出异常，而不是去执行指令
-如果我们让程序跳转到一个已经存在的系统函数中去呢？这时的DEP是不会拦截的，也就有了我们的ROP攻击。简而言之，只要为shell">
-<meta name="twitter:image" content="https://niwbie.github.io/image/Windows下的ROP绕过DEP保护/1.png">
+<meta name="twitter:title" content="在栈中利用SEH">
+<meta name="twitter:description" content="文中用到的两个插件：ollyssehfindjmp.exe">
+<meta name="twitter:image" content="https://niwbie.github.io/image/在栈中利用SEH/1.png">
   
     <link rel="alternative" href="/atom.xml" title="isee&#39;blog" type="application/atom+xml">
   
@@ -145,7 +145,7 @@ DEP保护的原理，就是将数据所在内存页标识为不可执行，当�
 </nav>
 
       <div class="body-wrap">
-        <article id="post-Windows下的ROP绕过DEP保护" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-在栈中利用SEH" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <input type="hidden" class="isFancy" />
@@ -155,7 +155,7 @@ DEP保护的原理，就是将数据所在内存页标识为不可执行，当�
         
   
     <h1 class="article-title" itemprop="name">
-      Windows下的ROP绕过DEP保护
+      在栈中利用SEH
     </h1>
   
       
@@ -163,35 +163,32 @@ DEP保护的原理，就是将数据所在内存页标识为不可执行，当�
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>这篇介绍经典的DEP绕过方法：通过VirtualProtect绕过DEP。<br><a href="/image/Windows下的ROP绕过DEP保护/test.exe）
-什么是DEP呢？
-溢出攻击的根源在于计算机对数据和代码没有明确区分，如果将代码放置于数据段，那么系统就会去执行
-为了弥补这一缺陷，微软从XP SP2开始支持数据执行保护(Data Exection Prevention">test.exe</a></p>
-<p>DEP保护的原理，就是将数据所在内存页标识为不可执行，当程序溢出成功转入shellcode时，程序会尝试在数据页面上执行指令，而有了DEP，此时CPU会抛出异常，而不是去执行指令</p>
-<p>如果我们让程序跳转到一个已经存在的系统函数中去呢？这时的DEP是不会拦截的，也就有了我们的ROP攻击。<br>简而言之，只要为shellcode中的每条指令都在代码区找到替代指令，就可以完成我们的功能了。但是这种操作难度极大，并不是每条指令都能找到，所以就有了以下三种折中的办法:</p>
-<pre><code>通过跳转到ZwSetInformationProcess函数将DEP关闭后再转入shellcode执行
-通过跳转到VirtualProtect函数来讲shellcode所在内存页设置为可执行状态，然后再转入shellcode执行。
-通过跳转到VirtualAllloc函数开辟一段具有执行权限的内存空间，然后将shellcode复制到这段内存中执行。
-</code></pre><p>这一节根据实例，介绍通过方法2来绕过DEP。</p>
-<p>先来看VirtualProtect函数：</p>
-<p>BOOL VirtualProtect{<br>LPVOID lpAddress,<br>DWORD dwsize,<br>DWORD flNewProtect,<br>PDWORD lpflOldProtect<br>}</p>
-<p>lpAddress:内存起始地址<br>dwsize:内存区域大小<br>flNewProtect:内存属性，PAGE_EXECUTE_READWRITE(0x40)<br>lpflOldProtect:内存原始属性保存地址</p>
-<p>先看程序，还是简单的栈溢出，只不过开了DEP保护：<br><img src="/image/Windows下的ROP绕过DEP保护/1.png" alt="这里写图片描述"></p>
-<p>使用ImmunityDebugger和插件mona，可以构造rop链：</p>
-<p>!mona rop -m *.dll -cp nonull</p>
-<p>执行后，会在ImmunityDebugger文件夹下生成<br>rop.txt、rop_chains.txt、rop_suggestions.txt、stackpivot.txt。<br>我们查看其中的rop_chains，选择其中的[C]：<br><img src="/image/Windows下的ROP绕过DEP保护/2.png" alt="这里写图片描述"></p>
-<p>这就是我们需要的ROP链了，前面跟上溢出长度，后面跟上我们的shellcode即可。</p>
-<p>执行起来，可以看到我们的堆栈编程这样：<br><img src="/image/Windows下的ROP绕过DEP保护/3.png" alt="这里写图片描述"></p>
-<p>F8往下走，可以看到经过一系列pop和retn可以在栈上构造VrtualProtect函数需要的参数，并调用该函数，可以通过eax判断是否调用成功：<br><img src="/image/Windows下的ROP绕过DEP保护/4.png" alt="这里写图片描述"></p>
-<p>然后就走到call esp：<br><img src="/image/Windows下的ROP绕过DEP保护/5.png" alt="这里写图片描述"></p>
-<p>这里到后面都是我们自己构造的shellcode了。</p>
+        <p>文中用到的两个插件：<br><a href="/image/在栈中利用SEH/ollysseh.zip">ollysseh</a><br><a href="/image/在栈中利用SEH/findjmp.exe">findjmp.exe</a><br><a id="more"></a><br>0x01 SEH简介<br>    关于SEH的原理就不多说了，介绍一些SEH逆向及漏洞利用的一些知识，这里主要介绍关闭<br>SAFESEH的情况下如何利用SEH植入shellcode。</p>
+<p>每个线程有它自己的SEH链。操作系统通过TEB中的ExceptionList成员定位SEH链的起始地址，TEB位于FS:[0]。下面为SEH链的一个示意图（图中简化了_EXCEPTION_REGISTRATION_RECORD结构）：<br><img src="/image/在栈中利用SEH/1.png" alt="这里写图片描述"></p>
+<p>在使用OD调试程序时，我们可以通过“查看 -&gt; SEH链”来查看当前线程的SEH链，如图：<br><img src="/image/在栈中利用SEH/2.png" alt="这里写图片描述"></p>
+<p>在堆栈中查看0xBBFCA0，OD已经将它标注出来了，实际上FS[0]中的值就是0xBBFCA0：<br><img src="/image/在栈中利用SEH/3.png" alt="这里写图片描述"></p>
+<p>我们利用SEH的基本思想就是通过栈溢出，覆盖SE处理程序的地址（0x010F19E9）</p>
+<p>0x02 SEH利用</p>
+<p>1）触发异常：<br>    可以利用堆栈的读写权限 。例如下图，如果我们的数据位于堆栈0xBBD000之中，那么可以构造一个很大的数据，让它覆盖到0xBC0000的地址中去，由于<br>    该地址只有Read权限，因此就会触发异常，调用SEH。<br><img src="/image/在栈中利用SEH/4.png" alt="这里写图片描述"></p>
+<p>2）寻找SEH<br>   在OD中使用命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">dd FS:[0]</div></pre></td></tr></table></figure></p>
+<p>3）寻找pop-pop-ret指令，并用它的地址覆盖SEH handler</p>
+<p>由于ntdll!KiUserExceptionDispatcher()会检查handler是否在线程TEB指定的Stack范围内(fs:[4]~fs:[8]),如果在其中,拒绝执行.<br>我们的栈就是在这个范围内的，所以不能直接用栈地址覆盖返回地址，那么就要去寻找pop-pop-ret指令去覆盖，这样执行完后<br>程序就会调到SEH.next（0xBBFCA0）中去执行了。</p>
+<p>pop-pop-ret原理：<br>我们再看这张图：<br><img src="/image/在栈中利用SEH/5.png" alt="这里写图片描述"></p>
+<p>我们再来看一下异常处理函数_except_handler的原型：<br><img src="/image/在栈中利用SEH/6.png" alt="这里写图片描述"></p>
+<p>第一个参数就不说了，我们来看第二个参数EstablisherFrame。这个参数实际上就是当前SEH链的首地址，即SEH链中第一个_EXCEPTION_REGISTRATION_RECORD结构的地址，也就是被我们改写的那个异常处理器的地址。当异常处理函数被调用的时候，这个参数位于栈上ESP+8的位置。这不难理解，这个函数为__cdecl调用方式，则栈上是这样子的：<br><img src="/image/在栈中利用SEH/7.png" alt="这里写图片描述"></p>
+<p>从OD中调试也可看出：<br><img src="/image/在栈中利用SEH/8.png" alt="这里写图片描述"></p>
+<p>当跳转到我们的handler函数中去后，堆栈如图所示，esp-&gt; 0xD8F848, 即ntdll.7717B652，而esp+8 就是EstablisherFrame，它实际上就是当前SEH链的首地址，即SEH链中第一个_EXCEPTION_REGISTRATION_RECORD结构的地址，也就是被我们改写的那个异常处理器的地址（SEH.next ：0xBBFCA0）。所以如果可以使用pop-pop-ret指令，就可以使EIP调到这个地址中去执行我们构造的一字节代码。</p>
+<p>3.1   首先使用OD插件ollysseh查看哪些模块开了SAFESEH，如果开了，就不能使用那个模块的ppr地址了：<br><img src="/image/在栈中利用SEH/9.png" alt="这里写图片描述"></p>
+<p>3.2  使用findjmp.exe查找ppr地址：<br><img src="/image/在栈中利用SEH/10.png" alt="这里写图片描述"></p>
+<p>4）找到ppr指令覆盖handler后，程序会调到SEH.next处执行，所以我们要构造一个字节的指令来代替这个SEH.next的地址，一般选用jmp xxx（EB 06）,<br>这样就调到了地址（0xBBFCA8）中去了，所以我们就在这里放入我们的shellcode即可。</p>
+<p>整个过程的堆栈结构如下：<br><img src="/image/在栈中利用SEH/11.png" alt="这里写图片描述"></p>
 
       
     </div>
     <div class="article-info article-info-index">
       
-      <a href="/2016/03/30/Windows下的ROP绕过DEP保护/" class="archive-article-date">
-  	<time datetime="2016-03-30T14:28:12.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-03-30</time>
+      <a href="/2016/11/13/在栈中利用SEH/" class="archive-article-date">
+  	<time datetime="2016-11-13T13:28:12.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-11-13</time>
 </a>
       
 	<div class="article-tag tagcloud">
@@ -209,18 +206,18 @@ DEP保护的原理，就是将数据所在内存页标识为不可执行，当�
   
 <nav id="article-nav">
   
-    <a href="/2016/05/11/简单的分配栈帧及溢出修改相邻变量/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2016/11/19/看雪CTF-2016第七题调试部分/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          简单的分配栈帧及溢出修改相邻变量
+          看雪CTF-2016第七题调试部分
         
       </div>
     </a>
   
   
-    <a href="/2016/03/30/Windows下漏洞调试神器mona/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Windows下漏洞调试神器之mona</div>
+    <a href="/2016/11/08/Hexo站点优化/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Hexo站点优化</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -254,7 +251,7 @@ DEP保护的原理，就是将数据所在内存页标识为不可执行，当�
 
 <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="Windows下的ROP绕过DEP保护" data-title="Windows下的ROP绕过DEP保护" data-url="https://niwbie.github.io/2016/03/30/Windows下的ROP绕过DEP保护/"></div>
+	<div class="ds-thread" data-thread-key="在栈中利用SEH" data-title="在栈中利用SEH" data-url="https://niwbie.github.io/2016/11/13/在栈中利用SEH/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">

