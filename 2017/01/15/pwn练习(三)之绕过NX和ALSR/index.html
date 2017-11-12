@@ -9,27 +9,30 @@
   <title>pwn练习(三)之绕过NX和ALSR | isee&#39;blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="通过一个例子来看看如何使用ret2lib绕过NX和ASLR。
-程序很简单，看IDA:之绕过NX和ALSR/1.png)之绕过NX和ALSR/2.png)
+程序很简单，看IDA:
 很明显的缓冲区溢出。checksec查看，程序开了NX保护，并且可以用命令查看，每次的堆栈都是发生了变化的，说明系统中开了ASLR保护的。sudo cat /proc/[pid]/maps
-给出pwntools的两个脚本：脚本一（给出libc的">
+给出pwntools的两个脚本：脚本一（给出libc的情况下）：from pwn import *
+p = process">
 <meta property="og:type" content="article">
 <meta property="og:title" content="pwn练习(三)之绕过NX和ALSR">
 <meta property="og:url" content="https://niwbie.github.io/2017/01/15/pwn练习(三)之绕过NX和ALSR/index.html">
 <meta property="og:site_name" content="isee'blog">
 <meta property="og:description" content="通过一个例子来看看如何使用ret2lib绕过NX和ASLR。
-程序很简单，看IDA:之绕过NX和ALSR/1.png)之绕过NX和ALSR/2.png)
+程序很简单，看IDA:
 很明显的缓冲区溢出。checksec查看，程序开了NX保护，并且可以用命令查看，每次的堆栈都是发生了变化的，说明系统中开了ASLR保护的。sudo cat /proc/[pid]/maps
-给出pwntools的两个脚本：脚本一（给出libc的">
-<meta property="og:image" content="https://niwbie.github.io/image/pwn练习(三">
-<meta property="og:image" content="https://niwbie.github.io/image/pwn练习(三">
-<meta property="og:updated_time" content="2017-11-12T07:26:50.229Z">
+给出pwntools的两个脚本：脚本一（给出libc的情况下）：from pwn import *
+p = process">
+<meta property="og:image" content="https://niwbie.github.io/image/pwn练习三之绕过NX和ALSR/1.png">
+<meta property="og:image" content="https://niwbie.github.io/image/pwn练习三之绕过NX和ALSR/2.png">
+<meta property="og:updated_time" content="2017-11-12T07:44:17.228Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="pwn练习(三)之绕过NX和ALSR">
 <meta name="twitter:description" content="通过一个例子来看看如何使用ret2lib绕过NX和ASLR。
-程序很简单，看IDA:之绕过NX和ALSR/1.png)之绕过NX和ALSR/2.png)
+程序很简单，看IDA:
 很明显的缓冲区溢出。checksec查看，程序开了NX保护，并且可以用命令查看，每次的堆栈都是发生了变化的，说明系统中开了ASLR保护的。sudo cat /proc/[pid]/maps
-给出pwntools的两个脚本：脚本一（给出libc的">
-<meta name="twitter:image" content="https://niwbie.github.io/image/pwn练习(三">
+给出pwntools的两个脚本：脚本一（给出libc的情况下）：from pwn import *
+p = process">
+<meta name="twitter:image" content="https://niwbie.github.io/image/pwn练习三之绕过NX和ALSR/1.png">
   
     <link rel="alternative" href="/atom.xml" title="isee&#39;blog" type="application/atom+xml">
   
@@ -165,7 +168,7 @@
       
         <a id="more"></a>
 <p>通过一个例子来看看如何使用ret2lib绕过NX和ASLR。</p>
-<p>程序很简单，看IDA:<br><img src="/image/pwn练习(三" alt="这里写图片描述">之绕过NX和ALSR/1.png)<br><img src="/image/pwn练习(三" alt="这里写图片描述">之绕过NX和ALSR/2.png)</p>
+<p>程序很简单，看IDA:<br><img src="/image/pwn练习三之绕过NX和ALSR/1.png" alt="这里写图片描述"><br><img src="/image/pwn练习三之绕过NX和ALSR/2.png" alt="这里写图片描述"></p>
 <p>很明显的缓冲区溢出。checksec查看，程序开了NX保护，并且可以用命令查看，每次的堆栈都是发生了变化的，说明系统中开了ASLR保护的。<br>sudo cat /proc/[pid]/maps</p>
 <p>给出pwntools的两个脚本：<br>脚本一（给出libc的情况下）：<br>from pwn import *</p>
 <p>p = process(‘./rop’)<br>libc = ELF(‘./libc.so’)<br>elf = ELF(‘./rop’)</p>

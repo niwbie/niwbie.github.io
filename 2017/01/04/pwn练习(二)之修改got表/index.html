@@ -8,18 +8,18 @@
   <link rel="dns-prefetch" href="https://niwbie.github.io">
   <title>pwn练习(二)之修改got表 | isee&#39;blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="bf之修改got表/bf)">
+  <meta name="description" content="bf">
 <meta property="og:type" content="article">
 <meta property="og:title" content="pwn练习(二)之修改got表">
 <meta property="og:url" content="https://niwbie.github.io/2017/01/04/pwn练习(二)之修改got表/index.html">
 <meta property="og:site_name" content="isee'blog">
-<meta property="og:description" content="bf之修改got表/bf)">
-<meta property="og:image" content="https://niwbie.github.io/image/pwn练习(二">
-<meta property="og:updated_time" content="2017-11-12T07:23:33.605Z">
+<meta property="og:description" content="bf">
+<meta property="og:image" content="https://niwbie.github.io/image/pwn练习二之修改got表/1.png">
+<meta property="og:updated_time" content="2017-11-12T07:43:59.193Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="pwn练习(二)之修改got表">
-<meta name="twitter:description" content="bf之修改got表/bf)">
-<meta name="twitter:image" content="https://niwbie.github.io/image/pwn练习(二">
+<meta name="twitter:description" content="bf">
+<meta name="twitter:image" content="https://niwbie.github.io/image/pwn练习二之修改got表/1.png">
   
     <link rel="alternative" href="/atom.xml" title="isee&#39;blog" type="application/atom+xml">
   
@@ -153,9 +153,9 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><a href="/image/pwn练习(二">bf</a>之修改got表/bf)</p>
+        <p><a href="/image/pwn练习二之修改got表/bf">bf</a></p>
 <a id="more"></a>
-<p>分析程序，发现是利用输入对相应的地址进行修改：<br><img src="/image/pwn练习(二" alt="这里写图片描述">之修改got表/1.png)</p>
+<p>分析程序，发现是利用输入对相应的地址进行修改：<br><img src="/image/pwn练习二之修改got表/1.png" alt="这里写图片描述"></p>
 <p>刚开始时思路错了，想的是通过‘+’ 和 ‘-’进行地址的修改，后来发现不成功，因为相对的地址不确定。所以可以通过getchar分支直接修改got表指向的地址的值。</p>
 <p>正确地思路是把memset修改成gets，fgets修改成system,这两个函数的地址都可以so文件里面获取到，最后再把putchar修改成main的地址，调用putchar将重新执行main，也就会执行gets和system。</p>
 <p>直接上python;</p>

@@ -559,7 +559,7 @@
       
         <a id="more"></a>
 <p>通过一个例子来看看如何使用ret2lib绕过NX和ASLR。</p>
-<p>程序很简单，看IDA:<br><img src="/image/pwn练习(三" alt="这里写图片描述">之绕过NX和ALSR/1.png)<br><img src="/image/pwn练习(三" alt="这里写图片描述">之绕过NX和ALSR/2.png)</p>
+<p>程序很简单，看IDA:<br><img src="/image/pwn练习三之绕过NX和ALSR/1.png" alt="这里写图片描述"><br><img src="/image/pwn练习三之绕过NX和ALSR/2.png" alt="这里写图片描述"></p>
 <p>很明显的缓冲区溢出。checksec查看，程序开了NX保护，并且可以用命令查看，每次的堆栈都是发生了变化的，说明系统中开了ASLR保护的。<br>sudo cat /proc/[pid]/maps</p>
 <p>给出pwntools的两个脚本：<br>脚本一（给出libc的情况下）：<br>from pwn import *</p>
 <p>p = process(‘./rop’)<br>libc = ELF(‘./libc.so’)<br>elf = ELF(‘./rop’)</p>
@@ -641,7 +641,7 @@ return data
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><a href="/image/pwn练习(二">bf</a>之修改got表/bf)</p>
+        <p><a href="/image/pwn练习二之修改got表/bf">bf</a></p>
         <p class="article-more-link">
           <a class="article-more-a"  href="/2017/01/04/pwn练习(二)之修改got表/#more">more >></a>
         </p>
